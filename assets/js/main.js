@@ -265,6 +265,27 @@
             }));
         }
 
+        // Product gallery: main slider + clickable thumb strip, kept in sync.
+        if (qs('.js-pdp-main')) {
+            var thumbsEl = qs('.js-pdp-thumbs');
+            var thumbsSwiper = null;
+
+            if (thumbsEl) {
+                thumbsSwiper = new Swiper(thumbsEl, {
+                    slidesPerView: 'auto',
+                    spaceBetween: 8,
+                    watchSlidesProgress: true
+                });
+                swipers.push(thumbsSwiper);
+            }
+
+            swipers.push(new Swiper('.js-pdp-main', {
+                speed: 650,
+                navigation: { nextEl: '.js-pdp-next', prevEl: '.js-pdp-prev' },
+                thumbs: thumbsSwiper ? { swiper: thumbsSwiper } : undefined
+            }));
+        }
+
         // Safety net for width changes after init (orientation, late fonts):
         // fully re-measure and snap back to the active slide.
         var resync = function (sw) {
@@ -393,6 +414,33 @@
 
             e.preventDefault();
 
+            // YITH bridge: adds server-side; a second tap opens the wishlist.
+            if (MS.yith && MS.yithAdd) {
+                if (btn.classList.contains('is-active')) {
+                    window.location.href = MS.wishlistUrl;
+                    return;
+                }
+
+                fetch(MS.yithAdd.replace('__ID__', btn.dataset.id), { credentials: 'same-origin' })
+                    .then(function () {
+                        btn.classList.add('is-active');
+                        var icon = btn.querySelector('i');
+                        if (icon) { icon.className = 'fa-solid fa-heart'; }
+
+                        qsa('.js-wish-count').forEach(function (el) {
+                            el.textContent = (parseInt(el.textContent, 10) || 0) + 1;
+                            el.classList.remove('is-empty');
+                            el.classList.add('is-bumped');
+                        });
+
+                        toast(i18n.saved, 'fa-heart');
+                    })
+                    .catch(function () {
+                        toast(i18n.error, 'fa-triangle-exclamation');
+                    });
+                return;
+            }
+
             var list = read();
             var id = btn.dataset.id;
             var at = list.indexOf(id);
@@ -409,7 +457,10 @@
             paint();
         });
 
-        paint();
+        // With YITH active the hearts render their state server-side.
+        if (!MS.yith) {
+            paint();
+        }
     }());
 
     /* ==========================================================
@@ -623,6 +674,117 @@
             }
         });
     }());
+
+    /* ==========================================================
+       Product page: qty stepper + sticky add-to-bag bar
+       The bar proxies the real add-to-cart form, so quantity and
+       validation stay single-source.
+    ========================================================== */
+    (function () {
+        var form = qs('.pdp-panel__form form.cart');
+        if (!form) { return; }
+
+        // Dress Woo's quantity input as a stepper.
+        qsa('.quantity', form).forEach(function (quantity) {
+            if (quantity.closest('.qty-stepper')) { return; }
+
+            var wrap = document.createElement('div');
+            wrap.className = 'qty-stepper';
+
+            var minus = document.createElement('button');
+            minus.type = 'button';
+            minus.className = 'qty-stepper__btn js-cart-qty';
+            minus.dataset.dir = '-1';
+            minus.setAttribute('aria-label', 'Decrease quantity');
+            minus.innerHTML = '&minus;';
+
+            var plus = document.createElement('button');
+            plus.type = 'button';
+            plus.className = 'qty-stepper__btn js-cart-qty';
+            plus.dataset.dir = '1';
+            plus.setAttribute('aria-label', 'Increase quantity');
+            plus.textContent = '+';
+
+            quantity.parentNode.insertBefore(wrap, quantity);
+            wrap.appendChild(minus);
+            wrap.appendChild(quantity);
+            wrap.appendChild(plus);
+        });
+
+        var bar = qs('.js-pdp-bar');
+        if (!bar) { return; }
+
+        var panel = qs('.js-pdp-panel');
+        var qty = qs('input.qty', form);
+        var count = qs('.js-pdp-bar-count', bar);
+        var addBtn = qs('.single_add_to_cart_button', form);
+
+        bar.removeAttribute('hidden');
+
+        function syncCount() {
+            if (count && qty) { count.textContent = qty.value || '1'; }
+        }
+
+        if (qty) {
+            qty.addEventListener('change', syncCount);
+            qty.addEventListener('input', syncCount);
+        }
+        syncCount();
+
+        // Bar steppers drive the real input.
+        bar.addEventListener('click', function (e) {
+            var stepBtn = e.target.closest('[data-dir]');
+            if (stepBtn && qty) {
+                var min = qty.min === '' ? 1 : parseFloat(qty.min) || 1;
+                var max = qty.max === '' ? Infinity : parseFloat(qty.max);
+                var next = (parseFloat(qty.value) || 1) + parseInt(stepBtn.dataset.dir, 10);
+                qty.value = Math.min(max, Math.max(min, next));
+                qty.dispatchEvent(new Event('change', { bubbles: true }));
+                return;
+            }
+
+            if (e.target.closest('.js-pdp-bar-add') && addBtn) {
+                if (addBtn.disabled || addBtn.classList.contains('disabled')) {
+                    // Variable product without a chosen variation — take them to the form.
+                    panel.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+                    return;
+                }
+                addBtn.click();
+            }
+        });
+
+        // Show the bar once the purchase panel scrolls out of view (upwards).
+        if ('IntersectionObserver' in window && panel) {
+            var barIO = new IntersectionObserver(function (entries) {
+                var entry = entries[0];
+                var passed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+                bar.classList.toggle('is-visible', passed);
+            }, { threshold: 0 });
+
+            barIO.observe(panel);
+        }
+    }());
+
+    /* ==========================================================
+       Cart page quantity steppers
+       Fires a bubbling `change` so WooCommerce's cart JS enables
+       the Update-cart button.
+    ========================================================== */
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.js-cart-qty');
+        if (!btn) { return; }
+
+        var input = btn.closest('.qty-stepper').querySelector('input.qty');
+        if (!input) { return; }
+
+        var step = parseFloat(input.step) || 1;
+        var min = input.min === '' ? 0 : parseFloat(input.min);
+        var max = input.max === '' ? Infinity : parseFloat(input.max);
+        var value = (parseFloat(input.value) || 0) + step * parseInt(btn.dataset.dir, 10);
+
+        input.value = Math.min(max, Math.max(min, value));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
 
     /* ==========================================================
        Newsletter (front-end only for now)

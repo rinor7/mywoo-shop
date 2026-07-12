@@ -33,6 +33,44 @@
     }
 }
 
+/* Shared CTA hover: dark lift + light sweep (the frontpage treatment).
+   @extend this on WooCommerce-generated buttons that can't take .btn classes. */
+%btn-dark-hover {
+    position: relative;
+    overflow: hidden;
+    transition: background-color var(--t) var(--ease),
+                color var(--t) var(--ease),
+                transform var(--t-fast) var(--ease),
+                box-shadow var(--t) var(--ease);
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -60%;
+        width: 40%;
+        background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .22), transparent);
+        transform: skewX(-18deg);
+        transition: left var(--t-slow) var(--ease-out);
+    }
+
+    &:hover {
+        background: var(--ink-soft);
+        color: #fff;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+
+        &::after {
+            left: 120%;
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
 /* ---------- Buttons ---------- */
 .btn {
     position: relative;

@@ -123,7 +123,7 @@
         transition: background-color var(--t) var(--ease);
 
         &:hover {
-            background: var(--accent);
+            background: var(--ink-soft);
         }
 
         &.is-loading {

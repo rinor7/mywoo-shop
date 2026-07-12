@@ -104,10 +104,19 @@
                     <i class="fa-regular fa-user" aria-hidden="true"></i>
                 </a>
 
-                <button type="button" class="icon-btn header__wish js-wishlist-peek" aria-label="<?php esc_attr_e( 'Wishlist', 'base-theme' ); ?>">
-                    <i class="fa-regular fa-heart" aria-hidden="true"></i>
-                    <span class="icon-btn__count js-wish-count is-empty">0</span>
-                </button>
+                <?php $wishlist_url = function_exists( 'myshop_wishlist_url' ) ? myshop_wishlist_url() : ''; ?>
+                <?php if ( $wishlist_url ) : ?>
+                    <a class="icon-btn header__wish" href="<?php echo esc_url( $wishlist_url ); ?>" aria-label="<?php esc_attr_e( 'Wishlist', 'base-theme' ); ?>">
+                        <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                        <?php $wl_count = myshop_wishlist_count(); ?>
+                        <span class="icon-btn__count js-wish-count<?php echo $wl_count ? '' : ' is-empty'; ?>"><?php echo (int) $wl_count; ?></span>
+                    </a>
+                <?php else : ?>
+                    <button type="button" class="icon-btn header__wish js-wishlist-peek" aria-label="<?php esc_attr_e( 'Wishlist', 'base-theme' ); ?>">
+                        <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                        <span class="icon-btn__count js-wish-count is-empty">0</span>
+                    </button>
+                <?php endif; ?>
 
                 <button type="button" class="icon-btn js-cart-open" aria-label="<?php esc_attr_e( 'Open bag', 'base-theme' ); ?>">
                     <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
