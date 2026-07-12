@@ -205,65 +205,120 @@ body.tax-product_tag {
     }
 }
 
-/* ---------- Pagination ---------- */
-/* full .woocommerce nav/ul/li chain mirrors Woo core exactly, so ours wins */
-.woocommerce nav.woocommerce-pagination ul li span.current,
-.woocommerce nav.woocommerce-pagination ul li a:focus,
-.woocommerce nav.woocommerce-pagination ul li a:hover {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: #fff;
-}
-
-.woocommerce-pagination {
+/* ---------- Pagination ----------
+   Every rule rides Woo core's own `.woocommerce nav ul li` chain, so none of
+   its defaults (ul border, li dividers, item padding) survive underneath. */
+.woocommerce nav.woocommerce-pagination {
     margin-top: clamp(36px, 4.5vw, 64px);
 
-    ul.page-numbers {
+    ul {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        white-space: normal;
+    }
+
+    ul li {
+        float: none;
         margin: 0;
         border: 0;
+        overflow: visible;
     }
 
-    li {
-        border: 0 !important;
-    }
-
-    .page-numbers:not(ul) {
+    /* Bare editorial numbers — current/hover get an animated underline */
+    ul li a,
+    ul li span {
+        position: relative;
         display: grid;
         place-items: center;
-        min-width: 44px;
-        height: 44px;
-        padding: 0 8px;
-        border: 1px solid var(--line);
-        border-radius: var(--r-xs);
-        background: #fff;
+        min-width: 26px;
+        height: 42px;
+        margin: 0;
+        padding: 0 2px;
+        border: 0;
+        background: none;
         font-size: 13px;
         font-weight: 600;
-        color: var(--ink);
-        transition: border-color var(--t) var(--ease),
-                    background-color var(--t) var(--ease),
-                    color var(--t) var(--ease);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: .1em;
+        line-height: 1;
+        color: var(--muted);
+        transition: color var(--t) var(--ease);
 
-        &:hover {
-            border-color: var(--ink);
-            background: #fff;
-            color: var(--ink);
-        }
-
-        &.current {
-            border-color: var(--ink);
+        &::after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            bottom: 5px;
+            height: 2px;
             background: var(--ink);
-            color: #fff;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--t) var(--ease);
+        }
+    }
+
+    ul li a:hover,
+    ul li a:focus {
+        background: none;
+        color: var(--ink);
+
+        &::after {
+            transform: scaleX(1);
+        }
+    }
+
+    ul li span.current {
+        background: none;
+        color: var(--ink);
+
+        &::after {
+            transform: scaleX(1);
+        }
+    }
+
+    ul li span.dots {
+        color: var(--muted-2);
+
+        &::after {
+            display: none;
+        }
+    }
+
+    /* Prev/next: the same circular arrows the hero and carousels use */
+    ul li a.prev,
+    ul li a.next {
+        min-width: 46px;
+        height: 46px;
+        margin-inline: 10px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        background: #fff;
+        font-size: 15px;
+        color: var(--ink);
+        transition: background-color var(--t) var(--ease),
+                    color var(--t) var(--ease),
+                    border-color var(--t) var(--ease),
+                    transform var(--t-fast) var(--ease),
+                    box-shadow var(--t) var(--ease);
+
+        &::after {
+            display: none;
         }
 
-        &.dots {
-            border-color: transparent;
-            background: none;
-            color: var(--muted-2);
+        &:hover,
+        &:focus {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: #fff;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
     }
 }
