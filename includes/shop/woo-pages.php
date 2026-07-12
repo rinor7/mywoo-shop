@@ -68,6 +68,13 @@ add_filter( 'woocommerce_order_button_text', 'myshop_order_button_text' );
  */
 function myshop_move_checkout_coupon() {
 	remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
+
+	// archive-product.php places these itself — unhook the defaults so
+	// breadcrumb, count, sorting and pagination render exactly once.
+	remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
+	remove_action( 'woocommerce_after_shop_loop', 'woocommerce_pagination', 10 );
 }
 add_action( 'init', 'myshop_move_checkout_coupon' );
 
@@ -182,6 +189,47 @@ function myshop_payment_badges() {
 		<li><i class="fa-brands fa-cc-paypal" aria-hidden="true"></i></li>
 		<li><i class="fa-brands fa-cc-apple-pay" aria-hidden="true"></i></li>
 	</ul>
+	<?php
+}
+
+/**
+ * Category pill bar for the shop/category archives — quick filtering without
+ * a sidebar. Current term (or "All" on the main shop) renders active.
+ */
+function myshop_shop_filterbar() {
+	// Top-level categories only — child terms (Men/Shirts, Women/Shirts)
+	// would surface as confusing duplicate pills.
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+			'parent'     => 0,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+			'number'     => 10,
+			'exclude'    => array( (int) get_option( 'default_product_cat' ) ),
+		)
+	);
+
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return;
+	}
+
+	$current = is_tax( 'product_cat' ) ? get_queried_object_id() : 0;
+	?>
+	<nav class="shop-pills" aria-label="<?php esc_attr_e( 'Product categories', 'base-theme' ); ?>">
+		<a class="shop-pills__pill<?php echo $current ? '' : ' is-active'; ?>" href="<?php echo esc_url( myshop_shop_url() ); ?>">
+			<?php esc_html_e( 'All', 'base-theme' ); ?>
+		</a>
+
+		<?php foreach ( $terms as $term ) : ?>
+			<a class="shop-pills__pill<?php echo $current === $term->term_id ? ' is-active' : ''; ?>"
+				href="<?php echo esc_url( get_term_link( $term ) ); ?>">
+				<?php echo esc_html( $term->name ); ?>
+				<span class="shop-pills__count"><?php echo (int) $term->count; ?></span>
+			</a>
+		<?php endforeach; ?>
+	</nav>
 	<?php
 }
 

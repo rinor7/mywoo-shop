@@ -118,10 +118,11 @@ function enable_post_type_archive_pagination() {
 }
 add_action('init', 'enable_post_type_archive_pagination');
 
-// Modify main query for post type archives to limit posts
+// Modify main query for post type archives to limit posts.
+// The product archive is excluded — WooCommerce paging (12/page) rules there.
 function modify_post_type_archive_query($query) {
     if (!is_admin() && $query->is_main_query()) {
-        if (is_post_type_archive()) {
+        if (is_post_type_archive() && !is_post_type_archive('product')) {
             $query->set('posts_per_page', 3);
         }
     }
