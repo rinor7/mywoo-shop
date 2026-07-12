@@ -206,10 +206,10 @@ body.tax-product_tag {
 }
 
 /* ---------- Pagination ---------- */
-/* nav/ul/li chain mirrors Woo core so these rules win the specificity war */
-nav.woocommerce-pagination ul li span.current,
-nav.woocommerce-pagination ul li a:focus,
-nav.woocommerce-pagination ul li a:hover {
+/* full .woocommerce nav/ul/li chain mirrors Woo core exactly, so ours wins */
+.woocommerce nav.woocommerce-pagination ul li span.current,
+.woocommerce nav.woocommerce-pagination ul li a:focus,
+.woocommerce nav.woocommerce-pagination ul li a:hover {
     background: var(--ink);
     border-color: var(--ink);
     color: #fff;
