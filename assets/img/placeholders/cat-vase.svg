@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" role="img" aria-label="vase">
+<g fill="none" stroke="#101114" stroke-opacity="0.58" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M264 268c0 60-76 80-76 190 0 86 52 146 112 146s112-60 112-146c0-110-76-130-76-190z"/>
+    <path d="M258 268h84"/>
+    <path d="M234 474c44 22 92 22 132 0" stroke-opacity="0.3"/>
+    <path d="M300 268c-4-42 12-70 46-84" stroke-opacity="0.4"/>
+    <path d="M330 208c-16 6-24 18-26 34 18 0 28-10 26-34z" stroke-opacity="0.4"/>
+  </g>
+</svg>

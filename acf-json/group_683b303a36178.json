@@ -1,0 +1,72 @@
+{
+    "key": "group_683b303a36178",
+    "title": "Menu Icon\/Image",
+    "fields": [
+        {
+            "key": "field_683b303ac7a00",
+            "label": "Image",
+            "name": "image-nav",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0,
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_683b30db69e56",
+            "label": "Fontawesome icon name",
+            "name": "icon",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "ex: <i class=\"fab fa-facebook-square\"><\/i>\r\nyou should add only: fa-facebook-square",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "fab",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "nav_menu_item",
+                "operator": "==",
+                "value": "all"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1749086419
+}

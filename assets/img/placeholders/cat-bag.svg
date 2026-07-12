@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" role="img" aria-label="bag">
+<g fill="none" stroke="#101114" stroke-opacity="0.58" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 345h240l-18 252a15 15 0 0 1-15 14H213a15 15 0 0 1-15-14z"/>
+    <path d="M243 345c0-62 21-98 57-98s57 36 57 98"/>
+    <path d="M264 405h72" stroke-opacity="0.35"/>
+  </g>
+</svg>

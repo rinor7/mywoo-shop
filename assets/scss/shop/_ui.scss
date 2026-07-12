@@ -1,0 +1,493 @@
+/* =========================================================
+   UI KIT — buttons, badges, ratings, section headers, inputs
+========================================================= */
+
+/* Drawers and modals set `display` via a class, which would otherwise beat the
+   UA's [hidden] rule and leave them visible on first paint. */
+[hidden] {
+    display: none !important;
+}
+
+/* ---------- Eyebrow / micro label ---------- */
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--tracking);
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--accent);
+
+    &::before {
+        content: "";
+        width: 18px;
+        height: 1px;
+        background: currentColor;
+        opacity: .6;
+    }
+
+    &--light {
+        color: rgba(255, 255, 255, .75);
+    }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 30px;
+    border: 1px solid transparent;
+    border-radius: var(--r-xs);
+    background: none;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: var(--tracking);
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color var(--t) var(--ease),
+                color var(--t) var(--ease),
+                border-color var(--t) var(--ease),
+                transform var(--t-fast) var(--ease),
+                box-shadow var(--t) var(--ease);
+
+    /* light sweep on hover */
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -60%;
+        width: 40%;
+        background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .22), transparent);
+        transform: skewX(-18deg);
+        transition: left var(--t-slow) var(--ease-out);
+    }
+
+    &:hover::after {
+        left: 120%;
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+    }
+
+    i {
+        font-size: 14px;
+    }
+}
+
+.btn--primary {
+    background: var(--ink);
+    color: #fff;
+
+    &:hover {
+        background: var(--ink-soft);
+        color: #fff;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+    }
+}
+
+.btn--accent {
+    background: var(--accent);
+    color: var(--accent-ink);
+
+    &:hover {
+        background: var(--accent-dark);
+        color: #fff;
+        box-shadow: 0 14px 28px -14px rgba(176, 123, 79, .85);
+        transform: translateY(-2px);
+    }
+}
+
+.btn--ghost {
+    border-color: var(--ink);
+    color: var(--ink);
+
+    &:hover {
+        background: var(--ink);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+}
+
+.btn--light {
+    background: #fff;
+    color: var(--ink);
+
+    &:hover {
+        background: var(--bone-2);
+        color: var(--ink);
+        transform: translateY(-2px);
+    }
+}
+
+.btn--outline-light {
+    border-color: rgba(255, 255, 255, .5);
+    color: #fff;
+
+    &:hover {
+        background: #fff;
+        border-color: #fff;
+        color: var(--ink);
+        transform: translateY(-2px);
+    }
+}
+
+.btn--sm {
+    height: 44px;
+    padding: 0 22px;
+}
+
+.btn--block {
+    width: 100%;
+}
+
+/* ---------- Text link ---------- */
+.link-arrow {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: var(--tracking);
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink);
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background: currentColor;
+        transform: scaleX(1);
+        transform-origin: right;
+        transition: transform var(--t) var(--ease);
+    }
+
+    i {
+        font-size: 12px;
+        transition: transform var(--t) var(--ease);
+    }
+
+    &:hover {
+        color: var(--accent);
+
+        &::before {
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        i {
+            transform: translateX(4px);
+        }
+    }
+
+    &--light,
+    &--light:hover {
+        color: #fff;
+    }
+}
+
+/* ---------- Icon button ---------- */
+.icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--ink);
+    font-size: 17px;
+    transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+
+    &:hover {
+        background: var(--bone-2);
+        color: var(--ink);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+}
+
+.icon-btn__count {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--r-pill);
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+
+    &.is-bumped {
+        animation: countBump .45s var(--ease-out);
+    }
+}
+
+@keyframes countBump {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.45); }
+    100% { transform: scale(1); }
+}
+
+/* ---------- Badges ---------- */
+.badge-pill {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: var(--r-xs);
+    background: var(--ink);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    line-height: 1;
+
+    &--sale {
+        background: var(--sale);
+    }
+
+    &--new {
+        background: var(--ink);
+    }
+
+    &--best {
+        background: var(--accent);
+    }
+
+    &--out {
+        background: var(--muted);
+    }
+}
+
+/* ---------- Rating ---------- */
+.stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    color: var(--accent);
+    font-size: 11px;
+
+    i {
+        line-height: 1;
+    }
+
+    .stars__empty {
+        color: var(--line);
+    }
+}
+
+.rating-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    &__count {
+        font-size: 11px;
+        color: var(--muted-2);
+    }
+}
+
+/* ---------- Price ---------- */
+.price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+
+    del {
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--muted-2);
+        text-decoration: line-through;
+    }
+
+    ins {
+        color: var(--sale);
+        font-weight: 600;
+        text-decoration: none;
+    }
+}
+
+/* ---------- Section header ---------- */
+.sec-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: clamp(28px, 3vw, 48px);
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 620px;
+    }
+
+    &__title {
+        font-size: clamp(28px, 3vw, 44px);
+        line-height: 1.1;
+        font-weight: 700;
+        letter-spacing: -.02em;
+        color: inherit;
+    }
+
+    &__sub {
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--muted);
+    }
+
+    &--center {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        .sec-head__text {
+            align-items: center;
+        }
+    }
+
+    &--light .sec-head__sub {
+        color: rgba(255, 255, 255, .65);
+    }
+
+    @include sm {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+}
+
+/* ---------- Inputs ---------- */
+.field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 52px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xs);
+    background: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
+
+    &::placeholder {
+        color: var(--muted-2);
+    }
+
+    &:focus {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 3px rgba(16, 17, 20, .06);
+    }
+}
+
+/* ---------- Reveal on scroll ---------- */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+
+    &.is-visible {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ---------- Toasts ---------- */
+.toast-stack {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    z-index: 140;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transform: translateX(-50%);
+    pointer-events: none;
+
+    @include sm {
+        bottom: 76px;
+        width: calc(100% - 32px);
+    }
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: var(--r-sm);
+    background: var(--ink);
+    color: #fff;
+    font-size: 13px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity var(--t) var(--ease-out), transform var(--t) var(--ease-out);
+
+    &.is-visible {
+        opacity: 1;
+        transform: none;
+    }
+
+    i {
+        color: var(--accent);
+    }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+    }
+}

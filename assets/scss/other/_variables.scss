@@ -1,0 +1,98 @@
+/* Variables START*/
+
+/*
+Example usage of colors from admin:
+
+background-color: var(--primary-color, $primary-color);
+background-color: var(--secondary-color, $secondary-color);
+color: var(--font-color, $secondary-color);
+
+
+- Uses WP admin value if available
+- Falls back to SCSS default ($primary-color)
+*/
+
+$white: #fff;
+$white-light: #f9f9f9;
+
+$black: #000000;
+$black-light: #000000a4;
+
+$primary-color: coral;
+$primary-color-light: coral;
+
+$secondary-color: #000;
+$secondary-color-light: #000000a4;
+
+$font-color: #0000;
+
+$grey-color: #666;
+
+@mixin transition {
+    transition: all .3s ease-in-out;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+}
+
+@mixin filter-header {
+    filter: brightness(.6);
+}
+
+@mixin button {
+    min-width: 185px;
+    padding-left: 12px;
+    padding-right: 12px;
+    height: 45px;
+    border: 1px solid transparent;
+    color: $black;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    will-change: box-shadow, transform;
+    background-color: #FCD13F;
+    background-image: linear-gradient(
+    to right,
+    #FCD13F 0%,
+    #fdd656 40%,
+    #fff178 50%,  // bright highlight in middle
+    #fdd656 60%,
+    #FCD13F 100%
+    );
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(252, 209, 63, 0.3),
+                0 3px 6px -2px rgba(252, 209, 63, 0.4),
+                0 1px 8px rgba(252, 209, 63, 0.25);
+    background-size: 200% auto !important;
+    white-space: nowrap;
+    transition: box-shadow 0.2s cubic-bezier(.4, 0, 1, 1),
+                background-color 0.2s cubic-bezier(.4, 0, .2, 1),
+                background-position 0.5s;
+
+    &:hover {
+        box-shadow: 0 14px 26px -12px rgba(252, 209, 63, 0.7),
+                    0 4px 23px rgba(0, 0, 0, 0.3),
+                    0 8px 10px -5px rgba(252, 209, 63, 0.5);
+        background-position: right center;
+        background-color: #fdd656;
+        border-color: transparent;
+    }
+}
+
+@mixin button-2 {
+    //for this, background of section should be same as this background color
+    background-color: #efefef;
+    border: none;
+    border-radius: 25px;
+    padding: 2px 10px;
+    color: $grey-color;
+    box-shadow: -6px -6px 10px $white-light, 6px 6px 10px #00000026;
+    transition: all .3s;
+    &:hover {
+        box-shadow: 2px 2px 2px $white-light, -2px -2px 2px #00000026;
+    }    
+}
+
+/* Variables END*/

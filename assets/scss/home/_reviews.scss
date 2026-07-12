@@ -1,0 +1,130 @@
+/* =========================================================
+   HOME — REVIEWS
+========================================================= */
+
+.reviews__carousel {
+    position: relative;
+}
+
+.reviews__swiper {
+    /* Slides default to height:100% in Swiper's CSS, which collapses the cards.
+       height:auto + stretch lets every card grow to the tallest in the row. */
+    .swiper-wrapper {
+        align-items: stretch;
+    }
+
+    .swiper-slide {
+        display: flex;
+        height: auto;
+    }
+}
+
+.review {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    padding: clamp(24px, 2.4vw, 34px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: #fff;
+    transition: box-shadow var(--t) var(--ease),
+                transform var(--t) var(--ease),
+                border-color var(--t) var(--ease);
+
+    &:hover {
+        border-color: transparent;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+    }
+
+    &__stars {
+        font-size: 13px;
+    }
+
+    &__quote {
+        flex: 1;
+        font-size: 15px;
+        line-height: 1.75;
+        color: var(--ink-soft);
+
+        &::before {
+            content: "\201C";
+        }
+
+        &::after {
+            content: "\201D";
+        }
+    }
+
+    &__product {
+        font-size: 11px;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--muted-2);
+    }
+
+    &__foot {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line-soft);
+    }
+
+    &__avatar {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 42px;
+        height: 42px;
+        border-radius: var(--r-pill);
+        background: var(--bone-2);
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    &__who {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+
+        strong {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+    }
+
+    &__verified {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        color: var(--success);
+    }
+}
+
+.reviews__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 32px;
+
+    .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        margin: 0 !important;
+        border-radius: var(--r-pill);
+        background: var(--line);
+        opacity: 1;
+        transition: width var(--t) var(--ease), background-color var(--t) var(--ease);
+
+        &-active {
+            width: 26px;
+            background: var(--ink);
+        }
+    }
+}

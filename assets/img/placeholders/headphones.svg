@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" role="img" aria-label="headphones">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#EEF0F3"/><stop offset="1" stop-color="#D7DCE3"/>
+    </linearGradient>
+    <radialGradient id="hl" cx="0.5" cy="0.42" r="0.55">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="750" fill="url(#bg)"/>
+  <rect width="600" height="750" fill="url(#hl)"/>
+  <g fill="none" stroke="#101114" stroke-opacity="0.58" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M178 432v-52a122 122 0 0 1 244 0v52"/>
+    <rect x="150" y="418" width="56" height="146" rx="27"/>
+    <rect x="394" y="418" width="56" height="146" rx="27"/>
+    <path d="M206 462h18a10 10 0 0 1 10 10v38a10 10 0 0 1-10 10h-18" stroke-opacity="0.35"/>
+    <path d="M394 462h-18a10 10 0 0 0-10 10v38a10 10 0 0 0 10 10h18" stroke-opacity="0.35"/>
+  </g>
+</svg>

@@ -1,0 +1,81 @@
+/* =========================================================
+   HOME — LOOKBOOK / SOCIAL GRID
+========================================================= */
+
+.look-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: clamp(8px, 1vw, 14px);
+
+    @include md {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include xs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.look-tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: var(--r-sm);
+    background: var(--bone);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .9s var(--ease-out);
+    }
+
+    &:hover img {
+        transform: scale(1.08);
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px;
+        text-align: center;
+        background: rgba(16, 17, 20, .55);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        transition: opacity var(--t) var(--ease);
+    }
+
+    &:hover &__overlay {
+        opacity: 1;
+    }
+
+    &__icon {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: var(--r-pill);
+        background: #fff;
+        color: var(--ink);
+        font-size: 14px;
+        transform: translateY(8px);
+        transition: transform var(--t) var(--ease-out);
+    }
+
+    &:hover &__icon {
+        transform: none;
+    }
+
+    &__label {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.4;
+        color: #fff;
+    }
+}

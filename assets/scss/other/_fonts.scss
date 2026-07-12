@@ -1,0 +1,161 @@
+/* Fonts START*/
+
+/* =========================
+   TYPOGRAPHY SYSTEM
+========================= */
+
+:root {
+    /* Font sizes (fluid) */
+    --fs-h1: clamp(42px, 3vw + 24px, 60px);
+    --fs-h2: clamp(32px, 2.5vw + 20px, 46px);
+    --fs-h3: clamp(32px, 2vw + 18px, 40px);
+    --fs-h4: clamp(22px, 1.5vw + 16px, 32px);
+    --fs-h5: clamp(20px, 1.2vw + 14px, 24px);
+    --fs-h6: clamp(16px, 1vw + 12px, 18px);
+    --fs-p:  clamp(14px, 0.8vw + 12px, 16px);
+
+    /* Mobile line-heights (from Figma) */
+    --lh-h1: 48px;
+    --lh-h2: 40px;
+    --lh-h3: 40px;
+    --lh-h4: 26px;
+    --lh-h5: 24px;
+    --lh-h6: 20px;
+    --lh-p:  20px;
+}
+
+/* Tablet */
+@include min-sm {
+    :root {
+        --lh-h1: 56px;
+        --lh-h2: 46px;
+        --lh-h3: 46px;
+        --lh-h4: 30px;
+        --lh-h5: 28px;
+        --lh-h6: 22px;
+        --lh-p:  21px;
+    }
+}
+
+/* Desktop */
+@include min-md {
+    :root {
+        --lh-h1: 66px;
+        --lh-h2: 52px;
+        --lh-h3: 52px;
+        --lh-h4: 34px;
+        --lh-h5: 30px;
+        --lh-h6: 24px;
+        --lh-p:  22px;
+    }
+}
+
+/* Apply */
+h1, .h1 {
+    font-size: var(--fs-h1);
+    line-height: var(--lh-h1);
+}
+
+h2, .h2 {
+    font-size: var(--fs-h2);
+    line-height: var(--lh-h2);
+}
+
+h3, .h3 {
+    font-size: var(--fs-h3);
+    line-height: var(--lh-h3);
+}
+
+h4, .h4 {
+    font-size: var(--fs-h4);
+    line-height: var(--lh-h4);
+}
+
+h5, .h5 {
+    font-size: var(--fs-h5);
+    line-height: var(--lh-h5);
+}
+
+h6, .h6 {
+    font-size: var(--fs-h6);
+    line-height: var(--lh-h6);
+}
+
+p, .paragraph {
+    font-size: var(--fs-p);
+    line-height: var(--lh-p);
+}
+
+/* =========================
+   MONTSERRAT FONT SYSTEM
+========================= */
+/* Light */
+@font-face {
+    font-family: "base-theme";
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url("../fonts/Montserrat-Light.woff2") format("woff2"),
+         url("../fonts/Montserrat-Light.woff") format("woff");
+}
+
+/* Regular */
+@font-face {
+    font-family: "base-theme";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/Montserrat-Regular.woff2") format("woff2"),
+         url("../fonts/Montserrat-Regular.woff") format("woff");
+}
+
+/* Medium */
+@font-face {
+    font-family: "base-theme";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("../fonts/Montserrat-Medium.woff2") format("woff2"),
+         url("../fonts/Montserrat-Medium.woff") format("woff");
+}
+
+/* SemiBold */
+@font-face {
+    font-family: "base-theme";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("../fonts/Montserrat-SemiBold.woff2") format("woff2"),
+         url("../fonts/Montserrat-SemiBold.woff") format("woff");
+}
+
+/* Bold */
+@font-face {
+    font-family: "base-theme";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../fonts/Montserrat-Bold.woff2") format("woff2"),
+         url("../fonts/Montserrat-Bold.woff") format("woff");
+}
+
+/* ExtraBold */
+@font-face {
+    font-family: "base-theme";
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url("../fonts/Montserrat-ExtraBold.woff2") format("woff2"),
+         url("../fonts/Montserrat-ExtraBold.woff") format("woff");
+}
+
+/* Black */
+@font-face {
+    font-family: "base-theme";
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url("../fonts/Montserrat-Black.woff2") format("woff2"),
+         url("../fonts/Montserrat-Black.woff") format("woff");
+}
+/* Fonts END*/

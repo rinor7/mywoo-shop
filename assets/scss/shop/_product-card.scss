@@ -1,0 +1,361 @@
+/* =========================================================
+   PRODUCT CARD + GRIDS
+========================================================= */
+
+.pcard {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    &__media {
+        position: relative;
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+        border-radius: var(--r-sm);
+        background: var(--bone);
+    }
+
+    &__link {
+        display: block;
+        height: 100%;
+    }
+
+    &__img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 1s var(--ease-out), opacity var(--t) var(--ease);
+    }
+
+    &__img--hover {
+        opacity: 0;
+    }
+
+    &:hover &__img {
+        transform: scale(1.05);
+    }
+
+    &:hover &__img--hover {
+        opacity: 1;
+    }
+
+    &__badges {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__wish {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, .92);
+        backdrop-filter: blur(6px);
+        color: var(--ink);
+        font-size: 14px;
+        opacity: 0;
+        transform: translateY(-6px);
+        transition: opacity var(--t) var(--ease),
+                    transform var(--t) var(--ease),
+                    color var(--t) var(--ease);
+
+        &:hover {
+            color: var(--sale);
+        }
+
+        &.is-active {
+            opacity: 1;
+            transform: none;
+            color: var(--sale);
+        }
+    }
+
+    &:hover &__wish {
+        opacity: 1;
+        transform: none;
+    }
+
+    &__actions {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        z-index: 2;
+        display: flex;
+        gap: 8px;
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity var(--t) var(--ease-out), transform var(--t) var(--ease-out);
+    }
+
+    &:hover &__actions {
+        opacity: 1;
+        transform: none;
+    }
+
+    &__add {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 44px;
+        border-radius: var(--r-xs);
+        background: var(--ink);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transition: background-color var(--t) var(--ease);
+
+        &:hover {
+            background: var(--accent);
+        }
+
+        &.is-loading {
+            pointer-events: none;
+            opacity: .75;
+        }
+
+        &.is-done {
+            background: var(--success);
+        }
+    }
+
+    &__quick {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: var(--r-xs);
+        background: #fff;
+        color: var(--ink);
+        font-size: 14px;
+        transition: background-color var(--t) var(--ease);
+
+        &:hover {
+            background: var(--bone-2);
+        }
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    &__cat {
+        font-size: 11px;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--muted-2);
+    }
+
+    &__title {
+        font-size: 15px;
+        line-height: 1.35;
+        font-weight: 600;
+        color: var(--ink);
+
+        a:hover {
+            color: var(--accent);
+        }
+    }
+
+    &__swatches {
+        display: flex;
+        gap: 6px;
+        margin-top: 2px;
+    }
+
+    &__swatch {
+        width: 14px;
+        height: 14px;
+        border-radius: var(--r-pill);
+        background: var(--sw);
+        box-shadow: inset 0 0 0 1px rgba(16, 17, 20, .14);
+    }
+}
+
+/* Touch devices never fire :hover — show the affordances up front */
+@media (hover: none) {
+    .pcard__actions,
+    .pcard__wish {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ---------- Grid ---------- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(24px, 2.5vw, 40px) clamp(12px, 1.5vw, 24px);
+
+    @include lg {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include md {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include xs {
+        gap: 22px 12px;
+    }
+}
+
+/* ---------- Carousel ---------- */
+.products__carousel {
+    position: relative;
+}
+
+.products__arrow {
+    position: absolute;
+    top: 32%;
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--r-pill);
+    background: #fff;
+    color: var(--ink);
+    font-size: 14px;
+    box-shadow: var(--shadow-md);
+    transition: background-color var(--t) var(--ease),
+                color var(--t) var(--ease),
+                opacity var(--t) var(--ease);
+
+    &--prev {
+        left: -16px;
+    }
+
+    &--next {
+        right: -16px;
+    }
+
+    &:hover {
+        background: var(--ink);
+        color: #fff;
+    }
+
+    &.swiper-button-disabled {
+        opacity: .3;
+        pointer-events: none;
+    }
+
+    @include md {
+        display: none;
+    }
+}
+
+.products__progress {
+    height: 2px;
+    margin-top: 30px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+}
+
+.products__progress-bar {
+    display: block;
+    height: 100%;
+    width: 25%;
+    border-radius: 2px;
+    background: var(--ink);
+    transform-origin: left;
+    transition: width var(--t) var(--ease), transform var(--t) var(--ease);
+}
+
+/* ---------- Tabs ---------- */
+.tabs__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: clamp(28px, 3vw, 44px);
+
+    @include md {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.tabs__nav {
+    display: flex;
+    gap: 4px;
+    padding: 5px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: #fff;
+
+    @include xs {
+        width: 100%;
+        overflow-x: auto;
+    }
+}
+
+.tabs__btn {
+    height: 40px;
+    padding: 0 20px;
+    border-radius: var(--r-pill);
+    background: none;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+
+    &:hover {
+        color: var(--ink);
+    }
+
+    &.is-active {
+        background: var(--ink);
+        color: #fff;
+    }
+}
+
+.tabs__panel {
+    display: none;
+
+    &.is-active {
+        display: block;
+        animation: tabIn .5s var(--ease-out);
+    }
+}
+
+@keyframes tabIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.tabs__foot {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(32px, 4vw, 52px);
+}

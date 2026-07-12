@@ -1,0 +1,93 @@
+/* =========================================================
+   HOME — TRUST BAR
+========================================================= */
+
+.usp {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+
+    &__list {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+
+        @include md {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @include xxs {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 26px 22px;
+        border-left: 1px solid var(--line);
+
+        &:first-child {
+            border-left: 0;
+        }
+
+        @include md {
+            border-left: 0;
+            border-top: 1px solid var(--line);
+
+            &:nth-child(2n) {
+                border-left: 1px solid var(--line);
+            }
+
+            &:nth-child(-n + 2) {
+                border-top: 0;
+            }
+        }
+
+        @include xxs {
+            &:nth-child(2n) {
+                border-left: 0;
+            }
+
+            &:nth-child(2) {
+                border-top: 1px solid var(--line);
+            }
+        }
+    }
+
+    &__icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 46px;
+        height: 46px;
+        border-radius: var(--r-pill);
+        background: var(--bone);
+        color: var(--accent);
+        font-size: 17px;
+        transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+    }
+
+    &__item:hover &__icon {
+        background: var(--ink);
+        color: #fff;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        min-width: 0;
+    }
+
+    &__title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ink);
+    }
+
+    &__text {
+        font-size: 12.5px;
+        line-height: 1.45;
+        color: var(--muted);
+    }
+}

@@ -1,0 +1,210 @@
+/* =========================================================
+   HOME — DEAL OF THE WEEK
+========================================================= */
+
+.deal {
+    background: var(--ink);
+    color: #fff;
+
+    /* warm glow behind the product */
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 22%;
+        width: 520px;
+        height: 520px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(176, 123, 79, .28), transparent 65%);
+        pointer-events: none;
+    }
+
+    &__inner {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: .85fr 1.15fr;
+        align-items: center;
+        gap: clamp(32px, 5vw, 80px);
+
+        @include md {
+            grid-template-columns: 1fr;
+            gap: 44px;
+        }
+    }
+
+    &__media {
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__art {
+        position: relative;
+        width: min(400px, 100%);
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+        border-radius: var(--r-lg);
+        box-shadow: 0 50px 90px -40px rgba(0, 0, 0, .85);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        height: 44px;
+        padding: 0 18px;
+        border-radius: var(--r-pill);
+        background: var(--sale);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: .02em;
+        box-shadow: 0 12px 30px -10px rgba(179, 64, 47, .8);
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+
+        @include md {
+            align-items: center;
+            text-align: center;
+        }
+    }
+
+    &__title {
+        font-size: clamp(30px, 3.4vw, 48px);
+        line-height: 1.08;
+        font-weight: 800;
+        letter-spacing: -.03em;
+        color: #fff;
+    }
+
+    &__text {
+        max-width: 460px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, .6);
+    }
+
+    &__price {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+
+        del {
+            font-size: 18px;
+            color: rgba(255, 255, 255, .4);
+        }
+
+        ins {
+            color: #d9a97c;
+        }
+    }
+
+    /* ---- Countdown ---- */
+    &__timer {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
+
+        @include xs {
+            width: 100%;
+        }
+    }
+
+    &__unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        min-width: 74px;
+        padding: 14px 10px;
+        border: 1px solid rgba(255, 255, 255, .1);
+        border-radius: var(--r-sm);
+        background: rgba(255, 255, 255, .06);
+
+        strong {
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        span {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .5);
+        }
+
+        @include xs {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 4px;
+
+            strong {
+                font-size: 20px;
+            }
+        }
+    }
+
+    /* ---- Stock ---- */
+    &__stock {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        max-width: 420px;
+        margin-top: 6px;
+    }
+
+    &__stock-track {
+        height: 5px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, .14);
+        overflow: hidden;
+    }
+
+    &__stock-bar {
+        display: block;
+        height: 100%;
+        border-radius: 5px;
+        background: linear-gradient(90deg, var(--accent), #e0b184);
+    }
+
+    &__stock-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, .55);
+    }
+
+    &__cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 8px;
+
+        @include xs {
+            width: 100%;
+
+            .btn {
+                flex: 1;
+                padding: 0 16px;
+            }
+        }
+    }
+}

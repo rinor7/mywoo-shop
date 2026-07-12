@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" role="img" aria-label="chair">
+<g fill="none" stroke="#101114" stroke-opacity="0.58" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M203 424V304c64-32 130-32 194 0v120"/>
+    <path d="M188 424h224a12 12 0 0 1 12 12v26a12 12 0 0 1-12 12H188a12 12 0 0 1-12-12v-26a12 12 0 0 1 12-12z"/>
+    <path d="M212 474l-26 116M388 474l26 116M244 474v96M356 474v96" stroke-opacity="0.55"/>
+    <path d="M212 350h176" stroke-opacity="0.3"/>
+  </g>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" role="img" aria-label="sweater">
+<g fill="none" stroke="#101114" stroke-opacity="0.58" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M232 328h136l62 44a10 10 0 0 1 3 13l-24 48a10 10 0 0 1-15 3l-24-18v168a10 10 0 0 1-10 10H240a10 10 0 0 1-10-10V418l-24 18a10 10 0 0 1-15-3l-24-48a10 10 0 0 1 3-13z"/>
+    <path d="M268 328q32 30 64 0" stroke-opacity="0.5"/>
+    <path d="M244 552h112" stroke-opacity="0.28"/>
+  </g>
+</svg>

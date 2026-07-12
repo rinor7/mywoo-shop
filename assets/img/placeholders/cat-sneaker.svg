@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" role="img" aria-label="sneaker">
+<g fill="none" stroke="#101114" stroke-opacity="0.58" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 468C150 430 172 402 208 386L262 360C278 352 294 356 302 370L322 402C331 416 345 425 362 427L398 431C416 433 428 422 430 402L434 370C436 356 448 348 462 350C476 352 484 364 482 378L474 446C472 460 462 468 448 468Z"/>
+    <path d="M138 466h330a14 14 0 0 1 14 14v10a26 26 0 0 1-26 26H150a26 26 0 0 1-26-26v-10a14 14 0 0 1 14-14z"/>
+    <path d="M140 492h342" stroke-opacity="0.28"/>
+    <path d="M244 394l28 12M262 376l30 12M282 360l28 14" stroke-opacity="0.42"/>
+    <path d="M336 412c6-18 16-30 30-36" stroke-opacity="0.42"/>
+    <path d="M186 464c30-30 78-46 130-46" stroke-opacity="0.32"/>
+  </g>
+</svg>

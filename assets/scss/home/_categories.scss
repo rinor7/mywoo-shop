@@ -1,0 +1,199 @@
+/* =========================================================
+   HOME — SHOP BY CATEGORY (editorial mosaic)
+   feature | wide
+   feature | small small
+========================================================= */
+
+.cat-mosaic {
+    display: grid;
+    grid-template-columns: 1.05fr .975fr .975fr;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        "feature wide wide"
+        "feature s1 s2";
+    gap: clamp(10px, 1.2vw, 18px);
+    height: clamp(480px, 46vw, 660px);
+
+    @include md {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: none;
+        grid-template-areas:
+            "feature feature"
+            "wide wide"
+            "s1 s2";
+        height: auto;
+    }
+}
+
+.cat-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--r-md);
+    background: linear-gradient(150deg, #f4f2ed, #e7e3db);
+    isolation: isolate;
+
+    &--feature {
+        grid-area: feature;
+
+        @include md {
+            aspect-ratio: 4 / 4.6;
+        }
+    }
+
+    &--wide {
+        grid-area: wide;
+
+        @include md {
+            aspect-ratio: 2.2 / 1;
+        }
+    }
+
+    &--small:nth-of-type(3) {
+        grid-area: s1;
+    }
+
+    &--small:nth-of-type(4) {
+        grid-area: s2;
+    }
+
+    &--small {
+        @include md {
+            aspect-ratio: 1 / 1;
+        }
+    }
+
+    /* photo → readable text */
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(180deg, rgba(16, 17, 20, 0) 45%, rgba(16, 17, 20, .62));
+        transition: background-color var(--t) var(--ease);
+    }
+
+    &:hover::after {
+        background-color: rgba(16, 17, 20, .12);
+    }
+
+    /* Placeholder tiles (no term image yet): dark editorial gradient per tile
+       (--ca/--cb set inline) with the line art as a large light watermark. */
+    &--noimg {
+        background: linear-gradient(155deg, var(--ca, #2c2f35), var(--cb, #131417));
+
+        &::after {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, .3));
+        }
+    }
+
+    &__media {
+        position: absolute;
+        inset: 0;
+    }
+
+    &__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 1.1s var(--ease-out);
+    }
+
+    /* Placeholder line art: inverted to light strokes, blown up and bled off
+       the top-right corner — a watermark motif, not a product shot. */
+    &__art {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: right top;
+        opacity: .3;
+        filter: invert(1) brightness(1.6);
+        transform: scale(1.55) translate(14%, -4%);
+        transform-origin: top right;
+        transition: transform 1.1s var(--ease-out);
+    }
+
+    &--wide &__art {
+        transform: scale(1.15) translate(6%, 4%);
+        object-position: 80% center;
+    }
+
+    &:hover &__art {
+        transform: scale(1.62) translate(14%, -4%);
+    }
+
+    &--wide:hover &__art {
+        transform: scale(1.2) translate(6%, 4%);
+    }
+
+    &:hover &__img,
+    &:hover &__art {
+        transform: scale(1.06);
+    }
+
+    &__body {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: clamp(18px, 2vw, 30px);
+    }
+
+    &__name {
+        font-size: clamp(20px, 1.8vw, 26px);
+        font-weight: 700;
+        letter-spacing: -.015em;
+        line-height: 1.1;
+        color: #fff;
+    }
+
+    &--feature &__name {
+        font-size: clamp(30px, 3vw, 46px);
+    }
+
+    &--wide &__name {
+        font-size: clamp(24px, 2.2vw, 34px);
+    }
+
+    &__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, .85);
+
+        i {
+            font-size: 10px;
+            transition: transform var(--t) var(--ease);
+        }
+
+        /* slides in on hover (always visible on touch) */
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity var(--t) var(--ease-out), transform var(--t) var(--ease-out);
+    }
+
+    &:hover &__cta {
+        opacity: 1;
+        transform: none;
+
+        i {
+            transform: translateX(3px);
+        }
+    }
+}
+
+@media (hover: none) {
+    .cat-card__cta {
+        opacity: 1;
+        transform: none;
+    }
+}

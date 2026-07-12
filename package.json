@@ -1,0 +1,42 @@
+{
+  "name": "base-theme",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gulp-imagemin": "^6.2.0",
+    "phantomjs-prebuilt": "^2.1.13",
+    "sass": "^1.54.9",
+    "vinyl-ftp": "^0.6.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "browser-sync": "^3.0.3",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-cheerio": "^1.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-csscomb": "^3.1.0",
+    "gulp-csso": "^4.0.1",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-replace": "^1.1.4",
+    "gulp-sass": "^5.1.0",
+    "gulp-sftp-up4": "^0.1.8",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-svg-sprite": "^1.5.0",
+    "gulp-svgmin": "^3.0.0",
+    "gulp-tinypng": "^1.0.2",
+    "gulp-uglify": "^3.0.2",
+    "gulp-webp": "^4.0.1",
+    "gulp.spritesmith": "^6.13.1"
+  }
+}

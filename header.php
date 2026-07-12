@@ -1,0 +1,119 @@
+<?php
+/**
+ * @package Base Theme
+ */
+?>
+<!doctype html>
+<html <?php language_attributes(); ?>>
+
+<head>
+    <meta charset="<?php bloginfo( 'charset' ); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <!-- Change this to "index, follow" when you go live -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="profile" href="https://gmpg.org/xfn/11">
+    <link rel="apple-touch-icon" href="<?php echo get_template_directory_uri(); ?>/assets/img/apple-touch-icon.png">
+
+    <link rel="preload" href="<?php echo get_template_directory_uri(); ?>/assets/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="<?php echo get_template_directory_uri(); ?>/assets/fonts/Montserrat-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="<?php echo get_template_directory_uri(); ?>/assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
+
+    <?php wp_head(); ?>
+</head>
+
+<body <?php body_class( wp_is_mobile() ? 'wp-is-mobile' : 'wp-is-desktop' ); ?>>
+
+<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'base-theme' ); ?></a>
+
+<div id="page" class="site">
+
+    <!-- Announcement bar -->
+    <div class="announce js-announce">
+        <div class="shop-container announce__inner">
+            <button type="button" class="announce__nav js-announce-prev" aria-label="<?php esc_attr_e( 'Previous message', 'base-theme' ); ?>">
+                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+            </button>
+
+            <div class="announce__viewport" aria-live="polite">
+                <?php
+                $messages = array(
+                    __( 'Complimentary shipping on orders over &euro;100', 'base-theme' ),
+                    __( '30-day returns — no questions asked', 'base-theme' ),
+                    __( 'New season has landed. Up to 20% off selected pieces', 'base-theme' ),
+                );
+                foreach ( $messages as $i => $message ) :
+                    ?>
+                    <p class="announce__item<?php echo 0 === $i ? ' is-active' : ''; ?>"><?php echo wp_kses_post( $message ); ?></p>
+                <?php endforeach; ?>
+            </div>
+
+            <button type="button" class="announce__nav js-announce-next" aria-label="<?php esc_attr_e( 'Next message', 'base-theme' ); ?>">
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </button>
+
+            <button type="button" class="announce__close js-announce-close" aria-label="<?php esc_attr_e( 'Dismiss', 'base-theme' ); ?>">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header-site" class="site-header js-header">
+        <div class="shop-container header__inner">
+
+            <button type="button" class="header__burger js-menu-open" aria-label="<?php esc_attr_e( 'Open menu', 'base-theme' ); ?>"
+                aria-controls="mobile-menu" aria-expanded="false">
+                <span class="burger"><span></span><span></span><span></span></span>
+            </button>
+
+            <div class="header__logo">
+                <?php if ( has_custom_logo() ) : ?>
+                    <?php the_custom_logo(); ?>
+                <?php else : ?>
+                    <a class="logo-text" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+                        <?php bloginfo( 'name' ); ?>
+                    </a>
+                <?php endif; ?>
+            </div>
+
+            <nav class="header__nav" aria-label="<?php esc_attr_e( 'Primary', 'base-theme' ); ?>">
+                <?php
+                wp_nav_menu(
+                    array(
+                        'theme_location' => 'menu-1',
+                        'menu_id'        => 'primary-menu',
+                        'menu_class'     => 'nav-list',
+                        'container'      => false,
+                        'depth'          => 2,
+                        'fallback_cb'    => 'myshop_nav_fallback',
+                    )
+                );
+                ?>
+            </nav>
+
+            <div class="header__actions">
+                <button type="button" class="icon-btn js-search-open" aria-label="<?php esc_attr_e( 'Search', 'base-theme' ); ?>">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                </button>
+
+                <a class="icon-btn header__account" href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/' ) ); ?>"
+                    aria-label="<?php esc_attr_e( 'My account', 'base-theme' ); ?>">
+                    <i class="fa-regular fa-user" aria-hidden="true"></i>
+                </a>
+
+                <button type="button" class="icon-btn header__wish js-wishlist-peek" aria-label="<?php esc_attr_e( 'Wishlist', 'base-theme' ); ?>">
+                    <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                    <span class="icon-btn__count js-wish-count is-empty">0</span>
+                </button>
+
+                <button type="button" class="icon-btn js-cart-open" aria-label="<?php esc_attr_e( 'Open bag', 'base-theme' ); ?>">
+                    <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                    <?php myshop_cart_count_html(); ?>
+                </button>
+            </div>
+
+        </div>
+    </header>

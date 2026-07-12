@@ -1,0 +1,32 @@
+# Ignore OS/system files
+.DS_Store
+Thumbs.db
+
+# Node modules and build stuff
+node_modules/
+npm-debug.log*
+yarn-error.log*
+dist/
+build/
+
+# IDE/project files
+.vscode/
+.idea/
+*.log
+
+# Composer (if used)
+vendor/
+composer.lock
+
+# SASS/LESS cache
+.sass-cache/
+*.css.map
+*.scssc
+
+# WordPress generated files (just in case)
+*.sql
+*.sql.gz
+
+# Environment files
+.env
+.env.local

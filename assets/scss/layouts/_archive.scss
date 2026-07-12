@@ -1,0 +1,56 @@
+/*Archive Start*/
+.site-archive {
+    &.archive-page {
+        &-main-posts {
+
+        }
+    }
+    .archive-layout {
+        display: flex;
+        gap: 30px;
+        padding: 40px 0;
+
+        @media (max-width: 991.98px) {
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+
+     .archive-content {
+            flex: 1;
+            min-width: 0; // Prevents flex item from overflowing
+
+            .page-header {
+                margin-bottom: 10px;
+
+                .page-title {}
+            }
+
+            .articles {
+                display: flex;
+                flex-direction: column;
+                row-gap: 10px;
+
+                article {
+                    .entry-header {
+                        .entry-title {
+                            a {}
+                        }
+                    }
+                }
+            }
+        }
+
+    #secondary {
+        background-color: red;
+        flex: 0 0 300px; // Fixed width for sidebar
+        max-width: 300px;
+
+        @media (max-width: 991.98px) {
+            flex: none;
+            max-width: 100%;
+        }
+    }
+}
+
+/*Archive page END*/
