@@ -35,12 +35,24 @@ function standard_scripts_and_style() {
 			// WooCommerce's own AJAX endpoints; '%%endpoint%%' is swapped in JS.
 			'wcAjax'      => class_exists( 'WC_AJAX' ) ? WC_AJAX::get_endpoint( '%%endpoint%%' ) : '',
 			'cartUrl'     => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
+			// Checkout coupon box posts to wc-ajax apply_coupon (see main.js).
+			'couponNonce' => wp_create_nonce( 'apply-coupon' ),
 			'checkoutUrl' => function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '',
 			// YITH wishlist bridge ('' / false when the plugin is off).
 			'yith'        => function_exists( 'myshop_yith_active' ) ? myshop_yith_active() : false,
 			'wishlistUrl' => function_exists( 'myshop_wishlist_url' ) ? myshop_wishlist_url() : '',
+			// YITH 4.x AJAX endpoint — requires the 'add_to_wishlist' nonce.
 			'yithAdd'     => function_exists( 'myshop_yith_active' ) && myshop_yith_active()
-				? esc_url_raw( add_query_arg( 'add_to_wishlist', '__ID__', home_url( '/' ) ) )
+				? esc_url_raw(
+					add_query_arg(
+						array(
+							'action'          => 'add_to_wishlist',
+							'add_to_wishlist' => '__ID__',
+							'nonce'           => wp_create_nonce( 'add_to_wishlist' ),
+						),
+						admin_url( 'admin-ajax.php' )
+					)
+				)
 				: '',
 			'i18n'        => array(
 				'added'         => __( 'Added to your bag', 'base-theme' ),
@@ -68,6 +80,7 @@ require get_template_directory() . '/includes/shop/frontpage-fields.php';
 require get_template_directory() . '/includes/shop/woo-pages.php';
 require get_template_directory() . '/includes/shop/product-single.php';
 require get_template_directory() . '/includes/shop/account.php';
+require get_template_directory() . '/includes/shop/orders.php';
 
 // Include files from the 'theme-options' directory
 require get_template_directory() . '/theme-options/global-colors.php';

@@ -7,11 +7,14 @@
 // Storefront design system
 @import "shop/tokens";
 @import "shop/ui";
+@import "shop/notices";
 @import "shop/product-card";
 @import "shop/drawers";
 @import "shop/woo-pages";
+@import "shop/orders";
 @import "shop/product-single";
 @import "shop/account";
+@import "shop/wishlist";
 @import "shop/shop-archive";
 
 // Layouts
@@ -21,6 +24,7 @@
 @import "layouts/footer";
 @import "layouts/singles";
 @import "layouts/archive";
+@import "layouts/policy";
 
 // Home sections
 @import "home/hero";

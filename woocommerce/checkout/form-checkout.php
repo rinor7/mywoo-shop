@@ -130,12 +130,18 @@ $fields = $checkout->get_checkout_fields( 'billing' );
 				</div>
 
 				<?php if ( wc_coupons_enabled() ) : ?>
-					<div class="checkout-summary__coupon">
-						<form class="checkout_coupon woocommerce-form-coupon" method="post">
+					<?php
+					// NOT a <form>: this sits inside form.checkout, and browsers drop
+					// nested form tags — the Apply button would submit the whole
+					// checkout. main.js applies the code via wc-ajax instead.
+					?>
+					<div class="checkout-summary__coupon js-checkout-coupon">
+						<div class="checkout-summary__coupon-msg js-coupon-msg" aria-live="polite"></div>
+						<div class="checkout-summary__coupon-row">
 							<label class="screen-reader-text" for="coupon_code"><?php esc_html_e( 'Coupon code', 'base-theme' ); ?></label>
 							<input type="text" name="coupon_code" class="input-text" placeholder="<?php esc_attr_e( 'Gift card or discount code', 'base-theme' ); ?>" id="coupon_code" value="">
-							<button type="submit" class="checkout-summary__apply" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'base-theme' ); ?>"><?php esc_html_e( 'Apply', 'base-theme' ); ?></button>
-						</form>
+							<button type="button" class="checkout-summary__apply js-coupon-apply"><?php esc_html_e( 'Apply', 'base-theme' ); ?></button>
+						</div>
 					</div>
 				<?php endif; ?>
 

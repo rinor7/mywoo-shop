@@ -198,8 +198,8 @@ function myshop_product_card( $product, $index = 0 ) {
 			<?php
 			// With YITH active, hearts render their saved state server-side.
 			$in_wishlist = ! $is_demo
-				&& function_exists( 'yith_wcwl_is_product_in_wishlist' )
-				&& yith_wcwl_is_product_in_wishlist( $product['id'] );
+				&& function_exists( 'myshop_in_wishlist' )
+				&& myshop_in_wishlist( $product['id'] );
 			?>
 			<button type="button" class="pcard__wish js-wishlist<?php echo $in_wishlist ? ' is-active' : ''; ?>"
 				data-id="<?php echo esc_attr( $product['id'] ); ?>"

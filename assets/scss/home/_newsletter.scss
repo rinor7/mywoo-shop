@@ -106,4 +106,161 @@
             justify-content: center;
         }
     }
+
+    /* ---------- Newsletter plugin ([newsletter_form]) dressed as the theme row ----------
+       `& &__form--plugin` doubles the specificity: the plugin ships its own
+       (sometimes inline) CSS that ties plain class selectors. */
+    & &__form--plugin {
+        .tnp {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            background: none;
+        }
+
+        .tnp form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: 10px;
+            margin: 0;
+            text-align: left !important;
+
+            @include xs {
+                flex-direction: column;
+            }
+        }
+
+        .tnp-field {
+            margin: 0 !important;
+
+            label {
+                display: none;
+            }
+        }
+
+        /* Source order is email → privacy → button; flex order rebuilds the
+           theme row: input + button together, privacy line underneath. */
+        .tnp-field-email {
+            order: 1;
+            flex: 1 1 220px;
+        }
+
+        .tnp-field-button {
+            order: 2;
+        }
+
+        .tnp-privacy-field,
+        .tnp-field-privacy {
+            order: 3;
+        }
+
+        .tnp-field-firstname,
+        .tnp-field-surname {
+            flex: 1 1 100%;
+        }
+
+        input.tnp-email,
+        input.tnp-name,
+        input.tnp-surname {
+            display: block;
+            width: 100% !important;
+            height: 52px !important;
+            padding: 0 18px !important;
+            border: 1px solid rgba(255, 255, 255, .16) !important;
+            border-radius: var(--r-xs) !important;
+            background: rgba(255, 255, 255, .06) !important;
+            font-family: inherit !important;
+            font-size: 14px !important;
+            color: #fff !important;
+            transition: border-color var(--t) var(--ease), background-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
+
+            &::placeholder {
+                color: rgba(255, 255, 255, .4) !important;
+                opacity: 1;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: #fff !important;
+                background: rgba(255, 255, 255, .1) !important;
+                box-shadow: 0 0 0 3px rgba(255, 255, 255, .08);
+            }
+        }
+
+        .tnp-field-button {
+            flex-shrink: 0;
+
+            @include xs {
+                width: 100%;
+            }
+        }
+
+        input.tnp-submit,
+        .tnp-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto !important;
+            height: 52px;
+            padding: 0 30px;
+            border: 0 !important;
+            border-radius: var(--r-xs) !important;
+            background: var(--accent) !important;
+            color: var(--accent-ink) !important;
+            font-family: inherit !important;
+            font-size: 12px !important;
+            font-weight: 600;
+            letter-spacing: var(--tracking);
+            text-transform: uppercase;
+            line-height: 1;
+            cursor: pointer;
+            transition: background-color var(--t) var(--ease), transform var(--t-fast) var(--ease), box-shadow var(--t) var(--ease);
+
+            &:hover {
+                background: var(--accent-dark) !important;
+                box-shadow: 0 14px 28px -14px rgba(176, 123, 79, .85);
+                transform: translateY(-2px);
+            }
+
+            @include xs {
+                width: 100% !important;
+            }
+        }
+
+        .tnp-privacy-field,
+        .tnp-field-privacy {
+            flex-basis: 100%;
+            font-size: 12px;
+            color: rgba(255, 255, 255, .45);
+
+            label {
+                display: inline-flex !important;
+                align-items: center;
+                gap: 9px;
+                margin: 0;
+                font-size: 12px;
+                color: rgba(255, 255, 255, .55);
+            }
+
+            a {
+                color: rgba(255, 255, 255, .8);
+                text-decoration: underline;
+                text-underline-offset: 3px;
+
+                &:hover {
+                    color: #fff;
+                }
+            }
+
+            input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                margin: 0;
+                accent-color: var(--accent);
+            }
+        }
+    }
 }

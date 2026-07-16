@@ -1,0 +1,272 @@
+/* =========================================================
+   YITH WISHLIST PAGE
+   Dresses the plugin's table + share row in the theme look.
+========================================================= */
+
+.wishlist-title-container,
+.wishlist-title {
+    h2 {
+        margin: 0 0 6px;
+        font-size: clamp(34px, 4vw, 56px);
+        font-weight: 800;
+        letter-spacing: -.03em;
+        color: var(--ink);
+    }
+}
+
+.wishlist-title-container {
+    margin-bottom: clamp(20px, 2.5vw, 32px);
+}
+
+/* ---------- Table card ---------- */
+table.shop_table.wishlist_table {
+    width: 100%;
+    margin: 0 0 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    font-size: 14px;
+
+    thead th {
+        padding: 14px 16px;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: var(--bone);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        text-align: left;
+        color: var(--muted);
+    }
+
+    td {
+        padding: 18px 16px;
+        border: 0;
+        border-bottom: 1px solid var(--line-soft);
+        vertical-align: middle;
+        background: none;
+    }
+
+    tr:last-child td {
+        border-bottom: 0;
+    }
+
+    /* Remove (×) */
+    .product-remove {
+        width: 48px;
+        padding-right: 0;
+
+        div {
+            margin: 0;
+        }
+
+        a.remove,
+        a.remove_from_wishlist {
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            margin: 0 auto;
+            border-radius: var(--r-pill);
+            background: none;
+            color: var(--muted-2) !important;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1;
+            transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+
+            &:hover {
+                background: var(--bone-2);
+                color: var(--sale) !important;
+            }
+        }
+    }
+
+    .product-thumbnail {
+        width: 92px;
+
+        a {
+            display: inline-block;
+        }
+
+        img {
+            display: block;
+            width: 68px;
+            height: 84px;
+            max-width: none;
+            object-fit: cover;
+            border-radius: var(--r-xs);
+            background: var(--bone-2);
+        }
+    }
+
+    .product-name {
+        a {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink);
+
+            &:hover {
+                color: var(--accent);
+            }
+        }
+    }
+
+    .product-price {
+        color: var(--ink);
+        font-weight: 600;
+
+        del {
+            margin-right: 6px;
+            font-weight: 400;
+            color: var(--muted-2);
+        }
+
+        ins {
+            text-decoration: none;
+            color: var(--sale);
+        }
+    }
+
+    /* Stock pills */
+    .wishlist-in-stock,
+    .wishlist-out-of-stock {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        height: 26px;
+        padding: 0 12px;
+        border-radius: var(--r-pill);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+
+        &::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: var(--r-pill);
+            background: currentColor;
+        }
+    }
+
+    .wishlist-in-stock {
+        background: rgba(47, 125, 93, .12);
+        color: var(--success);
+    }
+
+    .wishlist-out-of-stock {
+        background: rgba(179, 64, 47, .1);
+        color: var(--sale);
+    }
+
+    /* Add to cart / Select options */
+    .product-add-to-cart {
+        text-align: right;
+
+        a.button,
+        a.add_to_cart_button {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            height: 42px;
+            margin: 0;
+            padding: 0 22px;
+            border: 0;
+            border-radius: var(--r-xs);
+            background: var(--ink) !important;
+            color: #fff !important;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: var(--tracking);
+            text-transform: uppercase;
+            text-decoration: none;
+            line-height: 1;
+            white-space: nowrap;
+            transition: background-color var(--t) var(--ease), transform var(--t-fast) var(--ease), box-shadow var(--t) var(--ease);
+
+            &:hover {
+                background: var(--ink-soft) !important;
+                box-shadow: var(--shadow-md);
+                transform: translateY(-1px);
+            }
+        }
+    }
+
+    /* Date / arrange handles the plugin may print */
+    .product-arrange-priority {
+        color: var(--muted-2);
+    }
+}
+
+/* ---------- Share row ---------- */
+.yith-wcwl-share {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin: 4px 0 32px;
+
+    h4.yith-wcwl-share-title {
+        margin: 0;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+
+    ul {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    li {
+        margin: 0;
+    }
+
+    li a {
+        display: grid !important;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        margin: 0;
+        padding: 0;
+        border: 1px solid var(--line) !important;
+        border-radius: var(--r-pill) !important;
+        background: #fff !important;
+        color: var(--ink) !important;
+        font-size: 14px;
+        transition: background-color var(--t) var(--ease), color var(--t) var(--ease), border-color var(--t) var(--ease), transform var(--t-fast) var(--ease);
+
+        i,
+        svg {
+            color: inherit !important;
+            fill: currentColor !important;
+        }
+
+        &:hover {
+            background: var(--ink) !important;
+            border-color: var(--ink) !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+    }
+}
+
+/* Feedback the plugin prints after actions */
+.yith-wcwl-wishlist-fragment .woocommerce-message,
+.wishlist_table + .woocommerce-message {
+    margin-top: 16px;
+}

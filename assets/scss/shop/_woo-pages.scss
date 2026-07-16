@@ -18,24 +18,6 @@ body.woocommerce-checkout {
     }
 }
 
-/* Woo notices, restyled quietly */
-.woocommerce-notices-wrapper .woocommerce-message,
-.woocommerce-notices-wrapper .woocommerce-info,
-.woocommerce-notices-wrapper .woocommerce-error {
-    margin-bottom: 24px;
-    padding: 14px 18px;
-    border: 1px solid var(--line);
-    border-left: 3px solid var(--accent);
-    border-radius: var(--r-xs);
-    background: #fff;
-    font-size: 14px;
-    list-style: none;
-}
-
-.woocommerce-notices-wrapper .woocommerce-error {
-    border-left-color: var(--sale);
-}
-
 /* Woo core ships table borders/backgrounds — flatten them everywhere ours render */
 .myshop-cart table.shop_table,
 .myshop-checkout table.shop_table,
@@ -52,16 +34,29 @@ body.woocommerce-checkout {
     }
 }
 
-/* ---------- Shared: field look ---------- */
+/* ---------- Shared: field look ----------
+   `form.myshop-checkout` (element + class) is deliberate: WooCommerce's
+   layout CSS floats .form-row-first/-last at width:47% with
+   `.woocommerce form .form-row-first` (0,2,1). The element tag ties the
+   specificity, and the theme sheet loading last breaks the tie. */
 .myshop-cart,
-.myshop-checkout {
+form.myshop-checkout {
+    .form-row,
+    .form-row-first,
+    .form-row-last,
+    .form-row-wide {
+        float: none;
+        width: 100%;
+        overflow: visible;
+    }
+
     .form-row {
-        margin: 0 0 18px;
+        margin: 0 0 22px;
         padding: 0;
 
         label {
             display: block;
-            margin-bottom: 7px;
+            margin-bottom: 9px;
             font-size: 11px;
             font-weight: 600;
             letter-spacing: .09em;
@@ -73,48 +68,161 @@ body.woocommerce-checkout {
                 letter-spacing: 0;
                 color: var(--muted-2);
             }
+
+            .required {
+                color: var(--sale);
+                text-decoration: none;
+            }
         }
 
         .input-text,
         select {
             display: block;
             width: 100%;
-            height: 48px;
-            padding: 0 14px;
+            height: 56px;
+            padding: 0 18px;
             border: 1px solid var(--line);
-            border-radius: var(--r-xs);
+            border-radius: var(--r-sm);
             background: #fff;
+            box-shadow: none;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 15px;
             color: var(--ink);
             transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
 
-            &:focus {
-                border-color: var(--ink);
-                box-shadow: 0 0 0 3px rgba(16, 17, 20, .06);
+            &::placeholder {
+                color: var(--muted-2);
             }
+
+            &:hover {
+                border-color: var(--muted-2);
+            }
+
+            &:focus {
+                outline: none;
+                border-color: var(--ink);
+                box-shadow: 0 0 0 4px rgba(16, 17, 20, .07);
+            }
+        }
+
+        /* Native selects (country/state when select2 is unavailable) */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 46px;
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232c2f35' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            cursor: pointer;
+        }
+
+        textarea.input-text {
+            height: auto;
+            min-height: 110px;
+            padding: 14px 18px;
+            resize: vertical;
         }
 
         &.woocommerce-invalid .input-text,
         &.woocommerce-invalid select {
             border-color: var(--sale);
+            box-shadow: 0 0 0 4px rgba(179, 64, 47, .08);
+        }
+
+        &.woocommerce-validated .input-text,
+        &.woocommerce-validated select {
+            border-color: var(--line);
+            box-shadow: none;
         }
     }
 
+    /* select2 / selectWoo — must be indistinguishable from .input-text */
+    .select2-container .select2-selection--single,
     .select2-container--default .select2-selection--single {
-        height: 48px;
+        height: 56px;
         border: 1px solid var(--line);
-        border-radius: var(--r-xs);
+        border-radius: var(--r-sm);
+        background: #fff;
+        transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
+
+        &:hover {
+            border-color: var(--muted-2);
+        }
 
         .select2-selection__rendered {
-            line-height: 46px;
-            padding-left: 14px;
-            font-size: 14px;
+            padding: 0 46px 0 18px;
+            line-height: 54px;
+            font-size: 15px;
+            color: var(--ink);
         }
 
         .select2-selection__arrow {
-            height: 46px;
+            top: 0;
+            right: 6px;
+            height: 54px;
+            width: 40px;
+
+            b {
+                border-color: var(--ink-soft) transparent transparent;
+                border-width: 5px 4px 0;
+                margin-top: -2px;
+                margin-left: -8px;
+            }
         }
+    }
+
+    .select2-container--open .select2-selection--single,
+    .select2-container--focus .select2-selection--single {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 4px rgba(16, 17, 20, .07);
+    }
+
+    .select2-container--open .select2-selection__arrow b {
+        transform: rotate(180deg);
+        margin-top: -4px;
+    }
+}
+
+/* Dropdown renders at body level — style it globally */
+.select2-dropdown {
+    border: 1px solid var(--line);
+    border-radius: var(--r-xs);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+
+    .select2-search--dropdown {
+        padding: 10px;
+
+        .select2-search__field {
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-xs);
+            font-family: inherit;
+            font-size: 14px;
+
+            &:focus {
+                outline: none;
+                border-color: var(--ink);
+            }
+        }
+    }
+
+    .select2-results__option {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    .select2-results__option--highlighted[aria-selected],
+    .select2-results__option--highlighted[data-selected] {
+        background: var(--bone-2);
+        color: var(--ink);
+    }
+
+    .select2-results__option[aria-selected="true"],
+    .select2-results__option[data-selected="true"] {
+        background: var(--ink);
+        color: #fff;
     }
 }
 
@@ -122,6 +230,8 @@ body.woocommerce-checkout {
    CART
 ========================================================= */
 .myshop-cart__head {
+    max-width: 1220px;
+    margin-inline: auto;
     margin-bottom: clamp(28px, 3vw, 44px);
 }
 
@@ -140,11 +250,14 @@ body.woocommerce-checkout {
     color: var(--muted);
 }
 
+/* Same centred stage as checkout — table left, summary right beside it */
 .myshop-cart__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 360px;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
     align-items: start;
-    gap: clamp(24px, 3vw, 48px);
+    gap: clamp(24px, 3vw, 56px);
+    max-width: 1220px;
+    margin-inline: auto;
 
     @include lg {
         grid-template-columns: 1fr;
@@ -606,11 +719,15 @@ body.woocommerce-checkout {
 /* =========================================================
    CHECKOUT
 ========================================================= */
+/* Narrower centred stage: form column stays readable, summary sits right
+   beside it instead of drifting to the page edge. */
 .myshop-checkout__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 400px;
+    grid-template-columns: minmax(0, 1fr) minmax(400px, 460px);
     align-items: start;
-    gap: clamp(24px, 3.5vw, 64px);
+    gap: clamp(24px, 3.5vw, 56px);
+    max-width: 1220px;
+    margin-inline: auto;
 
     @include lg {
         grid-template-columns: 1fr;
@@ -668,7 +785,7 @@ body.woocommerce-checkout {
 .co-address {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    column-gap: 14px;
+    column-gap: 18px;
 
     > .form-row {
         grid-column: span 6;
@@ -914,61 +1031,116 @@ body.woocommerce-checkout {
 }
 
 /* Summary card (checkout) */
-.checkout-summary {
+/* Sticky lives on the grid item: the aside's grid area spans the full row
+   height, so the card can travel as the form scrolls. The sticky header is
+   cleared via the --bar-h offset. */
+.myshop-checkout__aside {
     position: sticky;
     top: calc(var(--bar-h) + 24px);
-    padding: 28px;
-    border: 1px solid var(--line);
-    border-radius: var(--r-sm);
-    background: #fff;
-    box-shadow: var(--shadow-sm);
+    align-self: start;
 
     @include lg {
         position: static;
     }
+}
+
+.checkout-summary {
+    padding: clamp(28px, 2.4vw, 38px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: #fff;
+    box-shadow: var(--shadow-sm);
 
     &__title {
-        padding-bottom: 16px;
+        padding-bottom: 18px;
         border-bottom: 1px solid var(--line);
-        font-size: 20px;
+        font-size: 23px;
         font-weight: 700;
-        letter-spacing: -.01em;
+        letter-spacing: -.015em;
     }
 
     &__coupon {
         margin-top: 18px;
+        transition: opacity var(--t) var(--ease);
 
-        .checkout_coupon {
-            display: flex;
-            border: 1px solid var(--line);
-            border-radius: var(--r-xs);
-            overflow: hidden;
+        &.is-busy {
+            opacity: .5;
+            pointer-events: none;
         }
 
         .input-text {
             flex: 1;
             min-width: 0;
-            height: 46px;
+            height: 48px;
             padding: 0 14px;
-            border: 0;
+            border: 1px solid var(--line);
+            border-radius: var(--r-xs);
             font-family: inherit;
             font-size: 13px;
+            color: var(--ink);
+            transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
+
+            &::placeholder {
+                color: var(--muted-2);
+            }
+
+            &:focus {
+                outline: none;
+                border-color: var(--ink);
+                box-shadow: 0 0 0 3px rgba(16, 17, 20, .06);
+            }
+        }
+    }
+
+    &__coupon-row {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* Coupon feedback renders our notice cards, sized for the sidebar */
+    &__coupon-msg {
+        &:not(:empty) {
+            margin-bottom: 12px;
+        }
+
+        .woocommerce-message,
+        .woocommerce-info,
+        .woocommerce-error {
+            gap: 8px 12px;
+            margin: 0 0 10px;
+            padding: 11px 14px;
+            box-shadow: none;
+            font-size: 13px;
+
+            &::before {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+        }
+
+        .woocommerce-error .notice-dismiss {
+            display: none;
         }
     }
 
     &__apply {
-        height: 46px;
+        flex-shrink: 0;
+        height: 48px;
         padding: 0 20px;
-        background: var(--bone-2);
+        border: 1px solid var(--ink);
+        border-radius: var(--r-xs);
+        background: none;
         color: var(--ink);
         font-size: 11px;
         font-weight: 700;
         letter-spacing: var(--tracking);
         text-transform: uppercase;
+        cursor: pointer;
         transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
 
         &:hover {
-            background: var(--ink-soft);
+            background: var(--ink);
             color: #fff;
         }
     }
@@ -999,7 +1171,7 @@ body.woocommerce-checkout {
     }
 
     &__media {
-        width: 64px;
+        width: 86px;
     }
 
     &__thumb {
@@ -1008,8 +1180,8 @@ body.woocommerce-checkout {
 
         img {
             display: block;
-            width: 56px;
-            height: 68px;
+            width: 74px;
+            height: 92px;
             object-fit: cover;
             border-radius: var(--r-xs);
             background: var(--bone-2);

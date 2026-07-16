@@ -9,16 +9,41 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Is YITH Wishlist available?
+ *
+ * YITH 4.x dropped the old yith_wcwl_get_wishlist_url() helper, so detect on
+ * the plugin constant + main instance function (present in 3.x and 4.x).
  */
 function myshop_yith_active() {
-	return defined( 'YITH_WCWL' ) && function_exists( 'yith_wcwl_get_wishlist_url' );
+	return defined( 'YITH_WCWL' ) && ( function_exists( 'yith_wcwl' ) || function_exists( 'yith_wcwl_get_wishlist_url' ) );
 }
 
 /**
  * Wishlist landing URL ('' when the plugin is off).
  */
 function myshop_wishlist_url() {
-	return myshop_yith_active() ? yith_wcwl_get_wishlist_url() : '';
+	if ( ! myshop_yith_active() ) {
+		return '';
+	}
+
+	if ( function_exists( 'yith_wcwl_get_wishlist_url' ) ) {
+		return yith_wcwl_get_wishlist_url();
+	}
+
+	$yith = yith_wcwl();
+	return is_object( $yith ) && method_exists( $yith, 'get_wishlist_url' ) ? $yith->get_wishlist_url( 'view' ) : '';
+}
+
+/**
+ * Is a product already saved? (YITH 4.x moved this onto the wishlists service.)
+ */
+function myshop_in_wishlist( $product_id ) {
+	if ( function_exists( 'yith_wcwl_wishlists' ) ) {
+		return (bool) yith_wcwl_wishlists()->is_product_in_wishlist( (int) $product_id );
+	}
+	if ( function_exists( 'yith_wcwl_is_product_in_wishlist' ) ) {
+		return (bool) yith_wcwl_is_product_in_wishlist( (int) $product_id );
+	}
+	return false;
 }
 
 /**

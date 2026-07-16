@@ -155,8 +155,16 @@ body.is-locked {
         color: var(--muted-2);
     }
 
-    &__price {
+    &__controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
         margin-top: auto;
+        padding-top: 8px;
+    }
+
+    &__price {
         font-size: 14px;
         font-weight: 600;
     }
@@ -175,6 +183,44 @@ body.is-locked {
             background: var(--bone-2);
             color: var(--sale);
         }
+    }
+}
+
+/* Per-line quantity stepper (drawer) */
+.drawer-qty {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xs);
+    background: #fff;
+    transition: opacity var(--t) var(--ease);
+
+    &.is-busy {
+        opacity: .45;
+        pointer-events: none;
+    }
+
+    &__btn {
+        width: 30px;
+        height: 32px;
+        background: none;
+        color: var(--ink);
+        font-size: 14px;
+        line-height: 1;
+        cursor: pointer;
+        transition: background-color var(--t) var(--ease);
+
+        &:hover {
+            background: var(--bone);
+        }
+    }
+
+    &__val {
+        min-width: 26px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
     }
 }
 

@@ -115,11 +115,22 @@ function myshop_cart_drawer_content() {
 								<?php echo esc_html( $product->get_name() ); ?>
 							</a>
 							<span class="cart-item__meta">
-								<?php echo esc_html( $item['quantity'] ); ?> &times; <?php echo wp_kses_post( wc_price( $product->get_price() ) ); ?>
+								<?php echo wp_kses_post( wc_price( $product->get_price() ) ); ?>
 							</span>
-							<span class="cart-item__price">
-								<?php echo wp_kses_post( WC()->cart->get_product_subtotal( $product, $item['quantity'] ) ); ?>
-							</span>
+
+							<div class="cart-item__controls">
+								<div class="drawer-qty" data-key="<?php echo esc_attr( $key ); ?>">
+									<button type="button" class="drawer-qty__btn js-drawer-qty" data-dir="-1"
+										aria-label="<?php esc_attr_e( 'Decrease quantity', 'base-theme' ); ?>">&minus;</button>
+									<span class="drawer-qty__val" data-qty="<?php echo (int) $item['quantity']; ?>"><?php echo (int) $item['quantity']; ?></span>
+									<button type="button" class="drawer-qty__btn js-drawer-qty" data-dir="1"
+										aria-label="<?php esc_attr_e( 'Increase quantity', 'base-theme' ); ?>">+</button>
+								</div>
+
+								<span class="cart-item__price">
+									<?php echo wp_kses_post( WC()->cart->get_product_subtotal( $product, $item['quantity'] ) ); ?>
+								</span>
+							</div>
 						</div>
 
 						<button type="button" class="cart-item__remove js-cart-remove"
@@ -152,6 +163,25 @@ function myshop_cart_drawer_content() {
 	</div>
 	<?php
 }
+
+/**
+ * wc-ajax: change a line's quantity from the drawer.
+ * Same response shape as add_to_cart/remove_from_cart (fragments + hash),
+ * so main.js reuses its fragment swap.
+ */
+function myshop_set_cart_qty() {
+	$key = isset( $_POST['cart_item_key'] ) ? wc_clean( wp_unslash( $_POST['cart_item_key'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$qty = isset( $_POST['quantity'] ) ? max( 0, (int) $_POST['quantity'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+	if ( '' === $key || null === $qty || ! WC()->cart || ! WC()->cart->get_cart_item( $key ) ) {
+		wp_send_json( array( 'error' => true ) );
+	}
+
+	WC()->cart->set_quantity( $key, $qty, true );
+
+	WC_AJAX::get_refreshed_fragments();
+}
+add_action( 'wc_ajax_myshop_set_qty', 'myshop_set_cart_qty' );
 
 /**
  * Register both fragments with WooCommerce.

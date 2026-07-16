@@ -103,9 +103,10 @@ $socials  = array(
 			</p>
 
 			<ul class="footer__legal">
-				<li><a href="#"><?php esc_html_e( 'Privacy', 'base-theme' ); ?></a></li>
-				<li><a href="#"><?php esc_html_e( 'Terms', 'base-theme' ); ?></a></li>
-				<li><a href="#"><?php esc_html_e( 'Cookies', 'base-theme' ); ?></a></li>
+				<li><a href="/privacy-policy/"><?php esc_html_e( 'Privacy', 'base-theme' ); ?></a></li>
+				<li><a href="/terms-conditions/"><?php esc_html_e( 'Terms', 'base-theme' ); ?></a></li>
+				<li><a href="/refund-and-returns-policy/"><?php esc_html_e( 'Refund & Returns Policy', 'base-theme' ); ?></a></li>
+				<li><a href="/cookies/"><?php esc_html_e( 'Cookies', 'base-theme' ); ?></a></li>
 			</ul>
 
 			<ul class="footer__pay" aria-label="<?php esc_attr_e( 'Accepted payment methods', 'base-theme' ); ?>">
@@ -263,7 +264,7 @@ $socials  = array(
 					<button type="button" class="qty__btn js-qty-plus" aria-label="<?php esc_attr_e( 'Increase quantity', 'base-theme' ); ?>">+</button>
 				</div>
 
-				<button type="button" class="btn btn--primary js-qv-add">
+				<button type="button" class="btn btn--primary js-add-to-cart js-qv-add">
 					<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
 					<span><?php esc_html_e( 'Add to bag', 'base-theme' ); ?></span>
 				</button>

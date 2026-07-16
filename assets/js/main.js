@@ -422,6 +422,10 @@
                 }
 
                 fetch(MS.yithAdd.replace('__ID__', btn.dataset.id), { credentials: 'same-origin' })
+                    .then(function (r) {
+                        if (!r.ok) { throw new Error('wishlist'); }
+                        return r.json().catch(function () { return {}; });
+                    })
                     .then(function () {
                         btn.classList.add('is-active');
                         var icon = btn.querySelector('i');
@@ -563,6 +567,33 @@
         );
     });
 
+    // Drawer quantity stepper — delegated, so it survives fragment replacement
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.js-drawer-qty');
+        if (!btn) { return; }
+
+        var box = btn.closest('.drawer-qty');
+        var val = box.querySelector('.drawer-qty__val');
+        var qty = (parseInt(val.dataset.qty, 10) || 1) + parseInt(btn.dataset.dir, 10);
+
+        if (qty < 0) { return; }
+
+        box.classList.add('is-busy');
+
+        post(
+            'myshop_set_qty',
+            { cart_item_key: box.dataset.key, quantity: qty },
+            function (json) {
+                applyFragments(json.fragments);
+                if (qty === 0) { toast(i18n.removed, 'fa-trash-can'); }
+            },
+            function () {
+                box.classList.remove('is-busy');
+                toast(i18n.error, 'fa-triangle-exclamation');
+            }
+        );
+    });
+
     // Remove from cart — delegated, so it survives fragment replacement
     document.addEventListener('click', function (e) {
         var btn = e.target.closest('.js-cart-remove');
@@ -584,6 +615,66 @@
             }
         );
     });
+
+    /* ==========================================================
+       Checkout coupon (summary card)
+       Not a nested <form> — we call Woo's apply_coupon endpoint and
+       let the core checkout JS refresh the totals.
+    ========================================================== */
+    (function () {
+        var box = qs('.js-checkout-coupon');
+        if (!box) { return; }
+
+        var input = qs('#coupon_code', box);
+        var button = qs('.js-coupon-apply', box);
+        var msg = qs('.js-coupon-msg', box);
+
+        function apply() {
+            var code = input ? input.value.trim() : '';
+            if (!code) {
+                if (input) { input.focus(); }
+                return;
+            }
+
+            button.disabled = true;
+            box.classList.add('is-busy');
+
+            fetch(endpoint('apply_coupon'), {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: new URLSearchParams({ coupon_code: code, security: MS.couponNonce || '' })
+            })
+                .then(function (r) { return r.text(); })
+                .then(function (html) {
+                    button.disabled = false;
+                    box.classList.remove('is-busy');
+
+                    if (msg) { msg.innerHTML = html; }
+                    if (html.indexOf('woocommerce-error') === -1 && input) { input.value = ''; }
+
+                    // Woo's checkout JS re-renders the order review.
+                    if (window.jQuery) { window.jQuery(document.body).trigger('update_checkout'); }
+                })
+                .catch(function () {
+                    button.disabled = false;
+                    box.classList.remove('is-busy');
+                    toast(i18n.error, 'fa-triangle-exclamation');
+                });
+        }
+
+        button.addEventListener('click', apply);
+
+        // Enter inside the coupon field must not submit the checkout form.
+        if (input) {
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    apply();
+                }
+            });
+        }
+    }());
 
     /* ==========================================================
        Quick view
@@ -832,6 +923,40 @@
         }, { rootMargin: '0px 0px -60px 0px', threshold: 0.05 });
 
         items.forEach(function (el) { io.observe(el); });
+    }());
+
+    /* ==========================================================
+       WooCommerce notices — dismiss button + auto-hide
+       Markup comes from Woo core; we only enhance it.
+    ========================================================== */
+    (function () {
+        var notices = qsa('.woocommerce-message, .woocommerce-error, .woocommerce-info');
+        if (!notices.length) { return; }
+
+        notices.forEach(function (notice) {
+            // The empty cart "info" box is part of the page, not a flash notice.
+            if (notice.classList.contains('cart-empty')) { return; }
+
+            var close = document.createElement('button');
+            close.type = 'button';
+            close.className = 'notice-dismiss';
+            close.setAttribute('aria-label', 'Dismiss');
+            close.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+
+            close.addEventListener('click', function () {
+                notice.classList.add('is-leaving');
+                setTimeout(function () { notice.remove(); }, 350);
+            });
+
+            notice.appendChild(close);
+
+            // Success messages slip away on their own; errors stay until read.
+            if (notice.classList.contains('woocommerce-message')) {
+                setTimeout(function () {
+                    if (document.body.contains(notice)) { close.click(); }
+                }, 6000);
+            }
+        });
     }());
 
     /* ==========================================================

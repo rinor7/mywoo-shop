@@ -71,7 +71,20 @@ body.woocommerce-account {
     color: var(--muted-2);
 }
 
-/* Woo nav */
+/* Woo nav — core layout CSS floats these at 30%/68%, which clips the
+   active-tab background. Same selectors as core, theme sheet loads last. */
+.woocommerce-account .woocommerce-MyAccount-navigation,
+.woocommerce-MyAccount-navigation {
+    float: none;
+    width: 100%;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content,
+.woocommerce-MyAccount-content {
+    float: none;
+    width: 100%;
+}
+
 .woocommerce-MyAccount-navigation {
     ul {
         display: flex;
@@ -435,6 +448,251 @@ body.woocommerce-account {
             background: var(--ink-soft);
         }
     }
+}
+
+/* ---------- Addresses (my-account/edit-address) ----------
+   Prefixed with .woocommerce-account: woocommerce.css styles these fields
+   with `.woocommerce form .form-row .input-text` (0,3,1) — incl. height:auto
+   — so the theme needs four classes to win. */
+.woocommerce-account .account__content {
+    > .woocommerce-notices-wrapper + p,
+    > p:first-child {
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: var(--muted);
+    }
+
+    .u-columns.woocommerce-Addresses,
+    .col2-set.addresses {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 460px));
+        gap: 16px;
+
+        /* kill Woo's clearfix pseudo rows */
+        &::before,
+        &::after {
+            display: none;
+        }
+    }
+
+    .woocommerce-Address,
+    .col2-set.addresses .col-1,
+    .col2-set.addresses .col-2 {
+        float: none;
+        width: 100%;
+        max-width: none;
+        padding: 24px 26px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-sm);
+        background: #fff;
+    }
+
+    .woocommerce-Address-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--line-soft);
+
+        &::before,
+        &::after {
+            display: none;
+        }
+
+        h2,
+        h3 {
+            float: none;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -.01em;
+            color: var(--ink);
+        }
+
+        a.edit {
+            float: none;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            height: 34px;
+            padding: 0 16px;
+            border: 1px solid var(--ink);
+            border-radius: var(--r-xs);
+            color: var(--ink);
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+
+            &:hover {
+                background: var(--ink);
+                color: #fff;
+            }
+        }
+    }
+
+    address {
+        margin: 0;
+        font-style: normal;
+        font-size: 14px;
+        line-height: 1.85;
+        color: var(--muted);
+    }
+
+    /* ---------- Account forms (edit address / account details) ---------- */
+    .form-row {
+        margin: 0 0 18px;
+        padding: 0;
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+
+            .required {
+                color: var(--sale);
+                text-decoration: none;
+            }
+        }
+
+        .input-text,
+        select {
+            display: block;
+            width: 100%;
+            height: 54px;
+            padding: 0 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-sm);
+            background: #fff;
+            font-family: inherit;
+            font-size: 14.5px;
+            color: var(--ink);
+            transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
+
+            &:hover {
+                border-color: var(--muted-2);
+            }
+
+            &:focus {
+                outline: none;
+                border-color: var(--ink);
+                box-shadow: 0 0 0 4px rgba(16, 17, 20, .07);
+            }
+        }
+
+        span em {
+            display: block;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--muted-2);
+        }
+    }
+
+    /* Address edit form: two columns for name fields on wide screens */
+    .woocommerce-address-fields__field-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 18px;
+
+        > .form-row {
+            grid-column: span 2;
+        }
+
+        > .form-row-first,
+        > .form-row-last {
+            grid-column: span 1;
+
+            @include xs {
+                grid-column: span 2;
+            }
+        }
+    }
+
+    /* Account details form: same two-column rhythm */
+    .woocommerce-EditAccountForm {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 18px;
+
+        > * {
+            grid-column: span 2;
+            min-width: 0;
+        }
+
+        > .woocommerce-form-row--first,
+        > .form-row-first {
+            grid-column: span 1;
+
+            @include xs {
+                grid-column: span 2;
+            }
+        }
+
+        > .woocommerce-form-row--last,
+        > .form-row-last {
+            grid-column: span 1;
+
+            @include xs {
+                grid-column: span 2;
+            }
+        }
+    }
+
+    /* Password fields: full-width wrapper, vertically centred eye toggle */
+    .password-input {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+
+    .show-password-input {
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        margin: 0;
+        transform: translateY(-50%);
+        color: var(--muted-2);
+        cursor: pointer;
+
+        &:hover {
+            color: var(--ink);
+        }
+    }
+
+    .select2-container .select2-selection--single {
+        height: 54px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-sm);
+
+        .select2-selection__rendered {
+            padding: 0 42px 0 16px;
+            line-height: 52px;
+            font-size: 14.5px;
+        }
+
+        .select2-selection__arrow {
+            height: 52px;
+        }
+    }
+}
+
+/* Core layout CSS floats .form-row-first/-last at width:47% with
+   `.woocommerce form .form-row-first` (0,2,1) — three classes outrank it. */
+.woocommerce-account .account__content .form-row,
+.woocommerce-account .account__content .form-row-first,
+.woocommerce-account .account__content .form-row-last,
+.woocommerce-account .account__content .form-row-wide {
+    float: none;
+    width: 100%;
+    overflow: visible;
 }
 
 /* ---------- Logged-out: login card ---------- */

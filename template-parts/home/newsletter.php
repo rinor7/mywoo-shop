@@ -22,22 +22,37 @@ defined( 'ABSPATH' ) || exit;
 			</p>
 		</div>
 
-		<form class="newsletter__form reveal js-newsletter" style="--reveal-delay:120ms" novalidate>
-			<div class="newsletter__row">
-				<label class="screen-reader-text" for="nl-email"><?php esc_html_e( 'Email address', 'base-theme' ); ?></label>
-				<input class="field newsletter__input" type="email" id="nl-email" name="email" required
-					placeholder="<?php esc_attr_e( 'you@example.com', 'base-theme' ); ?>">
+		<?php if ( shortcode_exists( 'newsletter_form' ) ) : ?>
 
-				<button type="submit" class="btn btn--accent newsletter__submit">
-					<?php esc_html_e( 'Subscribe', 'base-theme' ); ?>
-				</button>
+			<?php
+			// Real signup — the Newsletter plugin's own form, dressed as the
+			// theme row. Its privacy line already carries the trust message,
+			// so the "No spam" note is dropped here.
+			?>
+			<div class="newsletter__form newsletter__form--plugin reveal" style="--reveal-delay:120ms">
+				<?php echo do_shortcode( '[newsletter_form]' ); ?>
 			</div>
 
-			<p class="newsletter__note">
-				<i class="fa-solid fa-lock" aria-hidden="true"></i>
-				<?php echo esc_html( myshop_c( 'nl_note', __( 'No spam. Unsubscribe in one click.', 'base-theme' ) ) ); ?>
-			</p>
-		</form>
+		<?php else : ?>
+
+			<form class="newsletter__form reveal js-newsletter" style="--reveal-delay:120ms" novalidate>
+				<div class="newsletter__row">
+					<label class="screen-reader-text" for="nl-email"><?php esc_html_e( 'Email address', 'base-theme' ); ?></label>
+					<input class="field newsletter__input" type="email" id="nl-email" name="email" required
+						placeholder="<?php esc_attr_e( 'you@example.com', 'base-theme' ); ?>">
+
+					<button type="submit" class="btn btn--accent newsletter__submit">
+						<?php esc_html_e( 'Subscribe', 'base-theme' ); ?>
+					</button>
+				</div>
+
+				<p class="newsletter__note">
+					<i class="fa-solid fa-lock" aria-hidden="true"></i>
+					<?php echo esc_html( myshop_c( 'nl_note', __( 'No spam. Unsubscribe in one click.', 'base-theme' ) ) ); ?>
+				</p>
+			</form>
+
+		<?php endif; ?>
 
 	</div>
 </section>
