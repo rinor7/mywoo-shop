@@ -976,6 +976,47 @@
     }());
 
     /* ==========================================================
+       Mobile bar — glass chip glides between tabs (WhatsApp-style)
+    ========================================================== */
+    (function () {
+        var bar = qs('.mobile-bar');
+        if (!bar) { return; }
+
+        var glass = document.createElement('span');
+        glass.className = 'mobile-bar__glass';
+        bar.appendChild(glass);
+
+        function moveTo(item, instant) {
+            var b = bar.getBoundingClientRect();
+            var e = item.getBoundingClientRect();
+            var x = e.left - b.left + (e.width - glass.offsetWidth) / 2;
+
+            if (instant || reduceMotion) { glass.style.transition = 'none'; }
+            glass.style.transform = 'translateX(' + x + 'px)';
+            glass.classList.add('is-on');
+
+            if (instant || reduceMotion) {
+                requestAnimationFrame(function () { glass.style.transition = ''; });
+            }
+        }
+
+        var active = bar.querySelector('.is-active');
+        if (active) { moveTo(active, true); }
+
+        // Tapping glides the chip immediately — the page navigation follows,
+        // where the server marks the tab active again.
+        bar.addEventListener('click', function (e) {
+            var item = e.target.closest('.mobile-bar__item');
+            if (item) { moveTo(item); }
+        });
+
+        window.addEventListener('resize', function () {
+            var current = bar.querySelector('.is-active');
+            if (current) { moveTo(current, true); }
+        });
+    }());
+
+    /* ==========================================================
        Wishlist peek (header heart)
     ========================================================== */
     (function () {

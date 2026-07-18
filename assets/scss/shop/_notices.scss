@@ -256,11 +256,12 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
 
     &::before {
         content: "\f290";
+        position: static; /* woo core absolutely positions notice icons */
         display: grid;
         place-items: center;
         width: 72px;
         height: 72px;
-        margin-bottom: 8px;
+        margin: 0 0 8px;
         border-radius: var(--r-pill);
         background: var(--bone-2);
         color: var(--muted);

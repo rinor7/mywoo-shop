@@ -1212,7 +1212,9 @@ form.myshop-checkout {
     }
 
     &__items td {
+        /* woo's table.shop_table td border-top outranks the base reset */
         padding: 16px 0;
+        border: 0 !important;
         vertical-align: middle;
     }
 
@@ -1367,7 +1369,7 @@ form.myshop-checkout {
            full remaining width instead of fighting the price column */
         &__items tr {
             display: grid;
-            grid-template-columns: 62px minmax(0, 1fr);
+            grid-template-columns: 74px minmax(0, 1fr);
             grid-template-areas:
                 "media body"
                 "media price";
@@ -1393,8 +1395,8 @@ form.myshop-checkout {
         }
 
         &__thumb img {
-            width: 62px;
-            height: 76px;
+            width: 74px;
+            height: 90px;
         }
 
         &__body {

@@ -737,30 +737,19 @@ body.is-locked {
         font-size: 10px;
         letter-spacing: .03em;
 
-        i {
+        i,
+        > span {
             position: relative;
             z-index: 1;
+        }
+
+        i {
             font-size: 17px;
             transition: color var(--t) var(--ease), transform var(--t) var(--ease);
         }
 
         &:hover {
             color: var(--accent);
-        }
-
-        /* glassy chip that sits behind the active icon (WhatsApp-style) */
-        &::before {
-            content: "";
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            width: 48px;
-            height: 30px;
-            border-radius: var(--r-pill);
-            background: rgba(176, 123, 79, .16);
-            opacity: 0;
-            transform: translateX(-50%) scale(.6);
-            transition: opacity var(--t) var(--ease), transform var(--t) var(--ease-out);
         }
 
         &.is-active {
@@ -770,11 +759,26 @@ body.is-locked {
             i {
                 color: var(--accent-dark);
             }
+        }
+    }
 
-            &::before {
-                opacity: 1;
-                transform: translateX(-50%) scale(1);
-            }
+    /* Single glass chip, JS-positioned — glides between tabs on tap
+       (WhatsApp-style). Tall enough to hug icon + label as one unit. */
+    &__glass {
+        position: absolute;
+        top: 7px;
+        left: 0;
+        z-index: 0;
+        width: 56px;
+        height: 48px;
+        border-radius: 16px;
+        background: rgba(176, 123, 79, .15);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform .38s var(--ease-out), opacity var(--t) var(--ease);
+
+        &.is-on {
+            opacity: 1;
         }
     }
 
