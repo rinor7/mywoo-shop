@@ -976,6 +976,24 @@
     }());
 
     /* ==========================================================
+       404 "Go back" — real history when the visitor came from this
+       site, otherwise the link's href (homepage) does its job.
+    ========================================================== */
+    (function () {
+        var back = qs('.js-go-back');
+        if (!back) { return; }
+
+        back.addEventListener('click', function (e) {
+            var cameFromHere = document.referrer.indexOf(window.location.origin) === 0;
+
+            if (cameFromHere && window.history.length > 1) {
+                e.preventDefault();
+                window.history.back();
+            }
+        });
+    }());
+
+    /* ==========================================================
        Mobile bar — glass chip glides between tabs (WhatsApp-style)
     ========================================================== */
     (function () {

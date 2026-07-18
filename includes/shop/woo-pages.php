@@ -181,13 +181,18 @@ function myshop_chosen_shipping_label() {
  * Payment method icons + secure badge (cart summary card).
  */
 function myshop_payment_badges() {
+	$chosen = function_exists( 'myshop_opt' )
+		? (array) myshop_opt( 'payment_icons', array( 'visa', 'mastercard', 'amex', 'paypal', 'apple-pay' ) )
+		: array( 'visa', 'mastercard', 'amex', 'paypal', 'apple-pay' );
+
+	if ( ! $chosen ) {
+		return;
+	}
 	?>
 	<ul class="pay-icons" aria-label="<?php esc_attr_e( 'Accepted payment methods', 'base-theme' ); ?>">
-		<li><i class="fa-brands fa-cc-visa" aria-hidden="true"></i></li>
-		<li><i class="fa-brands fa-cc-mastercard" aria-hidden="true"></i></li>
-		<li><i class="fa-brands fa-cc-amex" aria-hidden="true"></i></li>
-		<li><i class="fa-brands fa-cc-paypal" aria-hidden="true"></i></li>
-		<li><i class="fa-brands fa-cc-apple-pay" aria-hidden="true"></i></li>
+		<?php foreach ( $chosen as $slug ) : ?>
+			<li><i class="fa-brands fa-cc-<?php echo esc_attr( sanitize_html_class( $slug ) ); ?>" aria-hidden="true"></i></li>
+		<?php endforeach; ?>
 	</ul>
 	<?php
 }

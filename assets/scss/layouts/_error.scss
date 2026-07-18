@@ -1,0 +1,51 @@
+/* =========================================================
+   404
+========================================================= */
+
+.fof {
+    display: grid;
+    place-items: center;
+    min-height: 58vh;
+    padding-block: clamp(56px, 8vw, 120px);
+    background: var(--bone);
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        text-align: center;
+    }
+
+    &__code {
+        font-size: clamp(96px, 16vw, 200px);
+        font-weight: 800;
+        line-height: .95;
+        letter-spacing: -.05em;
+        color: var(--ink);
+    }
+
+    &__text {
+        max-width: 420px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--muted);
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 14px;
+
+        @include xs {
+            width: 100%;
+            flex-direction: column;
+
+            .btn {
+                width: 100%;
+            }
+        }
+    }
+}

@@ -87,13 +87,7 @@ $socials  = array(
 				&copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'base-theme' ); ?>
 			</p>
 
-			<ul class="footer__pay" aria-label="<?php esc_attr_e( 'Accepted payment methods', 'base-theme' ); ?>">
-				<li><i class="fa-brands fa-cc-visa" aria-hidden="true"></i></li>
-				<li><i class="fa-brands fa-cc-mastercard" aria-hidden="true"></i></li>
-				<li><i class="fa-brands fa-cc-amex" aria-hidden="true"></i></li>
-				<li><i class="fa-brands fa-cc-paypal" aria-hidden="true"></i></li>
-				<li><i class="fa-brands fa-cc-apple-pay" aria-hidden="true"></i></li>
-			</ul>
+			<?php if ( function_exists( 'myshop_payment_icons' ) ) { myshop_payment_icons(); } ?>
 		</div>
 
 	</div>

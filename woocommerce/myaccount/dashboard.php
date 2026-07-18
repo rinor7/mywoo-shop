@@ -143,7 +143,19 @@ if ( ! $shipping ) {
 		<h2 class="acard__title acard__title--lg"><?php esc_html_e( 'The Inner Circle', 'base-theme' ); ?></h2>
 
 		<p class="acard__text">
-			<?php esc_html_e( 'Free delivery over €100, 30-day returns and first access to limited releases — yours with every order.', 'base-theme' ); ?>
+			<?php
+			$myshop_perk_lines = array_map(
+				static function ( $perk ) {
+					return $perk[1];
+				},
+				myshop_pdp_perks()
+			);
+			printf(
+				/* translators: %s: comma-separated perk list from Global Settings */
+				esc_html__( '%s and first access to limited releases — yours with every order.', 'base-theme' ),
+				esc_html( implode( ', ', $myshop_perk_lines ) )
+			);
+			?>
 		</p>
 
 		<a class="acard__btn" href="<?php echo esc_url( myshop_shop_url() ); ?>"><?php esc_html_e( 'Explore the collection', 'base-theme' ); ?></a>

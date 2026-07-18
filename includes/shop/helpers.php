@@ -396,5 +396,9 @@ function myshop_get_categories( $limit = 6 ) {
  * Free-shipping threshold used by the cart drawer progress bar.
  */
 function myshop_free_shipping_threshold() {
-	return (float) apply_filters( 'myshop_free_shipping_threshold', 100 );
+	$threshold = function_exists( 'myshop_opt' )
+		? (float) myshop_opt( 'free_shipping_threshold', 100 )
+		: 100;
+
+	return (float) apply_filters( 'myshop_free_shipping_threshold', $threshold );
 }

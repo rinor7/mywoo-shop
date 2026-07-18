@@ -108,8 +108,9 @@ if ( $rows ) {
 									</div>
 
 									<ul class="hero__meta">
-										<li><i class="fa-solid fa-truck-fast" aria-hidden="true"></i> <?php esc_html_e( 'Free delivery over &euro;100', 'base-theme' ); ?></li>
-										<li><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> <?php esc_html_e( '30-day returns', 'base-theme' ); ?></li>
+										<?php foreach ( array_slice( myshop_pdp_perks(), 0, 2 ) as $perk ) : ?>
+											<li><i class="fa-solid <?php echo esc_attr( $perk[0] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $perk[1] ); ?></li>
+										<?php endforeach; ?>
 									</ul>
 								</div>
 

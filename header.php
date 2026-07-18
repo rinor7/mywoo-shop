@@ -30,7 +30,9 @@
 
 <div id="page" class="site">
 
-    <!-- Announcement bar -->
+    <!-- Announcement bar (messages: Global Settings → Announcement Bar) -->
+    <?php $messages = function_exists( 'myshop_announce_messages' ) ? myshop_announce_messages() : array(); ?>
+    <?php if ( $messages ) : ?>
     <div class="announce js-announce">
         <div class="shop-container announce__inner">
             <button type="button" class="announce__nav js-announce-prev" aria-label="<?php esc_attr_e( 'Previous message', 'base-theme' ); ?>">
@@ -38,14 +40,7 @@
             </button>
 
             <div class="announce__viewport" aria-live="polite">
-                <?php
-                $messages = array(
-                    __( 'Complimentary shipping on orders over &euro;100', 'base-theme' ),
-                    __( '30-day returns — no questions asked', 'base-theme' ),
-                    __( 'New season has landed. Up to 20% off selected pieces', 'base-theme' ),
-                );
-                foreach ( $messages as $i => $message ) :
-                    ?>
+                <?php foreach ( $messages as $i => $message ) : ?>
                     <p class="announce__item<?php echo 0 === $i ? ' is-active' : ''; ?>"><?php echo wp_kses_post( $message ); ?></p>
                 <?php endforeach; ?>
             </div>
@@ -59,6 +54,7 @@
             </button>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Header -->
     <header id="header-site" class="site-header js-header">
