@@ -771,7 +771,8 @@ body.is-locked {
         z-index: 0;
         width: 56px;
         height: 48px;
-        border-radius: 16px;
+        /* concentric with the bar's pill ends: inner r = outer r − inset */
+        border-radius: var(--r-pill);
         background: rgba(176, 123, 79, .15);
         opacity: 0;
         pointer-events: none;

@@ -143,6 +143,8 @@ $socials  = array(
 		?>
 
 		<div class="menu-drawer__foot">
+			<?php if ( function_exists( 'myshop_language_switcher' ) ) { myshop_language_switcher( 'drawer' ); } ?>
+
 			<a class="btn btn--ghost btn--block" href="<?php echo esc_url( $account ); ?>">
 				<i class="fa-regular fa-user" aria-hidden="true"></i>
 				<?php esc_html_e( 'My account', 'base-theme' ); ?>

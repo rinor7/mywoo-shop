@@ -95,6 +95,8 @@
             </nav>
 
             <div class="header__actions">
+                <?php if ( function_exists( 'myshop_language_switcher' ) ) { myshop_language_switcher(); } ?>
+
                 <button type="button" class="icon-btn js-search-open" aria-label="<?php esc_attr_e( 'Search', 'base-theme' ); ?>">
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                 </button>

@@ -198,3 +198,39 @@ function myshop_cart_fragments( $fragments ) {
 	return $fragments;
 }
 add_filter( 'woocommerce_add_to_cart_fragments', 'myshop_cart_fragments' );
+
+/**
+ * Brand voice — the shop says "bag", WooCommerce core says "cart".
+ * Rewrites Woo's front-end strings (Add to cart → Add to bag, View cart →
+ * View bag, "…added to your cart." → "…your bag." and so on). Admin screens
+ * keep Woo's own wording so store management stays unambiguous.
+ */
+function myshop_bag_voice( $translation ) {
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		return $translation;
+	}
+
+	return str_replace(
+		array( 'cart', 'Cart', 'CART' ),
+		array( 'bag', 'Bag', 'BAG' ),
+		$translation
+	);
+}
+
+add_filter(
+	'gettext_woocommerce',
+	function ( $translation, $text, $domain ) {
+		return myshop_bag_voice( $translation );
+	},
+	10,
+	3
+);
+
+add_filter(
+	'ngettext_woocommerce',
+	function ( $translation, $single, $plural, $number, $domain ) {
+		return myshop_bag_voice( $translation );
+	},
+	10,
+	5
+);

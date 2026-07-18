@@ -212,7 +212,7 @@ function myshop_product_card( $product, $index = 0 ) {
 					<button type="button" class="pcard__add js-add-to-cart"
 						data-product-id="<?php echo esc_attr( $product['id'] ); ?>">
 						<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-						<span><?php esc_html_e( 'Add to cart', 'base-theme' ); ?></span>
+						<span><?php esc_html_e( 'Add to bag', 'base-theme' ); ?></span>
 					</button>
 				<?php elseif ( ! $is_demo ) : ?>
 					<?php // Variable/grouped products need options picked on the product page. ?>
@@ -224,7 +224,7 @@ function myshop_product_card( $product, $index = 0 ) {
 					<button type="button" class="pcard__add js-add-to-cart" data-demo="1"
 						data-product-id="<?php echo esc_attr( $product['id'] ); ?>">
 						<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-						<span><?php esc_html_e( 'Add to cart', 'base-theme' ); ?></span>
+						<span><?php esc_html_e( 'Add to bag', 'base-theme' ); ?></span>
 					</button>
 				<?php endif; ?>
 

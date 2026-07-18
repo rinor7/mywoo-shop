@@ -17,7 +17,7 @@ do_action( 'woocommerce_before_cart' );
 <div class="myshop-cart">
 
 	<header class="myshop-cart__head">
-		<h1 class="myshop-cart__title"><?php esc_html_e( 'Shopping Cart', 'base-theme' ); ?></h1>
+		<h1 class="myshop-cart__title"><?php esc_html_e( 'Your Bag', 'base-theme' ); ?></h1>
 		<p class="myshop-cart__sub"><?php esc_html_e( 'Review your selected pieces before checking out.', 'base-theme' ); ?></p>
 	</header>
 
@@ -57,7 +57,7 @@ do_action( 'woocommerce_before_cart' );
 									sprintf(
 										'<a href="%s" class="cart-row__remove" aria-label="%s" data-product_id="%s" data-product_sku="%s"><i class="fa-solid fa-xmark" aria-hidden="true"></i></a>',
 										esc_url( wc_get_cart_remove_url( $cart_item_key ) ),
-										esc_attr( sprintf( __( 'Remove %s from cart', 'base-theme' ), wp_strip_all_tags( $_product->get_name() ) ) ),
+										esc_attr( sprintf( __( 'Remove %s from your bag', 'base-theme' ), wp_strip_all_tags( $_product->get_name() ) ) ),
 										esc_attr( $product_id ),
 										esc_attr( $_product->get_sku() )
 									),
@@ -157,7 +157,7 @@ do_action( 'woocommerce_before_cart' );
 					</div>
 				<?php endif; ?>
 
-				<button type="submit" class="cart-actions__update" name="update_cart" value="<?php esc_attr_e( 'Update cart', 'base-theme' ); ?>"><?php esc_html_e( 'Update cart', 'base-theme' ); ?></button>
+				<button type="submit" class="cart-actions__update" name="update_cart" value="<?php esc_attr_e( 'Update bag', 'base-theme' ); ?>"><?php esc_html_e( 'Update bag', 'base-theme' ); ?></button>
 
 				<?php do_action( 'woocommerce_cart_actions' ); ?>
 				<?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce' ); ?>

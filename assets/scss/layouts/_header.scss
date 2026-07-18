@@ -408,3 +408,46 @@
 .skip-link:focus {
     z-index: 200;
 }
+
+/* ---------- Language switcher (Polylang) ---------- */
+.lang-switch {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: #fff;
+    overflow: hidden;
+
+    &__item {
+        display: inline-flex;
+        align-items: center;
+        height: 30px;
+        padding: 0 12px;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: .08em;
+        color: var(--muted);
+        transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+
+        &:hover {
+            color: var(--ink);
+        }
+
+        &.is-active {
+            background: var(--ink);
+            color: #fff;
+        }
+    }
+
+    @include sm {
+        display: none; /* lives in the menu drawer on phones */
+    }
+
+    /* Mobile drawer variant */
+    &--drawer {
+        display: inline-flex;
+        align-self: flex-start;
+        margin: 0 0 4px;
+    }
+}
