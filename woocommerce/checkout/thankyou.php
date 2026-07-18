@@ -121,13 +121,23 @@ defined( 'ABSPATH' ) || exit;
 		<?php endif; ?>
 
 		<?php
-		// Gateway-specific extras (bank details, pay-later instructions...).
+		// Gateway-specific extras (bank details, pay-later instructions...) and
+		// plugin output — buffered so it only renders inside the note card when
+		// something actually prints. The default details table is ours already.
+		ob_start();
 		do_action( 'woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id() );
-
-		// Plugins hooked here still run — the default details table is ours now.
 		remove_action( 'woocommerce_thankyou', 'woocommerce_order_details_table', 10 );
 		do_action( 'woocommerce_thankyou', $order->get_id() );
-		?>
+		$myshop_thankyou_extras = trim( ob_get_clean() );
+
+		if ( '' !== $myshop_thankyou_extras ) : ?>
+			<div class="order-confirm__extras">
+				<i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+				<div class="order-confirm__extras-body">
+					<?php echo $myshop_thankyou_extras; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				</div>
+			</div>
+		<?php endif; ?>
 
 	<?php else : ?>
 

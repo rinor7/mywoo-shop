@@ -27,16 +27,32 @@ defined( 'ABSPATH' ) || exit;
 			if ( ! $_product || ! $_product->exists() || $cart_item['quantity'] <= 0 || ! apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
 				continue;
 			}
+
+			$product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
 			?>
 			<tr class="<?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>">
 				<td class="co-review__media">
 					<span class="co-review__thumb">
-						<?php echo $_product->get_image( 'woocommerce_thumbnail' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						<?php if ( $product_permalink ) : ?>
+							<a href="<?php echo esc_url( $product_permalink ); ?>" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+								<?php echo $_product->get_image( 'woocommerce_thumbnail' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+							</a>
+						<?php else : ?>
+							<?php echo $_product->get_image( 'woocommerce_thumbnail' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						<?php endif; ?>
 						<span class="co-review__qty" aria-hidden="true"><?php echo esc_html( $cart_item['quantity'] ); ?></span>
 					</span>
 				</td>
 				<td class="co-review__body">
-					<span class="co-review__name"><?php echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) ); ?></span>
+					<span class="co-review__name">
+						<?php if ( $product_permalink ) : ?>
+							<a href="<?php echo esc_url( $product_permalink ); ?>" target="_blank" rel="noopener">
+								<?php echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) ); ?>
+							</a>
+						<?php else : ?>
+							<?php echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) ); ?>
+						<?php endif; ?>
+					</span>
 					<?php echo wc_get_formatted_cart_item_data( $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 					<span class="screen-reader-text"><?php echo esc_html( sprintf( _n( 'Quantity: %d', 'Quantity: %d', $cart_item['quantity'], 'base-theme' ), $cart_item['quantity'] ) ); ?></span>
 				</td>

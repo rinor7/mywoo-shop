@@ -176,6 +176,32 @@
         }
     }
 
+    /* Woo's price_html left unstyled looks like browser defaults —
+       give it the card's own rhythm (sale = old price inline before new). */
+    &__body .price {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 8px;
+        font-size: 14.5px;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        color: var(--ink);
+
+        del {
+            order: -1;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--muted-2);
+            text-decoration: line-through;
+        }
+
+        ins {
+            text-decoration: none;
+            color: var(--sale);
+        }
+    }
+
     &__swatches {
         display: flex;
         gap: 6px;
@@ -197,6 +223,62 @@
     .pcard__wish {
         opacity: 1;
         transform: none;
+    }
+}
+
+/* Narrow two-column grid: one full-width CTA that always fits.
+   The quick-view modal is a pointer nicety — the card link covers it. */
+@include sm {
+    .pcard__actions {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        gap: 6px;
+    }
+
+    .pcard__add {
+        min-width: 0;
+        height: 40px;
+        padding: 0 10px;
+        overflow: hidden;
+        font-size: 10px;
+        letter-spacing: .05em;
+
+        i {
+            display: none;
+        }
+    }
+
+    .pcard__quick {
+        display: none;
+    }
+
+    .pcard__wish {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .pcard__body {
+        gap: 5px;
+    }
+
+    .pcard__cat {
+        font-size: 10px;
+        letter-spacing: .08em;
+    }
+
+    .pcard__title {
+        font-size: 13.5px;
+    }
+
+    .pcard__body .price {
+        gap: 7px;
+        font-size: 13.5px;
+
+        del {
+            font-size: 11.5px;
+        }
     }
 }
 

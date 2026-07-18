@@ -9,9 +9,8 @@ $is_woo   = function_exists( 'WC' );
 $cats     = myshop_get_categories( 6 );
 $socials  = array(
 	'instagram' => 'fa-instagram',
-	'pinterest' => 'fa-pinterest-p',
 	'facebook'  => 'fa-facebook-f',
-	'tiktok'    => 'fa-tiktok',
+	'whatsapp'  => 'fa-whatsapp',
 );
 ?>
 
@@ -36,20 +35,6 @@ $socials  = array(
 
 				<?php if ( is_active_sidebar( 'footer-1' ) ) : ?>
 					<?php dynamic_sidebar( 'footer-1' ); ?>
-				<?php else : ?>
-					<p class="footer__blurb">
-						<?php esc_html_e( 'A small shop for well-made things. We work directly with the people who make them, and we keep the range short on purpose.', 'base-theme' ); ?>
-					</p>
-
-					<ul class="footer__social">
-						<?php foreach ( $socials as $name => $icon ) : ?>
-							<li>
-								<a href="#" aria-label="<?php echo esc_attr( ucfirst( $name ) ); ?>">
-									<i class="fa-brands <?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i>
-								</a>
-							</li>
-						<?php endforeach; ?>
-					</ul>
 				<?php endif; ?>
 			</div>
 
@@ -101,13 +86,6 @@ $socials  = array(
 			<p class="footer__copy">
 				&copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'base-theme' ); ?>
 			</p>
-
-			<ul class="footer__legal">
-				<li><a href="/privacy-policy/"><?php esc_html_e( 'Privacy', 'base-theme' ); ?></a></li>
-				<li><a href="/terms-conditions/"><?php esc_html_e( 'Terms', 'base-theme' ); ?></a></li>
-				<li><a href="/refund-and-returns-policy/"><?php esc_html_e( 'Refund & Returns Policy', 'base-theme' ); ?></a></li>
-				<li><a href="/cookies/"><?php esc_html_e( 'Cookies', 'base-theme' ); ?></a></li>
-			</ul>
 
 			<ul class="footer__pay" aria-label="<?php esc_attr_e( 'Accepted payment methods', 'base-theme' ); ?>">
 				<li><i class="fa-brands fa-cc-visa" aria-hidden="true"></i></li>
@@ -208,26 +186,31 @@ $socials  = array(
 			<button type="submit" class="btn btn--primary"><?php esc_html_e( 'Search', 'base-theme' ); ?></button>
 		</form>
 
-		<div class="search-overlay__suggest">
-			<span class="search-overlay__suggest-label"><?php esc_html_e( 'Popular right now', 'base-theme' ); ?></span>
-			<ul>
-				<?php
-				$popular = array( 'Leather tote', 'Cashmere', 'Headphones', 'Gifts under 75', 'New in' );
-				foreach ( $popular as $term ) :
-					$url = add_query_arg(
-						array_filter(
-							array(
-								's'         => rawurlencode( $term ),
-								'post_type' => $is_woo ? 'product' : null,
-							)
-						),
-						home_url( '/' )
-					);
-					?>
-					<li><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $term ); ?></a></li>
-				<?php endforeach; ?>
-			</ul>
-		</div>
+		<?php
+		// Chips come from Global Settings → Search Suggestions; none set = no block.
+		$popular = function_exists( 'myshop_search_suggest_terms' ) ? myshop_search_suggest_terms() : array();
+		if ( $popular ) :
+			?>
+			<div class="search-overlay__suggest">
+				<span class="search-overlay__suggest-label"><?php echo esc_html( myshop_search_suggest_label() ); ?></span>
+				<ul>
+					<?php
+					foreach ( $popular as $term ) :
+						$url = add_query_arg(
+							array_filter(
+								array(
+									's'         => rawurlencode( $term ),
+									'post_type' => $is_woo ? 'product' : null,
+								)
+							),
+							home_url( '/' )
+						);
+						?>
+						<li><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $term ); ?></a></li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
 
 	</div>
 </div>
@@ -279,13 +262,22 @@ $socials  = array(
 </div>
 
 <!-- Mobile bottom bar -->
+<?php
+// Which tab the current page belongs to (search/bag are overlays — never "here").
+$mb_home    = is_front_page();
+$mb_shop    = $is_woo && ( is_shop() || is_product_category() || is_product_tag() || is_product() );
+$mb_account = $is_woo && is_account_page();
+$mb_bag     = $is_woo && ( is_cart() || is_checkout() );
+?>
 <nav class="mobile-bar" aria-label="<?php esc_attr_e( 'Quick navigation', 'base-theme' ); ?>">
-	<a class="mobile-bar__item" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+	<a class="mobile-bar__item<?php echo $mb_home ? ' is-active' : ''; ?>" href="<?php echo esc_url( home_url( '/' ) ); ?>"
+		<?php echo $mb_home ? 'aria-current="page"' : ''; ?>>
 		<i class="fa-solid fa-house" aria-hidden="true"></i>
 		<span><?php esc_html_e( 'Home', 'base-theme' ); ?></span>
 	</a>
 
-	<a class="mobile-bar__item" href="<?php echo esc_url( $shop ); ?>">
+	<a class="mobile-bar__item<?php echo $mb_shop ? ' is-active' : ''; ?>" href="<?php echo esc_url( $shop ); ?>"
+		<?php echo $mb_shop ? 'aria-current="page"' : ''; ?>>
 		<i class="fa-solid fa-grip" aria-hidden="true"></i>
 		<span><?php esc_html_e( 'Shop', 'base-theme' ); ?></span>
 	</a>
@@ -295,12 +287,13 @@ $socials  = array(
 		<span><?php esc_html_e( 'Search', 'base-theme' ); ?></span>
 	</button>
 
-	<a class="mobile-bar__item" href="<?php echo esc_url( $account ); ?>">
+	<a class="mobile-bar__item<?php echo $mb_account ? ' is-active' : ''; ?>" href="<?php echo esc_url( $account ); ?>"
+		<?php echo $mb_account ? 'aria-current="page"' : ''; ?>>
 		<i class="fa-regular fa-user" aria-hidden="true"></i>
 		<span><?php esc_html_e( 'Account', 'base-theme' ); ?></span>
 	</a>
 
-	<button type="button" class="mobile-bar__item js-cart-open">
+	<button type="button" class="mobile-bar__item js-cart-open<?php echo $mb_bag ? ' is-active' : ''; ?>">
 		<span class="mobile-bar__bag">
 			<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
 			<?php myshop_cart_count_html(); ?>

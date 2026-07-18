@@ -179,6 +179,7 @@
 
     @include md {
         display: inline-flex;
+        justify-content: left;
     }
 }
 

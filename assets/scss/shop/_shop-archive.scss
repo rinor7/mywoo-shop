@@ -168,14 +168,38 @@ body.tax-product_tag {
     background: #fff;
     text-align: center;
 
-    .woocommerce-info {
+    /* The notice inside is plain text here, not a floating card —
+       :not(.cart-empty) matches the shared card selector's specificity. */
+    .woocommerce-info:not(.cart-empty) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
         margin: 0;
         padding: 0;
         border: 0;
+        border-radius: 0;
         background: none;
+        box-shadow: none;
+        animation: none;
         font-size: 16px;
         font-weight: 600;
         color: var(--ink);
+
+        /* icon bubble becomes a centred, neutral badge */
+        &::before {
+            content: "\f002"; // magnifying glass
+            width: 56px;
+            height: 56px;
+            background: var(--bone-2);
+            color: var(--muted);
+            font-size: 19px;
+        }
+
+        /* the JS-injected dismiss ✕ makes no sense in an empty state */
+        .notice-dismiss {
+            display: none;
+        }
     }
 }
 

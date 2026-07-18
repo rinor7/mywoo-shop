@@ -168,7 +168,7 @@
 /* ---------- Widget content (Appearance → Widgets) ---------- */
 /* Text / Custom HTML widgets inherit the column look without extra markup. */
 .footer__brand .widget-wrapper {
-    p {
+    p, .textwidget {
         max-width: 380px;
         font-size: 14px;
         line-height: 1.7;
@@ -206,16 +206,6 @@
     color: rgba(255, 255, 255, .45);
 }
 
-.footer__legal {
-    display: flex;
-    gap: 22px;
-    font-size: 13px;
-
-    a {
-        color: rgba(255, 255, 255, .45);
-    }
-}
-
 .footer__pay {
     display: flex;
     align-items: center;
@@ -236,7 +226,8 @@
 /* The fixed mobile bar overlaps the footer end — buy it some room */
 @include sm {
     .site-footer {
-        padding-bottom: 62px;
+        /* floating pill nav: 62px bar + 14px inset + breathing room */
+        padding-bottom: 96px;
     }
 }
 /* Footer End*/

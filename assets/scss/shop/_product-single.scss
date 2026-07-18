@@ -126,9 +126,12 @@
         align-items: flex-start;
         gap: 16px;
 
+        /* Stacked below the gallery: side padding matches the site gutter so
+           the content lines up with the header and every other section. */
         @include md {
             max-width: none;
             margin-inline: auto;
+            padding-inline: var(--gutter);
         }
     }
 
@@ -263,20 +266,30 @@
             }
         }
 
-        .woocommerce-variation-add-to-cart,
-        .quantity + .single_add_to_cart_button {
+        .woocommerce-variation-add-to-cart {
             display: flex;
             gap: 12px;
             width: 100%;
         }
 
-        /* Woo qty input dressed as our stepper via JS-added wrapper */
+        /* Simple products: the JS-built stepper sits directly in form.cart —
+           span the stepper + button pair across the full row like variables do. */
+        > form.cart > .qty-stepper {
+            flex: 0 0 auto;
+        }
+
+        /* Woo qty input dressed as our stepper via JS-added wrapper.
+           One segmented control: box on the wrapper, hairline dividers
+           between − / value / + — no nested boxes. */
+        .qty-stepper {
+            overflow: hidden;
+        }
+
         .quantity {
             display: inline-flex;
             align-items: center;
-            border: 1px solid var(--line);
-            border-radius: var(--r-xs);
-            background: #fff;
+            border: 0;
+            background: none;
 
             .qty {
                 width: 52px;
@@ -301,9 +314,21 @@
             }
         }
 
+        /* dividers + hover come from the shared .qty-stepper base */
         .qty-stepper__btn {
             height: 54px;
-            width: 40px;
+            width: 42px;
+            font-size: 16px;
+
+            @include xs {
+                width: 36px;
+            }
+        }
+
+        @include xs {
+            .quantity .qty {
+                width: 44px;
+            }
         }
 
         /* chained classes outgun Woo's purple .button.alt default */
@@ -311,9 +336,14 @@
         .single_add_to_cart_button {
             @extend %btn-dark-hover;
             flex: 1;
-            min-width: 200px;
+            min-width: 0;
             height: 56px;
             padding: 0 26px;
+
+            /* one row with the stepper even at 375px */
+            @include xs {
+                padding: 0 16px;
+            }
             border: 0;
             border-radius: var(--r-xs);
             background: var(--ink);
@@ -417,7 +447,8 @@
         gap: 8px;
         height: 48px;
         padding: 0 24px;
-        border-radius: var(--r-pill);
+        /* same rectangle family as every other CTA — the pill was the outlier */
+        border-radius: var(--r-xs);
         background: var(--ink);
         color: #fff;
         font-size: 12px;
@@ -436,9 +467,10 @@
         font-weight: 700;
     }
 
-    /* keep clear of the mobile bottom nav */
+    /* keep clear of the floating mobile nav pill */
     @include sm {
-        bottom: 62px;
+        bottom: calc(90px + env(safe-area-inset-bottom));
+        border-bottom: 1px solid var(--line);
     }
 }
 
