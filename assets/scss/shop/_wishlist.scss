@@ -109,10 +109,11 @@ table.shop_table.wishlist_table {
         a {
             font-size: 15px;
             font-weight: 600;
-            color: var(--ink);
+            color: var(--ink) !important;
+            text-decoration: none !important;
 
             &:hover {
-                color: var(--accent);
+                color: var(--accent) !important;
             }
         }
     }
@@ -203,6 +204,30 @@ table.shop_table.wishlist_table {
     /* Date / arrange handles the plugin may print */
     .product-arrange-priority {
         color: var(--muted-2);
+    }
+
+    /* Drag-to-reorder handle (fa-arrows) — shipped as a bare unstyled
+       icon by the plugin when reordering is enabled in its settings. */
+    .product-arrange {
+        width: 36px;
+        padding-left: 0;
+        text-align: center;
+
+        i.fa-arrows {
+            display: inline-grid;
+            place-items: center;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--r-pill);
+            color: var(--muted-2);
+            font-size: 13px;
+            transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+
+            &:hover {
+                background: var(--bone-2);
+                color: var(--ink-soft);
+            }
+        }
     }
 }
 
