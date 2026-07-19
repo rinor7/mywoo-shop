@@ -121,6 +121,42 @@
     gap: 16px;
     height: var(--bar-h);
     transition: height var(--t) var(--ease);
+
+    /* Equal-fr side columns so the logo stays centered regardless of how
+       little either side holds — e.g. the burger disappearing entirely
+       when nav is replaced by search, or a guest with no wishlist icon. */
+    @include md {
+        grid-template-columns: 1fr auto 1fr;
+    }
+}
+
+@include md {
+    /* Explicit grid-column per item — not just justify-self — because the
+       burger button is sometimes removed from the DOM entirely (nav menu
+       replaced by search), and grid auto-placement would otherwise shift
+       .header__logo/.header__actions into columns 1/2 by DOM order,
+       leaving column 3 empty instead of keeping each in its own slot. */
+    .header__burger {
+        grid-column: 1;
+        justify-self: start;
+    }
+
+    .header__logo {
+        grid-column: 2;
+    }
+
+    /* Centering only makes sense with the burger balancing it on the other
+       side — without it, a dead-centered logo leaves an odd empty gap on
+       the left where the burger used to be. Left-align instead. */
+    .header__inner:not(:has(.header__burger)) .header__logo {
+        grid-column: 1;
+        justify-self: start;
+    }
+
+    .header__actions {
+        grid-column: 3;
+        justify-self: end;
+    }
 }
 
 .site-header.is-stuck .header__inner {
@@ -164,7 +200,7 @@
     }
 
     @include md {
-        justify-self: center;
+        // justify-self: center;
     }
 }
 
@@ -478,10 +514,9 @@
 
 /* Account, Search and Bag all have a bottom-bar equivalent tab on mobile,
    so showing them here too is redundant. Wishlist has no bottom-bar tab
-   when logged out either, but a guest wishlist isn't really a persistent,
-   meaningful feature the way it is once signed in — so it only earns its
-   spot in the header for logged-in users; logged out, the header stays
-   minimal (logo + menu only).
+   at all, and YITH's guest wishlist genuinely persists (30-day cookie,
+   auto-merges into the account on login) — not just a throwaway session
+   — so it earns its spot in the header regardless of login state.
    Scoped to .header__actions specifically — .js-search-open/.js-cart-open
    are shared class names the bottom mobile-bar's own Search/Bag buttons
    reuse for the same delegated click handlers, so an unscoped rule here
@@ -489,12 +524,6 @@
 .header__account,
 .header__actions .js-search-open,
 .header__actions .js-cart-open {
-    @include sm {
-        display: none;
-    }
-}
-
-body:not(.logged-in) .header__wish {
     @include sm {
         display: none;
     }

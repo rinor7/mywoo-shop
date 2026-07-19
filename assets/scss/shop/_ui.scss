@@ -272,6 +272,22 @@
     }
 }
 
+/* Logged-in account avatar (first letter of display name) — replaces the
+   fa-user icon in both the desktop header and the mobile bottom-nav
+   Account tab; logged out, those fall back to the plain icon. */
+.icon-btn__avatar {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--r-pill);
+    background: var(--ink);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
 .icon-btn__count {
     position: absolute;
     top: 2px;

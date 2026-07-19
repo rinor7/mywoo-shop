@@ -60,10 +60,13 @@
     <header id="header-site" class="site-header js-header">
         <div class="shop-container header__inner">
 
-            <button type="button" class="header__burger js-menu-open" aria-label="<?php esc_attr_e( 'Open menu', 'base-theme' ); ?>"
-                aria-controls="mobile-menu" aria-expanded="false">
-                <span class="burger"><span></span><span></span><span></span></span>
-            </button>
+            <?php if ( ! function_exists( 'myshop_nav_menu_content' ) || 'search' !== myshop_nav_menu_content() ) : ?>
+                <!-- No menu drawer content worth opening while nav is replaced by search — revisit once the drawer has more in it. -->
+                <button type="button" class="header__burger js-menu-open" aria-label="<?php esc_attr_e( 'Open menu', 'base-theme' ); ?>"
+                    aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="burger"><span></span><span></span><span></span></span>
+                </button>
+            <?php endif; ?>
 
             <div class="header__logo">
                 <?php if ( has_custom_logo() ) : ?>
@@ -114,9 +117,14 @@
                     </button>
                 <?php endif; ?>
 
+                <?php $user_initial = function_exists( 'myshop_user_initial' ) ? myshop_user_initial() : ''; ?>
                 <a class="icon-btn header__account" href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/' ) ); ?>"
                     aria-label="<?php esc_attr_e( 'My account', 'base-theme' ); ?>">
-                    <i class="fa-regular fa-user" aria-hidden="true"></i>
+                    <?php if ( $user_initial ) : ?>
+                        <span class="icon-btn__avatar" aria-hidden="true"><?php echo esc_html( $user_initial ); ?></span>
+                    <?php else : ?>
+                        <i class="fa-regular fa-user" aria-hidden="true"></i>
+                    <?php endif; ?>
                 </a>
 
                 <?php $wishlist_url = function_exists( 'myshop_wishlist_url' ) ? myshop_wishlist_url() : ''; ?>

@@ -201,6 +201,22 @@ function myshop_nav_menu_content() {
 }
 
 /**
+ * First letter of the logged-in user's display name, for the account
+ * icon's avatar — empty string when logged out (fall back to the plain
+ * person icon there).
+ */
+function myshop_user_initial() {
+	if ( ! is_user_logged_in() ) {
+		return '';
+	}
+
+	$user = wp_get_current_user();
+	$name = $user->display_name ? $user->display_name : $user->user_login;
+
+	return $name ? strtoupper( mb_substr( $name, 0, 1 ) ) : '';
+}
+
+/**
  * Accepted-payment icon row (footer, cart summary).
  */
 function myshop_payment_icons() {

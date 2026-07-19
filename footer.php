@@ -293,9 +293,14 @@ $mb_bag     = $is_woo && ( is_cart() || is_checkout() );
 		<span><?php esc_html_e( 'Search', 'base-theme' ); ?></span>
 	</button>
 
+	<?php $mb_user_initial = function_exists( 'myshop_user_initial' ) ? myshop_user_initial() : ''; ?>
 	<a class="mobile-bar__item<?php echo $mb_account ? ' is-active' : ''; ?>" href="<?php echo esc_url( $account ); ?>"
 		<?php echo $mb_account ? 'aria-current="page"' : ''; ?>>
-		<i class="fa-regular fa-user" aria-hidden="true"></i>
+		<?php if ( $mb_user_initial ) : ?>
+			<span class="icon-btn__avatar" aria-hidden="true"><?php echo esc_html( $mb_user_initial ); ?></span>
+		<?php else : ?>
+			<i class="fa-regular fa-user" aria-hidden="true"></i>
+		<?php endif; ?>
 		<span><?php esc_html_e( 'Account', 'base-theme' ); ?></span>
 	</a>
 
