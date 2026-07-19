@@ -56,20 +56,14 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
         animation: noticeInRight .5s var(--ease-out) both;
     }
 
-    /* Sits flush at the bottom (like the sticky PDP bar) so it fully covers
-       .mobile-bar underneath instead of leaving part of it peeking out —
-       z-index already wins, the safe-area margin on the card itself just
-       keeps its content clear of the home-indicator area. */
+    /* Same bottom inset as .mobile-bar itself (not flush at the very edge,
+       no extra padding needed) — sharing that baseline plus this notice's
+       own taller card height and higher z-index fully covers it, same
+       reasoning as the sticky PDP bar. */
     @include sm {
         top: auto;
-        bottom: 0;
+        bottom: calc(14px + env(safe-area-inset-bottom));
         right: 16px;
-
-        .woocommerce-message,
-        .woocommerce-info,
-        .woocommerce-error {
-            margin-bottom: calc(8px + env(safe-area-inset-bottom));
-        }
     }
 }
 

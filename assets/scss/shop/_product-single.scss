@@ -478,20 +478,27 @@
         }
     }
 
-    /* Mirrors .mobile-bar's floating-pill language instead of clashing with
-       it as a flat edge-to-edge bar. Sits flush at the very bottom (like on
-       desktop) so it fully covers .mobile-bar underneath — its own z-index
-       already wins. Equal top/bottom padding keeps the content centered;
-       only the safe-area inset is bottom-only (that's the home-indicator
-       reservation, not a design asymmetry) — together they guarantee the
-       covered area is always at least as tall as .mobile-bar's own
-       footprint (14px inset + ~64px), so no sliver of it peeks out. */
+    /* Mirrors .mobile-bar's floating-pill language: the exact same bottom
+       inset as .mobile-bar (not flush at the very edge, and no extra
+       padding needed) — since both then share the same bottom edge and
+       this bar's natural height (~74px) is already taller than
+       .mobile-bar's (~64px), it fully covers it with room to spare,
+       purely from sharing that baseline plus its own higher z-index. */
     @include sm {
         left: 14px;
         right: 14px;
-        bottom: 0;
-        padding-top: 3px;
-        padding-bottom: calc(3px + env(safe-area-inset-bottom));
+        bottom: calc(14px + env(safe-area-inset-bottom));
+        /* translateY(100%) alone only shifts the bar down by its own
+           height — correct when bottom:0, but with a 14px+safe-area bottom
+           offset that same shift still leaves exactly that offset peeking
+           above the viewport edge while "hidden". Add it to the shift so
+           the hidden position clears the viewport completely. */
+        transform: translateY(calc(100% + 14px + env(safe-area-inset-bottom)));
+
+        &.is-visible {
+            transform: none;
+        }
+
         border: 1px solid var(--line);
         border-radius: var(--r-lg);
         background: rgba(255, 255, 255, .92);

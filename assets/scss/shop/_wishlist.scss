@@ -331,10 +331,11 @@ ul.wishlist_table {
         line-height: 1.35;
 
         a {
-            color: var(--ink);
+            color: var(--ink) !important;
+            text-decoration: none !important;
 
             &:hover {
-                color: var(--accent);
+                color: var(--accent) !important;
             }
         }
     }
@@ -364,23 +365,30 @@ ul.wishlist_table {
             width: 100%;
         }
 
+        /* YITH's own stylesheet sets `.wishlist_table tr td { border-color;
+           background; color }` — a descendant selector that also matches
+           these nested cells, at the exact same specificity as the rules
+           below, and it loads after this theme's stylesheet — so it wins
+           ties by cascade order alone. !important forces these to win
+           regardless of enqueue order. */
         td {
-            padding: 3px 0;
-            border: 0;
+            padding: 3px 0 !important;
+            border: 0 !important;
+            background: none !important;
             font-size: 12.5px;
             min-width: 0;
         }
 
         .label {
             flex-shrink: 0;
-            color: var(--muted);
+            color: var(--muted) !important;
         }
 
         .value,
         .product-quantity {
             text-align: right;
             font-weight: 600;
-            color: var(--ink);
+            color: var(--ink) !important;
         }
     }
 
