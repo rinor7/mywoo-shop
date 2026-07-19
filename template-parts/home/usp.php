@@ -2,19 +2,12 @@
 /**
  * Home — trust / service bar.
  *
- * Items come from "Frontpage Content → Trust bar" when rows exist.
+ * Items come from "Frontpage Content → Trust bar" — no rows, no section.
  *
  * @package Base Theme
  */
 
 defined( 'ABSPATH' ) || exit;
-
-$defaults = array(
-	array( 'fa-truck-fast', __( 'Free delivery', 'base-theme' ), __( 'On every order over &euro;100', 'base-theme' ) ),
-	array( 'fa-rotate-left', __( '30-day returns', 'base-theme' ), __( 'Changed your mind? Send it back', 'base-theme' ) ),
-	array( 'fa-lock', __( 'Secure checkout', 'base-theme' ), __( 'Encrypted payments, always', 'base-theme' ) ),
-	array( 'fa-headset', __( 'Talk to a human', 'base-theme' ), __( 'Mon–Sat, 9:00 to 18:00', 'base-theme' ) ),
-);
 
 $rows  = myshop_c( 'usp_items', array() );
 $items = array();
@@ -27,8 +20,10 @@ if ( $rows ) {
 			$row['usp_text'],
 		);
 	}
-} else {
-	$items = $defaults;
+}
+
+if ( ! $items ) {
+	return;
 }
 ?>
 

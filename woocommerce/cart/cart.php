@@ -173,10 +173,15 @@ do_action( 'woocommerce_before_cart' );
 				<?php myshop_payment_badges(); ?>
 			</div>
 
-			<div class="cart-summary__secure">
-				<i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-				<?php esc_html_e( 'Secure checkout guaranteed', 'base-theme' ); ?>
-			</div>
+			<?php
+			$secure_note = function_exists( 'myshop_opt' ) ? trim( (string) myshop_opt( 'cart_secure_note', '' ) ) : '';
+			if ( '' !== $secure_note ) :
+				?>
+				<div class="cart-summary__secure">
+					<i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+					<?php echo esc_html( $secure_note ); ?>
+				</div>
+			<?php endif; ?>
 		</aside>
 
 	</div>

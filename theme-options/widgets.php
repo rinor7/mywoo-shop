@@ -57,7 +57,7 @@ add_action( 'widgets_init', 'standard_widgets_init' );
 class MyShop_Social_Widget extends WP_Widget {
 
 	/** Networks offered in the widget form: slug => [label, Font Awesome class, placeholder]. */
-	private const NETWORKS = array(
+	public const NETWORKS = array(
 		'instagram' => array( 'Instagram', 'fa-instagram', '@username or full URL' ),
 		'facebook'  => array( 'Facebook', 'fa-facebook-f', 'username or full URL' ),
 		'whatsapp'  => array( 'WhatsApp', 'fa-whatsapp', '+383 44 123 456 or wa.me link' ),
@@ -187,3 +187,49 @@ add_action(
 		register_widget( 'MyShop_Social_Widget' );
 	}
 );
+
+/**
+ * Links saved in the Social Icons widget (first instance placed in an active
+ * sidebar). Lets other parts of the theme — like the mobile menu drawer —
+ * reuse the exact URLs the admin manages in Appearance → Widgets.
+ *
+ * @return array[] slug => [url, label, icon]
+ */
+function myshop_social_links() {
+	$instances = get_option( 'widget_myshop_social', array() );
+
+	if ( ! is_array( $instances ) ) {
+		return array();
+	}
+
+	$placed = array();
+	foreach ( wp_get_sidebars_widgets() as $sidebar_id => $widget_ids ) {
+		if ( 'wp_inactive_widgets' === $sidebar_id || ! is_array( $widget_ids ) ) {
+			continue;
+		}
+		foreach ( $widget_ids as $widget_id ) {
+			if ( 0 === strpos( $widget_id, 'myshop_social-' ) ) {
+				$placed[] = (int) substr( $widget_id, strlen( 'myshop_social-' ) );
+			}
+		}
+	}
+
+	$links = array();
+
+	foreach ( $placed as $number ) {
+		if ( empty( $instances[ $number ] ) || ! is_array( $instances[ $number ] ) ) {
+			continue;
+		}
+		foreach ( MyShop_Social_Widget::NETWORKS as $slug => $net ) {
+			if ( ! isset( $links[ $slug ] ) && ! empty( $instances[ $number ][ $slug ] ) ) {
+				$links[ $slug ] = array(
+					'url'   => $instances[ $number ][ $slug ],
+					'label' => $net[0],
+					'icon'  => $net[1],
+				);
+			}
+		}
+	}
+
+	return $links;
+}

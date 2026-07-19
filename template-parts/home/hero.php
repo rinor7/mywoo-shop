@@ -107,11 +107,14 @@ if ( $rows ) {
 										<?php endif; ?>
 									</div>
 
-									<ul class="hero__meta">
-										<?php foreach ( array_slice( myshop_pdp_perks(), 0, 2 ) as $perk ) : ?>
-											<li><i class="fa-solid <?php echo esc_attr( $perk[0] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $perk[1] ); ?></li>
-										<?php endforeach; ?>
-									</ul>
+									<?php $hero_perks = array_slice( myshop_pdp_perks(), 0, 2 ); ?>
+									<?php if ( $hero_perks ) : ?>
+										<ul class="hero__meta">
+											<?php foreach ( $hero_perks as $perk ) : ?>
+												<li><i class="fa-solid <?php echo esc_attr( $perk[0] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $perk[1] ); ?></li>
+											<?php endforeach; ?>
+										</ul>
+									<?php endif; ?>
 								</div>
 
 								<div class="hero__media">

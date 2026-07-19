@@ -92,6 +92,7 @@ require get_template_directory() . '/theme-options/widgets.php';
 require get_template_directory() . '/theme-options/search-suggestions.php';
 require get_template_directory() . '/theme-options/multilingual.php';
 require get_template_directory() . '/theme-options/store-ui.php';
+require get_template_directory() . '/theme-options/policy-page.php';
 require get_template_directory() . '/theme-options/container-admin-customize.php';
 // require get_template_directory() . '/theme-options/acf-navigation-background.php';
 require get_template_directory() . '/theme-options/general-functions.php';

@@ -2,8 +2,8 @@
 /**
  * Global Settings → store UI content that used to be hardcoded:
  * announcement bar, free-shipping threshold, product-page perks,
- * accepted-payment icons. Every helper falls back to the previous
- * built-in values, so empty settings never blank the storefront.
+ * accepted-payment icons, cart trust note. The admin values are the
+ * only source — an emptied field simply hides that element.
  *
  * @package Base Theme
  */
@@ -51,7 +51,7 @@ add_action(
 				'label'        => __( 'Messages', 'base-theme' ),
 				'type'         => 'textarea',
 				'rows'         => 4,
-				'instructions' => __( 'One message per line — they rotate automatically. Leave empty to use the built-in defaults.', 'base-theme' ),
+				'instructions' => __( 'One message per line — they rotate automatically. Leave empty to hide the bar.', 'base-theme' ),
 			)
 		);
 
@@ -88,7 +88,7 @@ add_action(
 				'label'        => __( 'Product page perks', 'base-theme' ),
 				'type'         => 'textarea',
 				'rows'         => 4,
-				'instructions' => __( 'One perk per line, shown under the add-to-bag button (e.g. "Free delivery over CHF 100"). Leave empty for the defaults.', 'base-theme' ),
+				'instructions' => __( 'One perk per line, shown under the add-to-bag button (e.g. "Free delivery over CHF 100"). Leave empty to hide the list.', 'base-theme' ),
 			)
 		);
 
@@ -110,6 +110,17 @@ add_action(
 				),
 				'default_value' => array( 'visa', 'mastercard', 'amex', 'paypal', 'apple-pay' ),
 				'layout'        => 'horizontal',
+			)
+		);
+
+		acf_add_local_field(
+			array(
+				'key'          => 'field_ms_cart_secure_note',
+				'parent'       => $parent,
+				'name'         => 'cart_secure_note',
+				'label'        => __( 'Cart trust note', 'base-theme' ),
+				'type'         => 'text',
+				'instructions' => __( 'Short reassurance line under the cart order summary (e.g. "Secure checkout guaranteed"). Leave empty to hide it.', 'base-theme' ),
 			)
 		);
 	}
@@ -143,26 +154,7 @@ function myshop_announce_messages() {
 	$raw   = (string) myshop_opt( 'announce_messages', '' );
 	$lines = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $raw ) ) );
 
-	if ( $lines ) {
-		return array_slice( array_values( $lines ), 0, 6 );
-	}
-
-	// Built-in defaults; the shipping line follows the configured threshold.
-	$threshold = myshop_free_shipping_threshold();
-	$messages  = array();
-
-	if ( $threshold > 0 && function_exists( 'wc_price' ) ) {
-		$messages[] = sprintf(
-			/* translators: %s: formatted threshold amount */
-			__( 'Complimentary shipping on orders over %s', 'base-theme' ),
-			wp_strip_all_tags( wc_price( $threshold, array( 'decimals' => 0 ) ) )
-		);
-	}
-
-	$messages[] = __( '30-day returns — no questions asked', 'base-theme' );
-	$messages[] = __( 'New season has landed. Up to 20% off selected pieces', 'base-theme' );
-
-	return $messages;
+	return array_slice( array_values( $lines ), 0, 6 );
 }
 
 /**
@@ -174,20 +166,6 @@ function myshop_pdp_perks() {
 	$icons = array( 'fa-truck-fast', 'fa-rotate-left', 'fa-lock', 'fa-headset' );
 	$raw   = (string) myshop_opt( 'pdp_perks', '' );
 	$lines = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $raw ) ) );
-
-	if ( ! $lines ) {
-		$threshold = myshop_free_shipping_threshold();
-		$lines     = array(
-			$threshold > 0 && function_exists( 'wc_price' )
-				? sprintf(
-					/* translators: %s: formatted threshold amount */
-					__( 'Free delivery over %s', 'base-theme' ),
-					wp_strip_all_tags( wc_price( $threshold, array( 'decimals' => 0 ) ) )
-				)
-				: __( 'Fast, tracked delivery', 'base-theme' ),
-			__( '30-day returns, no questions asked', 'base-theme' ),
-		);
-	}
 
 	$perks = array();
 
@@ -202,7 +180,7 @@ function myshop_pdp_perks() {
  * Accepted-payment icon row (footer, cart summary).
  */
 function myshop_payment_icons() {
-	$chosen = (array) myshop_opt( 'payment_icons', array( 'visa', 'mastercard', 'amex', 'paypal', 'apple-pay' ) );
+	$chosen = (array) myshop_opt( 'payment_icons', array() );
 
 	if ( ! $chosen ) {
 		return;

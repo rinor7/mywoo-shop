@@ -3,15 +3,9 @@
  * @package Base Theme
  */
 
-$shop     = myshop_shop_url();
-$account  = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/' );
-$is_woo   = function_exists( 'WC' );
-$cats     = myshop_get_categories( 6 );
-$socials  = array(
-	'instagram' => 'fa-instagram',
-	'facebook'  => 'fa-facebook-f',
-	'whatsapp'  => 'fa-whatsapp',
-);
+$shop    = myshop_shop_url();
+$account = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/' );
+$is_woo  = function_exists( 'WC' );
 ?>
 
 <footer id="footer-site" class="site-footer">
@@ -43,27 +37,12 @@ $socials  = array(
 				<div class="footer__col">
 					<?php if ( is_active_sidebar( 'footer-2' ) ) : ?>
 						<?php dynamic_sidebar( 'footer-2' ); ?>
-					<?php else : ?>
-						<ul>
-							<?php foreach ( array_slice( $cats, 0, 5 ) as $cat ) : ?>
-								<li><a href="<?php echo esc_url( $cat['link'] ); ?>"><?php echo esc_html( $cat['name'] ); ?></a></li>
-							<?php endforeach; ?>
-							<li><a href="<?php echo esc_url( $shop ); ?>"><?php esc_html_e( 'All products', 'base-theme' ); ?></a></li>
-						</ul>
 					<?php endif; ?>
 				</div>
 
 				<div class="footer__col">
 					<?php if ( is_active_sidebar( 'footer-3' ) ) : ?>
 						<?php dynamic_sidebar( 'footer-3' ); ?>
-					<?php else : ?>
-						<ul>
-							<li><a href="<?php echo esc_url( home_url( '/contact' ) ); ?>"><?php esc_html_e( 'Contact us', 'base-theme' ); ?></a></li>
-							<li><a href="<?php echo esc_url( $shop ); ?>"><?php esc_html_e( 'Shipping &amp; delivery', 'base-theme' ); ?></a></li>
-							<li><a href="<?php echo esc_url( $shop ); ?>"><?php esc_html_e( 'Returns &amp; exchanges', 'base-theme' ); ?></a></li>
-							<li><a href="<?php echo esc_url( $shop ); ?>"><?php esc_html_e( 'Track your order', 'base-theme' ); ?></a></li>
-							<li><a href="<?php echo esc_url( $shop ); ?>"><?php esc_html_e( 'Size guide', 'base-theme' ); ?></a></li>
-						</ul>
 					<?php endif; ?>
 				</div>
 
@@ -144,15 +123,22 @@ $socials  = array(
 				<?php esc_html_e( 'My account', 'base-theme' ); ?>
 			</a>
 
-			<ul class="menu-drawer__social">
-				<?php foreach ( $socials as $name => $icon ) : ?>
-					<li>
-						<a href="#" aria-label="<?php echo esc_attr( ucfirst( $name ) ); ?>">
-							<i class="fa-brands <?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i>
-						</a>
-					</li>
-				<?php endforeach; ?>
-			</ul>
+			<?php
+			// Same links the Social Icons widget renders in the footer.
+			$drawer_socials = function_exists( 'myshop_social_links' ) ? myshop_social_links() : array();
+			if ( $drawer_socials ) :
+				?>
+				<ul class="menu-drawer__social">
+					<?php foreach ( $drawer_socials as $social ) : ?>
+						<li>
+							<a href="<?php echo esc_url( $social['url'] ); ?>" target="_blank" rel="noopener"
+								aria-label="<?php echo esc_attr( $social['label'] ); ?>">
+								<i class="fa-brands <?php echo esc_attr( $social['icon'] ); ?>" aria-hidden="true"></i>
+							</a>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
 		</div>
 	</div>
 </aside>
@@ -188,7 +174,10 @@ $socials  = array(
 		if ( $popular ) :
 			?>
 			<div class="search-overlay__suggest">
-				<span class="search-overlay__suggest-label"><?php echo esc_html( myshop_search_suggest_label() ); ?></span>
+				<?php $suggest_label = myshop_search_suggest_label(); ?>
+				<?php if ( '' !== $suggest_label ) : ?>
+					<span class="search-overlay__suggest-label"><?php echo esc_html( $suggest_label ); ?></span>
+				<?php endif; ?>
 				<ul>
 					<?php
 					foreach ( $popular as $term ) :

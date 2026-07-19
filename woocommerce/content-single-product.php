@@ -100,11 +100,14 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 					?>
 				</div>
 
-				<ul class="pdp-panel__meta">
-					<?php foreach ( myshop_pdp_perks() as $perk ) : ?>
-						<li><i class="fa-solid <?php echo esc_attr( $perk[0] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $perk[1] ); ?></li>
-					<?php endforeach; ?>
-				</ul>
+				<?php $pdp_perks = myshop_pdp_perks(); ?>
+				<?php if ( $pdp_perks ) : ?>
+					<ul class="pdp-panel__meta">
+						<?php foreach ( $pdp_perks as $perk ) : ?>
+							<li><i class="fa-solid <?php echo esc_attr( $perk[0] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $perk[1] ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
 
 			</div>
 		</div>

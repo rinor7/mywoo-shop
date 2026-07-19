@@ -150,11 +150,15 @@ if ( ! $shipping ) {
 				},
 				myshop_pdp_perks()
 			);
-			printf(
-				/* translators: %s: comma-separated perk list from Global Settings */
-				esc_html__( '%s and first access to limited releases — yours with every order.', 'base-theme' ),
-				esc_html( implode( ', ', $myshop_perk_lines ) )
-			);
+			if ( $myshop_perk_lines ) {
+				printf(
+					/* translators: %s: comma-separated perk list from Global Settings */
+					esc_html__( '%s and first access to limited releases — yours with every order.', 'base-theme' ),
+					esc_html( implode( ', ', $myshop_perk_lines ) )
+				);
+			} else {
+				esc_html_e( 'First access to limited releases — yours with every order.', 'base-theme' );
+			}
 			?>
 		</p>
 

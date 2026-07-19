@@ -13,19 +13,24 @@ get_header();
 
 <main id="primary" class="site-default policy">
 
+	<?php
+	$policy_eyebrow       = function_exists( 'get_field' ) ? trim( (string) get_field( 'policy_eyebrow' ) ) : '';
+	$policy_updated_label = function_exists( 'get_field' ) ? trim( (string) get_field( 'policy_updated_label' ) ) : '';
+	?>
+
 	<section class="policy-hero">
 		<div class="shop-container policy-hero__inner">
-			<span class="eyebrow"><?php esc_html_e( 'Legal', 'base-theme' ); ?></span>
+			<?php if ( '' !== $policy_eyebrow ) : ?>
+				<span class="eyebrow"><?php echo esc_html( $policy_eyebrow ); ?></span>
+			<?php endif; ?>
+
 			<h1 class="policy-hero__title"><?php the_title(); ?></h1>
-			<p class="policy-hero__updated">
-				<?php
-				printf(
-					/* translators: %s: last modified date */
-					esc_html__( 'Last updated %s', 'base-theme' ),
-					esc_html( get_the_modified_date() )
-				);
-				?>
-			</p>
+
+			<?php if ( '' !== $policy_updated_label ) : ?>
+				<p class="policy-hero__updated">
+					<?php echo esc_html( $policy_updated_label . ' ' . get_the_modified_date() ); ?>
+				</p>
+			<?php endif; ?>
 		</div>
 	</section>
 

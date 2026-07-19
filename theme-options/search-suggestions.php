@@ -75,12 +75,12 @@ function myshop_search_suggest_terms() {
 }
 
 /**
- * Heading above the chips, with the built-in default.
+ * Heading above the chips — empty string hides the heading.
  *
  * @return string
  */
 function myshop_search_suggest_label() {
 	$label = function_exists( 'get_field' ) ? (string) get_field( 'search_suggest_label', 'option' ) : '';
 
-	return '' !== trim( $label ) ? $label : __( 'Popular right now', 'base-theme' );
+	return trim( $label );
 }
