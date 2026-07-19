@@ -189,7 +189,7 @@ table.shop_table.wishlist_table {
             font-weight: 600;
             letter-spacing: var(--tracking);
             text-transform: uppercase;
-            text-decoration: none;
+            text-decoration: none !important;
             line-height: 1;
             white-space: nowrap;
             transition: background-color var(--t) var(--ease), transform var(--t-fast) var(--ease), box-shadow var(--t) var(--ease);
@@ -600,7 +600,7 @@ ul.wishlist_table {
             font-weight: 600;
             letter-spacing: var(--tracking);
             text-transform: uppercase;
-            text-decoration: none;
+            text-decoration: none !important;
             line-height: 1;
             transition: background-color var(--t) var(--ease);
 
