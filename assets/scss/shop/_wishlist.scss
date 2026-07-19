@@ -36,6 +36,7 @@ table.shop_table.wishlist_table {
         border: 0;
         border-bottom: 1px solid var(--line);
         background: var(--bone);
+        white-space: nowrap;
         font-size: 11px;
         font-weight: 600;
         letter-spacing: .1em;
@@ -231,13 +232,104 @@ table.shop_table.wishlist_table {
     }
 }
 
+/* ---------- Wishlist footer (share row, bulk actions, update/add-all/
+   ask-estimate buttons — all optional YITH features toggled in its own
+   settings). Containment here is a safety net: even if something inside
+   ever renders wider than expected again, it gets clipped to this section
+   instead of blowing out the whole page's width (which is what actually
+   broke the site footer earlier — a child overflowing here inflated
+   document.documentElement.scrollWidth past the viewport). */
+.yith_wcwl_wishlist_footer {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.yith_wcwl_wishlist_bulk_action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    label {
+        font-size: 12.5px;
+        color: var(--muted);
+    }
+
+    select {
+        height: 42px;
+        padding: 0 34px 0 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xs);
+        background: #fff;
+        font-family: inherit;
+        font-size: 16px;
+        color: var(--ink);
+    }
+
+    input[type="submit"] {
+        display: inline-flex;
+        align-items: center;
+        height: 42px;
+        padding: 0 20px;
+        border: 0;
+        border-radius: var(--r-xs);
+        background: var(--ink);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+        cursor: pointer;
+
+        &:hover {
+            background: var(--ink-soft);
+        }
+    }
+}
+
+.wishlist-actions,
+.yith_wcwl_footer_additional_action {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    input[type="submit"],
+    a.ask-an-estimate-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 46px;
+        padding: 0 24px;
+        border: 0;
+        border-radius: var(--r-xs);
+        background: var(--ink);
+        color: #fff !important;
+        font-family: inherit;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+        text-decoration: none !important;
+        cursor: pointer;
+        transition: background-color var(--t) var(--ease);
+
+        &:hover {
+            background: var(--ink-soft);
+        }
+    }
+}
+
 /* ---------- Share row ---------- */
 .yith-wcwl-share {
-    display: flex;
+    display: block;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px 18px;
     margin: 4px 0 32px;
+    max-width: 100%;
+    overflow-x: hidden;
 
     h4.yith-wcwl-share-title {
         margin: 0;
@@ -255,6 +347,7 @@ table.shop_table.wishlist_table {
         margin: 0;
         padding: 0;
         list-style: none;
+        padding-left: 0!important;
     }
 
     li {
@@ -326,6 +419,7 @@ ul.wishlist_table {
 
     .item-wrapper {
         display: flex;
+        flex-wrap: nowrap;
         gap: 14px;
         align-items: flex-start;
     }
@@ -414,6 +508,21 @@ ul.wishlist_table {
             text-align: right;
             font-weight: 600;
             color: var(--ink) !important;
+
+            /* Browser default styling for <del>/<ins> (price ranges/sales)
+               — line-through reads fine, but the underline on <ins> looks
+               like a stray link. */
+            del {
+                margin-right: 6px;
+                font-weight: 400;
+                color: var(--muted-2) !important;
+                text-decoration: line-through;
+            }
+
+            ins {
+                text-decoration: none !important;
+                color: var(--sale) !important;
+            }
         }
     }
 
@@ -421,6 +530,16 @@ ul.wishlist_table {
         margin-top: 12px;
         padding-top: 12px;
         border-top: 1px solid var(--line-soft);
+
+        /* Quantity/Stock rows sit in a separate wrapper the plugin renders
+           full-width below the thumbnail+title block — left-aligning them
+           under the thumbnail instead of under the title/price column
+           above reads as two different margins on the same card. Indent
+           just the label rows (not the CTA buttons, which stay full-width
+           on purpose) to match. */
+        table.additional-info {
+            padding-left: 82px;
+        }
     }
 
     input[type="number"] {
@@ -586,9 +705,19 @@ ul.wishlist_table {
             width: auto;
         }
 
+        /* WooCommerce core's own woocommerce-smallscreen.css (loaded via a
+           max-width:768px media link) hides ".cart .product-thumbnail" on
+           small screens — meant for the classic cart table, but this table
+           also carries a "cart" class (YITH piggybacks on Woo's cart-table
+           styles), so it gets caught as a side effect. Force it back. */
         .product-thumbnail {
+            display: block !important;
             width: auto;
             flex-shrink: 0;
+
+            a {
+                display: block !important;
+            }
         }
 
         .product-name {
@@ -621,9 +750,14 @@ ul.wishlist_table {
 
     .yith-wcwl-share {
         gap: 10px 14px;
-
+        @include sm {
+             margin-bottom: 0!important;
+        }
         h4.yith-wcwl-share-title {
             flex: 1 0 100%;
+            @include sm {
+                margin-top: 0!important;
+            }
         }
     }
 }

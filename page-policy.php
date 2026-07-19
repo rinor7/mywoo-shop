@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Policy Page
+ * Template Name: Default Page w Hero
  *
  * Shared template for legal pages (Privacy, Terms, Cookies, Refunds...):
  * a quiet banner with the H1, then the content in a readable column.

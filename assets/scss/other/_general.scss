@@ -122,6 +122,14 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
 
     > .container {
         max-width: 760px;
+
+        /* The 760px prose width is for hand-typed page content — a product
+           table (e.g. the wishlist page, a plain page rather than a
+           My Account endpoint) needs more room, just not the full shop-wide
+           stage cart/checkout get. */
+        &:has(.wishlist_table) {
+            max-width: 1040px;
+        }
     }
 }
 
@@ -170,7 +178,11 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
         margin-bottom: 0;
     }
 
-    a {
+    /* :not(...) on a/ul/ol below — same reasoning as the table exclusion:
+       plugin output (YITH wishlist's own <ul>, its share-icon list, etc.)
+       can land inside this same .container on a plain page and must keep
+       its own dedicated styling rather than inherit generic prose rules. */
+    a:not(.wishlist_table a, .shop_table a, .yith-wcwl-share a) {
         font-weight: 600;
         color: var(--ink, $black);
         text-decoration: underline;
@@ -181,7 +193,7 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
         }
     }
 
-    ul,
+    ul:not(.wishlist_table, .yith-wcwl-share, .yith-wcwl-share ul),
     ol {
         padding-left: 22px;
 
@@ -208,7 +220,12 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
         border-radius: var(--r-md, 14px);
     }
 
-    table {
+    /* :not(.shop_table) — WooCommerce/plugin tables (cart, orders, the
+       YITH wishlist table dropped on its own plain page) already have
+       their own dedicated styling elsewhere and carry this class; this
+       generic table styling is only for tables inside hand-typed page
+       content and must not double up on theirs. */
+    table:not(.shop_table) {
         width: 100%;
         margin: 1.4em 0;
         border-collapse: collapse;
