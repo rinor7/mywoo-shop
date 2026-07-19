@@ -309,6 +309,17 @@ body.is-locked {
     padding: 30px 28px 28px;
 }
 
+/* Reuses .search-overlay__form/__icon/__input as-is (same look, per
+   request) — just sized down for the drawer's ~400px column instead of
+   the full-viewport search overlay. */
+.menu-drawer__search {
+    margin-bottom: 32px;
+
+    .search-overlay__input {
+        font-size: 22px;
+    }
+}
+
 /* Primary items: numbered editorial index with a trailing arrow */
 .menu-drawer__nav {
     display: flex;
@@ -417,6 +428,22 @@ body.is-locked {
     gap: 24px;
     margin-top: auto;
     padding-top: 40px;
+
+    /* "My account" + "Log out" read as one paired group — tighter gap
+       between them than the rest of the stack (lang switch, socials). */
+    .btn--block + .btn--block {
+        margin-top: -12px;
+    }
+}
+
+.menu-drawer__logout {
+    border-color: var(--sale);
+    color: var(--sale);
+
+    &:hover {
+        background: var(--sale);
+        color: #fff;
+    }
 }
 
 .menu-drawer__social {

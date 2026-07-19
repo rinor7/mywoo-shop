@@ -103,17 +103,31 @@ $is_woo  = function_exists( 'WC' );
 	</header>
 
 	<div class="menu-drawer__body">
-		<?php
-		wp_nav_menu(
-			array(
-				'theme_location' => 'menu-1',
-				'menu_class'     => 'menu-drawer__nav',
-				'container'      => false,
-				'depth'          => 2,
-				'fallback_cb'    => 'myshop_mobile_nav_fallback',
-			)
-		);
-		?>
+		<?php if ( function_exists( 'myshop_nav_menu_content' ) && 'nav' === myshop_nav_menu_content() ) : ?>
+			<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => 'menu-1',
+					'menu_class'     => 'menu-drawer__nav',
+					'container'      => false,
+					'depth'          => 2,
+					'fallback_cb'    => 'myshop_mobile_nav_fallback',
+				)
+			);
+			?>
+		<?php else : ?>
+			<form class="search-overlay__form menu-drawer__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+				<i class="fa-solid fa-magnifying-glass search-overlay__icon" aria-hidden="true"></i>
+
+				<label class="screen-reader-text" for="drawer-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
+				<input class="search-overlay__input" type="search" id="drawer-search" name="s"
+					placeholder="<?php esc_attr_e( 'What are you looking for?', 'base-theme' ); ?>" autocomplete="off">
+
+				<?php if ( $is_woo ) : ?>
+					<input type="hidden" name="post_type" value="product">
+				<?php endif; ?>
+			</form>
+		<?php endif; ?>
 
 		<div class="menu-drawer__foot">
 			<?php if ( function_exists( 'myshop_language_switcher' ) ) { myshop_language_switcher( 'drawer' ); } ?>
@@ -122,6 +136,13 @@ $is_woo  = function_exists( 'WC' );
 				<i class="fa-regular fa-user" aria-hidden="true"></i>
 				<?php esc_html_e( 'My account', 'base-theme' ); ?>
 			</a>
+
+			<?php if ( is_user_logged_in() ) : ?>
+				<a class="btn btn--ghost btn--block menu-drawer__logout" href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>">
+					<i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+					<?php esc_html_e( 'Log out', 'base-theme' ); ?>
+				</a>
+			<?php endif; ?>
 
 			<?php
 			// Same links the Social Icons widget renders in the footer.

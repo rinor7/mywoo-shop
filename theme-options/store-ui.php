@@ -123,6 +123,22 @@ add_action(
 				'instructions' => __( 'Short reassurance line under the cart order summary (e.g. "Secure checkout guaranteed"). Leave empty to hide it.', 'base-theme' ),
 			)
 		);
+
+		acf_add_local_field(
+			array(
+				'key'           => 'field_ms_nav_menu_content',
+				'parent'        => $parent,
+				'name'          => 'nav_menu_content',
+				'label'         => __( 'Header navigation content', 'base-theme' ),
+				'type'          => 'button_group',
+				'choices'       => array(
+					'search' => __( 'Search input', 'base-theme' ),
+					'nav'    => __( 'Navigation menu', 'base-theme' ),
+				),
+				'default_value' => 'search',
+				'instructions'  => __( 'What shows in place of the nav menu — the desktop header\'s middle nav bar, and the top of the mobile hamburger menu. With only a few pages, a quick search is more useful than a repeated nav list — switch back to the menu once there are more pages to link to.', 'base-theme' ),
+			)
+		);
 	}
 );
 
@@ -174,6 +190,14 @@ function myshop_pdp_perks() {
 	}
 
 	return $perks;
+}
+
+/**
+ * What replaces the nav menu — the desktop header's middle nav bar, and
+ * the top of the mobile hamburger menu: 'search' (default) or 'nav'.
+ */
+function myshop_nav_menu_content() {
+	return myshop_opt( 'nav_menu_content', 'search' );
 }
 
 /**

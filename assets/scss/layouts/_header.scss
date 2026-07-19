@@ -248,6 +248,67 @@
     }
 }
 
+/* Alternative to .header__nav (Global Settings → Store UI → "Header
+   navigation content") — same centered slot in the grid, hidden at the
+   same breakpoint since mobile has its own search entry point (bottom
+   bar + hamburger drawer) already. */
+.header__search {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    gap: 10px;
+    width: clamp(240px, 24vw, 360px);
+    height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--bone);
+    box-shadow: inset 0 1px 2px rgba(16, 17, 20, .03);
+    transition: border-color var(--t) var(--ease),
+                background-color var(--t) var(--ease),
+                box-shadow var(--t) var(--ease);
+
+    &:hover {
+        border-color: var(--muted-2);
+    }
+
+    &:focus-within {
+        border-color: var(--ink);
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(16, 17, 20, .06);
+    }
+
+    @include md {
+        display: none;
+    }
+}
+
+.header__search-icon {
+    flex-shrink: 0;
+    font-size: 13px;
+    color: var(--muted-2);
+}
+
+.header__search-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink);
+
+    &::placeholder {
+        color: var(--muted-2);
+        font-weight: 400;
+    }
+
+    &::-webkit-search-cancel-button {
+        display: none;
+    }
+}
+
 .nav-list {
     display: flex;
     align-items: center;
@@ -415,10 +476,25 @@
     justify-self: end;
 }
 
-/* Account is dropped on mobile since it has a bottom-bar equivalent tab;
-   wishlist has no bottom-bar tab, so it must stay visible here or it has
-   no access point on mobile at all. */
-.header__account {
+/* Account, Search and Bag all have a bottom-bar equivalent tab on mobile,
+   so showing them here too is redundant. Wishlist has no bottom-bar tab
+   when logged out either, but a guest wishlist isn't really a persistent,
+   meaningful feature the way it is once signed in — so it only earns its
+   spot in the header for logged-in users; logged out, the header stays
+   minimal (logo + menu only).
+   Scoped to .header__actions specifically — .js-search-open/.js-cart-open
+   are shared class names the bottom mobile-bar's own Search/Bag buttons
+   reuse for the same delegated click handlers, so an unscoped rule here
+   would hide those too. */
+.header__account,
+.header__actions .js-search-open,
+.header__actions .js-cart-open {
+    @include sm {
+        display: none;
+    }
+}
+
+body:not(.logged-in) .header__wish {
     @include sm {
         display: none;
     }

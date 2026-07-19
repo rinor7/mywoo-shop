@@ -1083,4 +1083,28 @@
             );
         });
     }());
+
+    /* ==========================================================
+       YITH wishlist (mobile layout) — move the stock badge onto the
+       thumbnail as a corner tag instead of its own "Stock:" row; the
+       desktop table's column layout already reads fine as-is.
+    ========================================================== */
+    (function () {
+        qsa('ul.wishlist_table li').forEach(function (li) {
+            var badge = li.querySelector('.wishlist-in-stock, .wishlist-out-of-stock');
+            var thumb = li.querySelector('.product-thumbnail');
+            if (!badge || !thumb) { return; }
+
+            var row = badge.closest('tr');
+            var table = row ? row.closest('table.additional-info') : null;
+            thumb.appendChild(badge);
+            if (row && row.parentNode) { row.parentNode.removeChild(row); }
+
+            // No Quantity row (or anything else) left — drop the now-empty
+            // table so its border-top separator doesn't show on its own.
+            if (table && !table.querySelector('tr')) {
+                table.parentNode.removeChild(table);
+            }
+        });
+    }());
 }());

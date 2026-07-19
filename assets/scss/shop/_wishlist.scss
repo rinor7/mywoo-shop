@@ -425,6 +425,10 @@ ul.wishlist_table {
     }
 
     .product-thumbnail {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
         flex-shrink: 0;
 
         img {
@@ -434,6 +438,24 @@ ul.wishlist_table {
             object-fit: cover;
             border-radius: var(--r-xs);
             background: var(--bone-2);
+        }
+
+        /* Moved here from its own "Stock:" row by JS (main.js) — sits below
+           the thumbnail (in the column's own leftover vertical space)
+           rather than overlapping the product photo itself. */
+        .wishlist-in-stock,
+        .wishlist-out-of-stock {
+            height: 18px;
+            padding: 0 6px;
+            font-size: 7.5px;
+            letter-spacing: .04em;
+            gap: 3px;
+            white-space: nowrap;
+
+            &::before {
+                width: 5px;
+                height: 5px;
+            }
         }
     }
 

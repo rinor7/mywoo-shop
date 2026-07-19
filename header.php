@@ -75,27 +75,44 @@
                 <?php endif; ?>
             </div>
 
-            <nav class="header__nav" aria-label="<?php esc_attr_e( 'Primary', 'base-theme' ); ?>">
-                <?php
-                wp_nav_menu(
-                    array(
-                        'theme_location' => 'menu-1',
-                        'menu_id'        => 'primary-menu',
-                        'menu_class'     => 'nav-list',
-                        'container'      => false,
-                        'depth'          => 2,
-                        'fallback_cb'    => 'myshop_nav_fallback',
-                    )
-                );
-                ?>
-            </nav>
+            <?php if ( function_exists( 'myshop_nav_menu_content' ) && 'search' === myshop_nav_menu_content() ) : ?>
+                <form class="header__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+                    <i class="fa-solid fa-magnifying-glass header__search-icon" aria-hidden="true"></i>
+
+                    <label class="screen-reader-text" for="header-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
+                    <input class="header__search-input" type="search" id="header-search" name="s"
+                        placeholder="<?php esc_attr_e( 'What are you looking for?', 'base-theme' ); ?>" autocomplete="off">
+
+                    <?php if ( function_exists( 'WC' ) ) : ?>
+                        <input type="hidden" name="post_type" value="product">
+                    <?php endif; ?>
+                </form>
+            <?php else : ?>
+                <nav class="header__nav" aria-label="<?php esc_attr_e( 'Primary', 'base-theme' ); ?>">
+                    <?php
+                    wp_nav_menu(
+                        array(
+                            'theme_location' => 'menu-1',
+                            'menu_id'        => 'primary-menu',
+                            'menu_class'     => 'nav-list',
+                            'container'      => false,
+                            'depth'          => 2,
+                            'fallback_cb'    => 'myshop_nav_fallback',
+                        )
+                    );
+                    ?>
+                </nav>
+            <?php endif; ?>
 
             <div class="header__actions">
                 <?php if ( function_exists( 'myshop_language_switcher' ) ) { myshop_language_switcher(); } ?>
 
-                <button type="button" class="icon-btn js-search-open" aria-label="<?php esc_attr_e( 'Search', 'base-theme' ); ?>">
-                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                </button>
+                <?php if ( ! function_exists( 'myshop_nav_menu_content' ) || 'search' !== myshop_nav_menu_content() ) : ?>
+                    <!-- Redundant when the header already shows a search field in the nav slot. -->
+                    <button type="button" class="icon-btn js-search-open" aria-label="<?php esc_attr_e( 'Search', 'base-theme' ); ?>">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    </button>
+                <?php endif; ?>
 
                 <a class="icon-btn header__account" href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/' ) ); ?>"
                     aria-label="<?php esc_attr_e( 'My account', 'base-theme' ); ?>">
