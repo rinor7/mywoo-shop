@@ -26,13 +26,18 @@
         var el = document.createElement('div');
         el.className = 'toast';
 
+        var badge = document.createElement('span');
+        badge.className = 'toast__icon';
+
         var i = document.createElement('i');
         i.className = 'fa-solid ' + (icon || 'fa-circle-check');
+        badge.appendChild(i);
 
         var span = document.createElement('span');
+        span.className = 'toast__text';
         span.textContent = message;
 
-        el.appendChild(i);
+        el.appendChild(badge);
         el.appendChild(span);
         toastStack.appendChild(el);
 
@@ -195,6 +200,33 @@
         window.addEventListener('resize', setHeight);
         setHeight();
         onScroll();
+    }());
+
+    /* ==========================================================
+       Mobile bottom nav clearance — measured, not guessed, so any
+       fixed bar meant to sit above it (e.g. the PDP sticky add-to-
+       bag bar) lines up exactly, including as iOS's
+       env(safe-area-inset-bottom) shifts when the browser chrome
+       collapses/expands on scroll.
+    ========================================================== */
+    (function () {
+        var mobileBar = qs('.mobile-bar');
+        if (!mobileBar) { return; }
+
+        function setClearance() {
+            var style = window.getComputedStyle(mobileBar);
+            if (style.display === 'none') { return; }
+            var bottom = parseFloat(style.bottom) || 0;
+            var clearance = bottom + mobileBar.offsetHeight + 14;
+            document.documentElement.style.setProperty('--mobile-bar-clear', clearance + 'px');
+        }
+
+        window.addEventListener('resize', setClearance);
+        window.addEventListener('orientationchange', setClearance);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', setClearance);
+        }
+        setClearance();
     }());
 
     /* ==========================================================

@@ -467,10 +467,22 @@
         font-weight: 700;
     }
 
-    /* keep clear of the floating mobile nav pill */
+    /* Mirrors .mobile-bar's floating-pill language instead of clashing with
+       it as a flat edge-to-edge bar. --mobile-bar-clear is measured in JS
+       (main.js) from the real rendered nav so it stays correct even as
+       iOS's env(safe-area-inset-bottom) shifts with the browser chrome;
+       the calc() is only a pre-JS/no-JS fallback. */
     @include sm {
-        bottom: calc(90px + env(safe-area-inset-bottom));
-        border-bottom: 1px solid var(--line);
+        left: 14px;
+        right: 14px;
+        bottom: var(--mobile-bar-clear, calc(90px + env(safe-area-inset-bottom)));
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        background: rgba(255, 255, 255, .92);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
     }
 }
 

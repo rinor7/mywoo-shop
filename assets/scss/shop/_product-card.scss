@@ -122,8 +122,11 @@
         white-space: nowrap;
         transition: background-color var(--t) var(--ease);
 
-        &:hover {
+        &:hover,
+        &:focus,
+        &:active {
             background: var(--ink-soft);
+            color: #fff;
         }
 
         &.is-loading {

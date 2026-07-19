@@ -86,7 +86,7 @@ form.myshop-checkout {
             background: #fff;
             box-shadow: none;
             font-family: inherit;
-            font-size: 15px;
+            font-size: 16px;
             color: var(--ink);
             transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
 
@@ -152,7 +152,7 @@ form.myshop-checkout {
         .select2-selection__rendered {
             padding: 0 46px 0 18px;
             line-height: 54px;
-            font-size: 15px;
+            font-size: 16px;
             color: var(--ink);
         }
 
@@ -1122,7 +1122,7 @@ form.myshop-checkout {
             border: 1px solid var(--line);
             border-radius: var(--r-xs);
             font-family: inherit;
-            font-size: 13px;
+            font-size: 16px;
             color: var(--ink);
             transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
 
@@ -1215,11 +1215,14 @@ form.myshop-checkout {
         /* woo's table.shop_table td border-top outranks the base reset */
         padding: 16px 0;
         border: 0 !important;
-        vertical-align: middle;
+        /* top-aligned so the price lines up with the title's own line,
+           instead of centering against the row's full height (which grows
+           when a .variation line is present under the title). */
+        vertical-align: top;
     }
 
     &__media {
-        width: 86px;
+        width: 104px;
     }
 
     &__thumb {
@@ -1228,8 +1231,8 @@ form.myshop-checkout {
 
         img {
             display: block;
-            width: 74px;
-            height: 92px;
+            width: 88px;
+            height: 110px;
             object-fit: cover;
             border-radius: var(--r-xs);
             background: var(--bone-2);
@@ -1303,6 +1306,7 @@ form.myshop-checkout {
         text-align: right;
         font-size: 13.5px;
         font-weight: 600;
+        line-height: 1.35;
         white-space: nowrap;
         color: var(--ink);
     }

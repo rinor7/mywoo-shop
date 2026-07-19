@@ -7,7 +7,7 @@
 
 :root {
     /* ---- Palette ---- */
-    --ink: #101114;
+    --ink: var(--secondary-color, #101114);
     --ink-soft: #2c2f35;
     --muted: #74787f;
     --muted-2: #9ba0a7;
@@ -17,8 +17,8 @@
     --bone: #f7f5f1;
     --bone-2: #efebe4;
 
-    --accent: #b07b4f;
-    --accent-dark: #95643c;
+    --accent: var(--primary-color, #b07b4f);
+    --accent-dark: var(--primary-hover-color, #95643c);
     --accent-soft: #f3e9df;
     --accent-ink: #ffffff;
 

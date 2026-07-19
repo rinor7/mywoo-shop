@@ -5,11 +5,12 @@ Example usage of colors from admin:
 
 background-color: var(--primary-color, $primary-color);
 background-color: var(--secondary-color, $secondary-color);
-color: var(--font-color, $secondary-color);
+color: var(--font-color, $font-color);
+background-color: var(--primary-hover-color, $primary-hover-color);
 
 
-- Uses WP admin value if available
-- Falls back to SCSS default ($primary-color)
+- Uses WP admin value if available (see theme-options/global-colors.php)
+- Falls back to SCSS default ($primary-color, etc.)
 */
 
 $white: #fff;
@@ -18,13 +19,14 @@ $white-light: #f9f9f9;
 $black: #000000;
 $black-light: #000000a4;
 
-$primary-color: coral;
-$primary-color-light: coral;
+$primary-color: #b07b4f;
+$primary-color-light: #b07b4f;
+$primary-hover-color: #95643c;
 
-$secondary-color: #000;
+$secondary-color: #101114;
 $secondary-color-light: #000000a4;
 
-$font-color: #0000;
+$font-color: #000;
 
 $grey-color: #666;
 
