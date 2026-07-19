@@ -63,7 +63,10 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
     }
 }
 
-/* ---------- Shared card ---------- */
+/* ---------- Shared card ----------
+   Glass-card treatment matching the add-to-cart toast/sticky bars — the
+   icon badge already carries the status color, so a heavy flat colored
+   strip on top of that read as dated/redundant. */
 .woocommerce-message,
 .woocommerce-info:not(.cart-empty),
 .woocommerce-error {
@@ -75,10 +78,11 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
     margin: 0 0 26px;
     padding: 15px 58px 15px 16px;
     border: 1px solid var(--line);
-    border-left: 3px solid var(--success);
-    border-radius: var(--r-sm);
-    background: #fff;
-    box-shadow: var(--shadow-md);
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: var(--shadow-lg);
     color: var(--ink-soft);
     font-size: 14px;
     line-height: 1.55;
@@ -168,8 +172,6 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
 
 /* ---------- Info ---------- */
 .woocommerce-info:not(.cart-empty) {
-    border-left-color: var(--accent);
-
     &::before {
         content: "\f05a";
         background: var(--accent-soft);
@@ -179,8 +181,6 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
 
 /* ---------- Error ---------- */
 .woocommerce-error {
-    border-left-color: var(--sale);
-
     /* Errors arrive as a <ul> — grid keeps multiple messages aligned
        beside a single icon. */
     display: grid;
