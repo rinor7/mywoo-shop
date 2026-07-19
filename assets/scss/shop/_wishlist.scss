@@ -271,6 +271,237 @@ table.shop_table.wishlist_table {
     margin-top: 16px;
 }
 
+/* ---------- Real mobile markup (wishlist-view-mobile.php) ----------
+   YITH decides server-side via wp_is_mobile() whether to render the
+   <table> above or a completely different <ul class="wishlist_table">/<li>
+   structure — this isn't a CSS breakpoint swap, so it's not gated by a
+   media query; it applies whenever this markup is actually present.
+   The plugin ships the variation/date/price and quantity/stock rows as
+   bare unstyled <table>s (hence the "terrible" boxed Price:/Stock: look). */
+ul.wishlist_table {
+    display: block;
+    margin: 0 0 28px;
+    padding: 0;
+    list-style: none;
+
+    li {
+        position: relative;
+        display: block;
+        margin-bottom: 14px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-sm);
+        background: #fff;
+        box-shadow: var(--shadow-sm);
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .item-wrapper {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .product-thumbnail {
+        flex-shrink: 0;
+
+        img {
+            display: block;
+            width: 68px;
+            height: 84px;
+            object-fit: cover;
+            border-radius: var(--r-xs);
+            background: var(--bone-2);
+        }
+    }
+
+    .item-details {
+        flex: 1;
+        min-width: 0;
+        padding-right: 30px;
+    }
+
+    .product-name h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.35;
+
+        a {
+            color: var(--ink);
+
+            &:hover {
+                color: var(--accent);
+            }
+        }
+    }
+
+    /* Label/value mini-tables the plugin ships bare — variation, added-on,
+       price, quantity, stock. Turn each row into a simple flex split
+       instead of default <table> auto-layout (a real overflow risk on
+       narrow phones once a long variation value or attribute forces a
+       wide column). */
+    table.item-details-table,
+    table.additional-info {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        border-collapse: collapse;
+
+        tbody,
+        tr {
+            display: block;
+            width: 100%;
+        }
+
+        tr {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+        }
+
+        td {
+            padding: 3px 0;
+            border: 0;
+            font-size: 12.5px;
+            min-width: 0;
+        }
+
+        .label {
+            flex-shrink: 0;
+            color: var(--muted);
+        }
+
+        .value,
+        .product-quantity {
+            text-align: right;
+            font-weight: 600;
+            color: var(--ink);
+        }
+    }
+
+    .additional-info-wrapper {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line-soft);
+    }
+
+    input[type="number"] {
+        width: 60px;
+        height: 34px;
+        padding: 0 8px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xs);
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .wishlist-in-stock,
+    .wishlist-out-of-stock {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+
+        &::before {
+            content: "";
+            flex-shrink: 0;
+            width: 6px;
+            height: 6px;
+            border-radius: var(--r-pill);
+            background: currentColor;
+        }
+    }
+
+    .wishlist-in-stock {
+        color: var(--success);
+    }
+
+    .wishlist-out-of-stock {
+        color: var(--sale);
+    }
+
+    .product-add-to-cart {
+        margin-top: 12px;
+
+        a.button,
+        a.add_to_cart_button {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 42px;
+            padding: 0 20px;
+            border: 0;
+            border-radius: var(--r-xs);
+            background: var(--ink) !important;
+            color: #fff !important;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: var(--tracking);
+            text-transform: uppercase;
+            text-decoration: none;
+            line-height: 1;
+            transition: background-color var(--t) var(--ease);
+
+            &:hover {
+                background: var(--ink-soft) !important;
+            }
+        }
+    }
+
+    .move-to-another-wishlist {
+        margin-top: 10px;
+        font-size: 12px;
+
+        select {
+            height: 38px;
+            font-size: 16px;
+        }
+    }
+
+    .product-remove {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+
+        a.remove_from_wishlist {
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--r-pill);
+            color: var(--muted-2) !important;
+            font-size: 14px;
+            transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+
+            &:hover {
+                background: var(--bone-2);
+                color: var(--sale) !important;
+            }
+        }
+    }
+
+    .product-checkbox {
+        margin-bottom: 10px;
+    }
+}
+
+.wishlist-empty {
+    padding: clamp(40px, 6vw, 64px) 16px;
+    text-align: center;
+    font-size: 15px;
+    color: var(--muted);
+}
+
 /* ---------- Mobile: table → cards ----------
    The desktop table has 5-6 columns (remove, thumb, name, price, stock,
    add-to-cart) that just squash together on a phone. Flex-wrap instead of

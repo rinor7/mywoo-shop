@@ -740,6 +740,35 @@ body.woocommerce-account:not(.logged-in) {
             font-size: 16px;
         }
 
+        /* "Remember me" — a checkbox + text sharing one <label>. The
+           generic `label { display: block }` above (meant for the
+           Username/Password field labels) was forcing the checkbox onto
+           its own line, separate from the text. */
+        .form-row:has(input[type="checkbox"]) {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            label {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 0;
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: normal;
+                text-transform: none;
+            }
+
+            input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
+                accent-color: var(--ink);
+                cursor: pointer;
+            }
+        }
+
         .woocommerce-button {
             width: 100%;
             height: 52px;
