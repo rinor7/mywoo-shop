@@ -270,3 +270,96 @@ table.shop_table.wishlist_table {
 .wishlist_table + .woocommerce-message {
     margin-top: 16px;
 }
+
+/* ---------- Mobile: table → cards ----------
+   The desktop table has 5-6 columns (remove, thumb, name, price, stock,
+   add-to-cart) that just squash together on a phone. Flex-wrap instead of
+   a fixed grid so it degrades gracefully even if the plugin's exact column
+   set/order varies between products (variable vs simple, in vs out of stock). */
+@include sm {
+    table.shop_table.wishlist_table {
+        display: block;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        font-size: 13.5px;
+
+        thead {
+            display: none;
+        }
+
+        tbody {
+            display: block;
+        }
+
+        tr {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 14px;
+            margin-bottom: 14px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-sm);
+            background: #fff;
+            box-shadow: var(--shadow-sm);
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        td {
+            padding: 0;
+            border: 0;
+        }
+
+        .product-remove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: auto;
+        }
+
+        .product-thumbnail {
+            width: auto;
+            flex-shrink: 0;
+        }
+
+        .product-name {
+            flex: 1 1 150px;
+            min-width: 0;
+            padding-right: 30px;
+        }
+
+        .product-price,
+        [class*="stock-status"] {
+            flex: 1 1 auto;
+        }
+
+        .wishlist-in-stock,
+        .wishlist-out-of-stock {
+            margin-left: auto;
+        }
+
+        .product-add-to-cart,
+        .product-arrange-priority {
+            flex: 1 0 100%;
+            text-align: left;
+
+            a.button,
+            a.add_to_cart_button {
+                width: 100%;
+            }
+        }
+    }
+
+    .yith-wcwl-share {
+        gap: 10px 14px;
+
+        h4.yith-wcwl-share-title {
+            flex: 1 0 100%;
+        }
+    }
+}

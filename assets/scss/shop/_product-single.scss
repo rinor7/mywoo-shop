@@ -355,8 +355,13 @@
             text-transform: uppercase;
             cursor: pointer;
 
+            /* Woo core ships its own !important purple for .button.disabled —
+               re-assert the dark button colors so disabled just dims them,
+               instead of falling back to Woo's default purple/lavender. */
             &.disabled,
             &:disabled {
+                background: var(--ink) !important;
+                color: #fff !important;
                 opacity: .4;
                 pointer-events: none;
             }

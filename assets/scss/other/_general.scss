@@ -260,6 +260,135 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
             color: var(--accent-ink, #fff);
         }
     }
+
+    /* Newsletter plugin ([newsletter_form]) dropped straight into a plain
+       page — light variant of the dark treatment in home/_newsletter.scss,
+       which only applies inside the homepage's dark .newsletter section. */
+    .tnp {
+        max-width: 480px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+    }
+
+    .tnp form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        gap: 10px;
+        margin: 0;
+        text-align: left !important;
+
+        @include xs {
+            flex-direction: column;
+        }
+    }
+
+    .tnp form > input[type="hidden"] {
+        display: none;
+    }
+
+    .tnp-field {
+        margin: 0 !important;
+
+        label {
+            display: none;
+        }
+    }
+
+    .tnp-field-email {
+        flex: 1 1 220px;
+
+        @include xs {
+            flex: 0 0 auto;
+            width: 100%;
+        }
+    }
+
+    .tnp-field-button {
+        flex-shrink: 0;
+
+        @include xs {
+            width: 100%;
+        }
+    }
+
+    input.tnp-email {
+        display: block;
+        width: 100% !important;
+        height: 52px !important;
+        padding: 0 18px !important;
+        border: 1px solid var(--line, #e6e3dd) !important;
+        border-radius: var(--r-xs, 8px) !important;
+        background: #fff !important;
+        font-family: inherit !important;
+        font-size: 16px !important;
+        color: var(--ink, $black) !important;
+        transition: border-color var(--t, .3s) var(--ease, ease), box-shadow var(--t, .3s) var(--ease, ease);
+
+        &::placeholder {
+            color: var(--muted-2, #9ba0a7) !important;
+            opacity: 1;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--ink, $black) !important;
+            box-shadow: 0 0 0 3px rgba(16, 17, 20, .06);
+        }
+    }
+
+    input.tnp-submit,
+    .tnp-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: auto !important;
+        height: 52px;
+        padding: 0 30px;
+        border: 0 !important;
+        border-radius: var(--r-xs, 8px) !important;
+        background: var(--accent, $primary-color) !important;
+        color: var(--accent-ink, #fff) !important;
+        font-family: inherit !important;
+        font-size: 12px !important;
+        font-weight: 600;
+        letter-spacing: var(--tracking, .14em);
+        text-transform: uppercase;
+        line-height: 1;
+        cursor: pointer;
+        transition: background-color var(--t, .3s) var(--ease, ease);
+
+        &:hover {
+            background: var(--accent-dark, $primary-hover-color) !important;
+        }
+
+        @include xs {
+            width: 100% !important;
+        }
+    }
+
+    .tnp-privacy-field,
+    .tnp-field-privacy {
+        flex-basis: 100%;
+        font-size: 12px;
+        color: var(--muted, $grey-color);
+
+        label {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 9px;
+            margin: 0;
+            font-size: 12px;
+            color: var(--muted, $grey-color);
+        }
+
+        a {
+            font-weight: 400;
+            text-decoration: underline;
+        }
+    }
 }
 
 //class for title

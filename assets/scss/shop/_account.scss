@@ -107,10 +107,13 @@ body.woocommerce-account {
             transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
 
             &::before {
+                display: inline-flex;
+                justify-content: center;
                 font-family: "Font Awesome 6 Free";
                 font-weight: 900;
                 font-size: 13px;
                 width: 17px;
+                flex-shrink: 0;
                 color: var(--muted-2);
                 transition: color var(--t) var(--ease);
             }
