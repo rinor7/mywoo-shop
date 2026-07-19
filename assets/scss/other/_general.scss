@@ -133,7 +133,12 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
     }
 }
 
-body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-default .container {
+/* :not(:has(.wishlist_table, .shop_table)) — excludes the whole block at
+   the source rather than patching each element (table, ul, a, h1-h4, ...)
+   one at a time as plugin markup (wishlist, share icons, etc.) keeps
+   surfacing new clashes. Any page dropping in a shop_table-family
+   component keeps that component's own dedicated styling untouched. */
+body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-default .container:not(:has(.wishlist_table, .shop_table)) {
     font-size: 15.5px;
     line-height: 1.85;
     color: var(--ink-soft, $black);
@@ -178,11 +183,7 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
         margin-bottom: 0;
     }
 
-    /* :not(...) on a/ul/ol below — same reasoning as the table exclusion:
-       plugin output (YITH wishlist's own <ul>, its share-icon list, etc.)
-       can land inside this same .container on a plain page and must keep
-       its own dedicated styling rather than inherit generic prose rules. */
-    a:not(.wishlist_table a, .shop_table a, .yith-wcwl-share a) {
+    a {
         font-weight: 600;
         color: var(--ink, $black);
         text-decoration: underline;
@@ -193,7 +194,7 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
         }
     }
 
-    ul:not(.wishlist_table, .yith-wcwl-share, .yith-wcwl-share ul),
+    ul,
     ol {
         padding-left: 22px;
 
@@ -220,12 +221,7 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
         border-radius: var(--r-md, 14px);
     }
 
-    /* :not(.shop_table) — WooCommerce/plugin tables (cart, orders, the
-       YITH wishlist table dropped on its own plain page) already have
-       their own dedicated styling elsewhere and carry this class; this
-       generic table styling is only for tables inside hand-typed page
-       content and must not double up on theirs. */
-    table:not(.shop_table) {
+    table {
         width: 100%;
         margin: 1.4em 0;
         border-collapse: collapse;
