@@ -712,12 +712,12 @@ body.is-locked {
     z-index: 90;
     display: none;
     grid-template-columns: repeat(5, 1fr);
-    border: 1px solid var(--line);
+    border: 1px solid rgba(255, 255, 255, .4);
     border-radius: var(--r-pill);
-    background: rgba(255, 255, 255, .92);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    box-shadow: 0 18px 40px -12px rgba(16, 17, 20, .28);
+    background: rgba(255, 255, 255, .55);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 18px 40px -12px rgba(16, 17, 20, .28), inset 0 1px 0 rgba(255, 255, 255, .5);
     overflow: hidden;
 
     @include sm {
