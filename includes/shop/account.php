@@ -143,3 +143,22 @@ function myshop_account_orders_snapshot() {
 		'thumbs' => $thumbs,
 	);
 }
+
+/**
+ * Nextend Social Login only auto-places its buttons on wp-login.php in the
+ * free version — WooCommerce's own My Account login form is a Pro-only
+ * "location". Its shortcode still works standalone regardless, so hook it
+ * onto the My Account login form directly instead of buying the addon.
+ */
+function myshop_account_social_login() {
+	if ( ! shortcode_exists( 'nextend_social_login' ) ) {
+		return;
+	}
+	?>
+	<div class="account-social-login">
+		<span class="account-social-login__divider"><?php esc_html_e( 'or', 'base-theme' ); ?></span>
+		<?php echo do_shortcode( '[nextend_social_login]' ); ?>
+	</div>
+	<?php
+}
+add_action( 'woocommerce_login_form_end', 'myshop_account_social_login' );
