@@ -111,7 +111,14 @@ if ( $rows ) {
 									<?php if ( $hero_perks ) : ?>
 										<ul class="hero__meta">
 											<?php foreach ( $hero_perks as $perk ) : ?>
-												<li><i class="fa-solid <?php echo esc_attr( $perk[0] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $perk[1] ); ?></li>
+												<li>
+													<?php if ( $perk['image'] ) : ?>
+														<img src="<?php echo esc_url( $perk['image'] ); ?>" alt="" width="15" height="15" loading="lazy">
+													<?php else : ?>
+														<i class="fa-solid <?php echo esc_attr( $perk['icon'] ); ?>" aria-hidden="true"></i>
+													<?php endif; ?>
+													<?php echo esc_html( $perk['text'] ); ?>
+												</li>
 											<?php endforeach; ?>
 										</ul>
 									<?php endif; ?>

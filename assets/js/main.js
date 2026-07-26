@@ -55,6 +55,25 @@
     var backdrop = qs('.js-backdrop');
     var openEl = null;
     var lastFocus = null;
+    var lockedScrollY = 0;
+
+    // overflow:hidden on <body> alone doesn't stop touch-scroll/rubber-band
+    // on iOS Safari — a scrollable element inside the overlay (e.g. search
+    // results) chains its scroll straight through to the page behind it.
+    // Pinning the body with position:fixed is the only reliable cross-browser
+    // fix; scroll position is saved/restored around it so the page doesn't
+    // jump to the top while the overlay is open.
+    function lockBodyScroll() {
+        lockedScrollY = window.scrollY;
+        document.body.style.top = ( -lockedScrollY ) + 'px';
+        document.body.classList.add('is-locked');
+    }
+
+    function unlockBodyScroll() {
+        document.body.classList.remove('is-locked');
+        document.body.style.top = '';
+        window.scrollTo(0, lockedScrollY);
+    }
 
     function openOverlay(el) {
         if (!el) { return; }
@@ -65,7 +84,7 @@
 
         el.hidden = false;
         if (backdrop) { backdrop.hidden = false; }
-        document.body.classList.add('is-locked');
+        lockBodyScroll();
 
         requestAnimationFrame(function () {
             el.classList.add('is-open');
@@ -84,7 +103,7 @@
 
         el.classList.remove('is-open');
         if (backdrop) { backdrop.classList.remove('is-open'); }
-        document.body.classList.remove('is-locked');
+        unlockBodyScroll();
 
         if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
 
