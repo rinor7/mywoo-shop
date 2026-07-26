@@ -484,8 +484,12 @@ body.is-locked {
     z-index: 130;
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, .97);
-    backdrop-filter: blur(20px);
+    /* Fully opaque — this is a full-screen takeover, not a light peek-through
+       modal, and the near-transparent .97 let whatever section of the page
+       was behind it (color blocks, images) show through the blur, most
+       noticeably at the edges where the overlay's own content doesn't
+       cover the full height. */
+    background: var(--bone);
     opacity: 0;
     transform: translateY(-12px);
     transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);

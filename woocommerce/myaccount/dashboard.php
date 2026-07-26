@@ -196,7 +196,27 @@ $greeting_text  = myshop_account_greeting_text(
 </div>
 
 <!-- Curated -->
-<?php $curated = myshop_account_card_enabled( 'acct_curated_enabled' ) ? myshop_get_products( array( 'limit' => 4, 'type' => 'bestseller' ) ) : array(); ?>
+<?php
+$curated = array();
+if ( myshop_account_card_enabled( 'acct_curated_enabled' ) ) {
+	// Admin's explicit picks first, in the order they were set.
+	$curated_picked_ids = function_exists( 'myshop_account_curated_product_ids' ) ? myshop_account_curated_product_ids() : array();
+	foreach ( $curated_picked_ids as $id ) {
+		$curated_product = wc_get_product( $id );
+		if ( $curated_product && 'publish' === $curated_product->get_status() ) {
+			$curated[] = myshop_normalize_product( $curated_product );
+		}
+		if ( count( $curated ) >= 4 ) {
+			break;
+		}
+	}
+
+	// No picks (or none still published) — fall back to current bestsellers.
+	if ( ! $curated ) {
+		$curated = myshop_get_products( array( 'limit' => 4, 'type' => 'bestseller' ) );
+	}
+}
+?>
 <?php if ( $curated ) : ?>
 	<section class="account-curated">
 		<div class="sec-head">

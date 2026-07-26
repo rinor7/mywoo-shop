@@ -286,3 +286,15 @@ function myshop_account_greeting_text( $urls ) {
 function myshop_account_card_enabled( $name ) {
 	return (bool) ( function_exists( 'myshop_opt' ) ? myshop_opt( $name, 1 ) : 1 );
 }
+
+/**
+ * Manually-picked products for the account dashboard's "Curated for you"
+ * strip. Empty = let the caller fall back to its automatic pick.
+ *
+ * @return int[] Product IDs.
+ */
+function myshop_account_curated_product_ids() {
+	$ids = myshop_opt( 'acct_curated_products', array() );
+
+	return is_array( $ids ) ? array_map( 'intval', $ids ) : array();
+}
