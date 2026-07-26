@@ -231,9 +231,9 @@
         }
     });
 
-    // Overlay head (close button) sits outside the scrolling area on
-    // purpose (see _drawers.scss) — this just adds the shadow once
-    // there's actually content scrolled underneath it.
+    // __head is position:sticky (see _drawers.scss) inside the overlay's
+    // own scroll — this just adds the shadow once there's actually content
+    // scrolled underneath it.
     (function () {
         var scrollArea = qs('.js-search-overlay-scroll');
         var head = qs('.search-overlay__head');
@@ -242,19 +242,6 @@
         scrollArea.addEventListener('scroll', function () {
             head.classList.toggle('is-scrolled', scrollArea.scrollTop > 4);
         });
-
-        // iOS Safari's position:fixed becomes unreliable while the on-screen
-        // keyboard is open (the search input is focused right up until the
-        // user scrolls) — the "fixed" close button can visually scroll with
-        // the page in that state, no CSS fix for it. Dismissing the keyboard
-        // as soon as a scroll gesture starts — same as Mail, Messages, most
-        // apps — sidesteps the bug entirely once it closes.
-        scrollArea.addEventListener('touchmove', function () {
-            var active = document.activeElement;
-            if (active && 'INPUT' === active.tagName && active.blur) {
-                active.blur();
-            }
-        }, { passive: true });
     }());
 
     /* ==========================================================

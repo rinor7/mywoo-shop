@@ -168,25 +168,26 @@ $is_woo  = function_exists( 'WC' );
 </aside>
 
 <!-- Search overlay -->
-<div class="search-overlay js-search-overlay" role="dialog" aria-modal="true"
+<div class="search-overlay js-search-overlay js-search-overlay-scroll" role="dialog" aria-modal="true"
 	aria-label="<?php esc_attr_e( 'Search', 'base-theme' ); ?>" hidden>
 
-	<!-- Full-width sticky bar so the close button stays put (with a shadow
-	     once scrolled) while everything below it — long result lists
-	     especially — scrolls underneath. See main.js for the scroll listener
-	     that toggles .is-scrolled. -->
+	<!-- position:sticky, not fixed — iOS Safari's position:fixed breaks
+	     while the on-screen keyboard is open (which it is here, right up
+	     until the user scrolls). Sticky is part of the normal scroll flow
+	     so it doesn't have that failure mode, and it lets the whole overlay
+	     stay one natural, uninterrupted scroll area. Shadow (.is-scrolled,
+	     toggled in main.js) shows once there's content scrolled under it. -->
 	<div class="search-overlay__head">
 		<button type="button" class="search-overlay__close icon-btn js-drawer-close" aria-label="<?php esc_attr_e( 'Close search', 'base-theme' ); ?>">
 			<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 		</button>
 	</div>
 
-	<div class="search-overlay__inner js-search-overlay-scroll">
-		<div class="shop-container search-overlay__body">
+	<div class="shop-container search-overlay__body">
 
-			<span class="eyebrow"><?php esc_html_e( 'Search', 'base-theme' ); ?></span>
+		<span class="eyebrow"><?php esc_html_e( 'Search', 'base-theme' ); ?></span>
 
-			<form class="search-overlay__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+		<form class="search-overlay__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 				<i class="fa-solid fa-magnifying-glass search-overlay__icon" aria-hidden="true"></i>
 
 				<label class="screen-reader-text" for="shop-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
@@ -231,7 +232,6 @@ $is_woo  = function_exists( 'WC' );
 					</ul>
 				</div>
 			<?php endif; ?>
-		</div>
 	</div>
 </div>
 

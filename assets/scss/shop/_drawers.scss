@@ -482,14 +482,14 @@ body.is-locked {
     position: fixed;
     inset: 0;
     z-index: 130;
-    display: flex;
-    flex-direction: column;
-    /* Belt-and-braces for iOS Safari: it's known to sometimes ignore a
-       flex child's min-height:0 and let it grow past its bounds instead
-       of scrolling internally, which would drag this whole fixed box
-       (head included) along with it. This guarantees nothing can escape
-       the box even if that happens. */
-    overflow: hidden;
+    /* The overlay itself is the one scroll container (not a nested flex
+       child) — simplest, most robust structure, and it's what lets __head
+       below use position:sticky instead of fixed. iOS Safari's
+       position:fixed is unreliable while the on-screen keyboard is open
+       (true here right up until the user scrolls); sticky is part of
+       normal scroll flow and doesn't share that failure mode. */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     /* Fully opaque — this is a full-screen takeover, not a light peek-through
        modal, and the near-transparent .97 let whatever section of the page
        was behind it (color blocks, images) show through the blur, most
@@ -505,13 +505,14 @@ body.is-locked {
         transform: none;
     }
 
-    /* Outside the scrolling __inner below (not just sticky inside it), so
-       it never moves — a long result list scrolls underneath it instead.
-       .is-scrolled (toggled in main.js from __inner's scroll position)
-       adds the separation shadow once there's something to separate from. */
+    /* .is-scrolled (toggled in main.js from the overlay's own scroll
+       position) adds the separation shadow once there's something to
+       separate from. */
     &__head {
+        position: sticky;
+        top: 0;
+        z-index: 5;
         display: flex;
-        flex: none;
         justify-content: flex-end;
         padding: 18px var(--gutter) 0;
         background: var(--bone);
@@ -522,23 +523,12 @@ body.is-locked {
         }
     }
 
-    &__inner {
-        flex: 1;
-        /* height:0 (not just min-height:0) is the more forceful version of
-           this fix — iOS Safari has a history of not respecting min-height
-           alone on a flex child, letting it size to its content instead
-           of the space actually available. */
-        height: 0;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 22px;
-    }
-
     &__body {
         display: flex;
         flex-direction: column;
         gap: 22px;
         width: 100%;
+        padding-bottom: 22px;
     }
 
     &__form {
