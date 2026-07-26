@@ -124,6 +124,56 @@ function myshop_register_frontpage_fields() {
 		myshop_f( 'cat_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $third ),
 		myshop_f( 'cat_title', __( 'Title', 'base-theme' ), 'text', $third ),
 		myshop_f( 'cat_sub', __( 'Subtitle', 'base-theme' ), 'text', $third ),
+		myshop_f(
+			'cat_picks',
+			__( 'Pick specific categories, in order (empty = automatic top categories by product count)', 'base-theme' ),
+			'repeater',
+			array(
+				'layout'       => 'block',
+				'button_label' => __( 'Add category', 'base-theme' ),
+				'max'          => 4,
+				'sub_fields'   => array(
+					myshop_f( 'cp_term', __( 'Category', 'base-theme' ), 'taxonomy', array(
+						'taxonomy'      => 'product_cat',
+						'field_type'    => 'select',
+						'return_format' => 'id',
+						'allow_null'    => 1,
+						'multiple'      => 0,
+					) + $half ),
+					myshop_f( 'cp_icon', __( 'Custom icon/image', 'base-theme' ), 'image', array(
+						'return_format' => 'url',
+						'preview_size'  => 'thumbnail',
+						'instructions'  => __( 'Overrides the category\'s own thumbnail (Products → Categories) when set.', 'base-theme' ),
+					) + $half ),
+					myshop_f( 'cp_bg_enabled', __( 'Custom background for this tile?', 'base-theme' ), 'true_false', array( 'ui' => 1 ) + $third ),
+					myshop_f( 'cp_bg_type', __( 'Background type', 'base-theme' ), 'button_group', array(
+						'choices'           => array(
+							'color'    => __( 'Solid color', 'base-theme' ),
+							'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+						),
+						'default_value'     => 'color',
+						'conditional_logic' => array( array( array( 'field' => 'field_ms_cp_bg_enabled', 'operator' => '==', 'value' => '1' ) ) ),
+					) + $third ),
+					myshop_f( 'cp_bg_color', __( 'Color', 'base-theme' ), 'color_picker', array(
+						'conditional_logic' => array(
+							array(
+								array( 'field' => 'field_ms_cp_bg_enabled', 'operator' => '==', 'value' => '1' ),
+								array( 'field' => 'field_ms_cp_bg_type', 'operator' => '==', 'value' => 'color' ),
+							),
+						),
+					) + $third ),
+					myshop_f( 'cp_bg_css', __( 'Gradient / custom CSS', 'base-theme' ), 'text', array(
+						'placeholder'       => 'linear-gradient(135deg, #ff5f6d, #6a11cb)',
+						'conditional_logic' => array(
+							array(
+								array( 'field' => 'field_ms_cp_bg_enabled', 'operator' => '==', 'value' => '1' ),
+								array( 'field' => 'field_ms_cp_bg_type', 'operator' => '==', 'value' => 'gradient' ),
+							),
+						),
+					) ),
+				),
+			)
+		),
 
 		myshop_tab( 'New arrivals' ),
 		myshop_f( 'na_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $third ),
@@ -161,6 +211,13 @@ function myshop_register_frontpage_fields() {
 		myshop_f( 'deal_ends', __( 'Ends (empty = next Sunday)', 'base-theme' ), 'date_time_picker', array( 'return_format' => 'Y-m-d H:i:s', 'wrapper' => array( 'width' => '24' ) ) ),
 		myshop_f( 'deal_sold', __( 'Units sold', 'base-theme' ), 'number', array( 'default_value' => 32, 'wrapper' => array( 'width' => '18' ) ) ),
 		myshop_f( 'deal_total', __( 'Units total', 'base-theme' ), 'number', array( 'default_value' => 50, 'wrapper' => array( 'width' => '18' ) ) ),
+		myshop_f( 'deal_stock_text', __( 'Stock line', 'base-theme' ), 'text', array(
+			'default_value' => __( 'Sold: {sold} of {total} — going fast', 'base-theme' ),
+			'instructions'  => __( '{sold} and {total} are replaced with the numbers above. Leave empty to hide the line (the progress bar still shows).', 'base-theme' ),
+		) ),
+		myshop_f( 'deal_secondary_cta', __( 'Second button (empty = "View details" → the product page)', 'base-theme' ), 'link', array(
+			'instructions' => __( 'Both the label and the URL come from this one field. Use it to point somewhere other than the product\'s own page — the shop, a category, anywhere.', 'base-theme' ),
+		) ),
 
 		/* ---- Product tabs ---- */
 		myshop_tab( 'Product tabs' ),

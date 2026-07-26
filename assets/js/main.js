@@ -231,6 +231,19 @@
         }
     });
 
+    // Overlay head (close button) sits outside the scrolling area on
+    // purpose (see _drawers.scss) — this just adds the shadow once
+    // there's actually content scrolled underneath it.
+    (function () {
+        var scrollArea = qs('.js-search-overlay-scroll');
+        var head = qs('.search-overlay__head');
+        if (!scrollArea || !head) { return; }
+
+        scrollArea.addEventListener('scroll', function () {
+            head.classList.toggle('is-scrolled', scrollArea.scrollTop > 4);
+        });
+    }());
+
     /* ==========================================================
        Announcement bar
     ========================================================== */

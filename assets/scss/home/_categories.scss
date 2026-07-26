@@ -79,8 +79,11 @@
 
     /* Placeholder tiles (no term image yet): dark editorial gradient per tile
        (--ca/--cb set inline) with the line art as a large light watermark. */
+    /* --bg-override (Frontpage → Categories per-tile background) wins when
+       set — a solid color or raw gradient/CSS string, either way just a
+       valid `background` value. Falls back to the usual --ca/--cb pair. */
     &--noimg {
-        background: linear-gradient(155deg, var(--ca, #2c2f35), var(--cb, #131417));
+        background: var(--bg-override, linear-gradient(155deg, var(--ca, #2c2f35), var(--cb, #131417)));
 
         &::after {
             background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, .3));

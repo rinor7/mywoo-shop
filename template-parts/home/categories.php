@@ -51,10 +51,16 @@ $tones = array(
 		<div class="cat-mosaic">
 			<?php foreach ( array_slice( $categories, 0, 4 ) as $i => $cat ) : ?>
 				<?php $variant = $variants[ $i ]; ?>
+				<?php
+				$bg_override = '';
+				if ( ! empty( $cat['bg'] ) ) {
+					$bg_override = 'gradient' === $cat['bg']['type'] ? $cat['bg']['css'] : $cat['bg']['color'];
+				}
+				?>
 
 				<a class="cat-card cat-card--<?php echo esc_attr( $variant ); ?><?php echo empty( $cat['image'] ) ? ' cat-card--noimg' : ''; ?> reveal"
 					href="<?php echo esc_url( $cat['link'] ); ?>"
-					style="--reveal-delay:<?php echo (int) ( $i * 80 ); ?>ms;--ca:<?php echo esc_attr( $tones[ $i ][0] ); ?>;--cb:<?php echo esc_attr( $tones[ $i ][1] ); ?>">
+					style="--reveal-delay:<?php echo (int) ( $i * 80 ); ?>ms;--ca:<?php echo esc_attr( $tones[ $i ][0] ); ?>;--cb:<?php echo esc_attr( $tones[ $i ][1] ); ?><?php echo $bg_override ? ';--bg-override:' . esc_attr( $bg_override ) : ''; ?>">
 
 					<span class="cat-card__media">
 						<?php if ( ! empty( $cat['image'] ) ) : ?>

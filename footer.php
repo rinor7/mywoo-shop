@@ -63,7 +63,7 @@ $is_woo  = function_exists( 'WC' );
 
 		<div class="footer__bottom">
 			<p class="footer__copy">
-				&copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'base-theme' ); ?>
+				&copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'base-theme' ); ?> <a href="<?php echo esc_url( 'https://www.puzzle-enterprise.com' ); ?>" target="_blank" rel="noopener">Puzzle Enterprise</a>
 			</p>
 
 			<?php if ( function_exists( 'myshop_payment_icons' ) ) { myshop_payment_icons(); } ?>
@@ -170,60 +170,68 @@ $is_woo  = function_exists( 'WC' );
 <!-- Search overlay -->
 <div class="search-overlay js-search-overlay" role="dialog" aria-modal="true"
 	aria-label="<?php esc_attr_e( 'Search', 'base-theme' ); ?>" hidden>
-	<div class="shop-container search-overlay__inner">
 
+	<!-- Full-width sticky bar so the close button stays put (with a shadow
+	     once scrolled) while everything below it — long result lists
+	     especially — scrolls underneath. See main.js for the scroll listener
+	     that toggles .is-scrolled. -->
+	<div class="search-overlay__head">
 		<button type="button" class="search-overlay__close icon-btn js-drawer-close" aria-label="<?php esc_attr_e( 'Close search', 'base-theme' ); ?>">
 			<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 		</button>
+	</div>
 
-		<span class="eyebrow"><?php esc_html_e( 'Search', 'base-theme' ); ?></span>
+	<div class="search-overlay__inner js-search-overlay-scroll">
+		<div class="shop-container search-overlay__body">
 
-		<form class="search-overlay__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-			<i class="fa-solid fa-magnifying-glass search-overlay__icon" aria-hidden="true"></i>
+			<span class="eyebrow"><?php esc_html_e( 'Search', 'base-theme' ); ?></span>
 
-			<label class="screen-reader-text" for="shop-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
-			<input class="search-overlay__input js-search-input" type="search" id="shop-search" name="s"
-				placeholder="<?php esc_attr_e( 'What are you looking for?', 'base-theme' ); ?>" autocomplete="off">
+			<form class="search-overlay__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+				<i class="fa-solid fa-magnifying-glass search-overlay__icon" aria-hidden="true"></i>
 
-			<?php if ( $is_woo ) : ?>
-				<input type="hidden" name="post_type" value="product">
-			<?php endif; ?>
+				<label class="screen-reader-text" for="shop-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
+				<input class="search-overlay__input js-search-input" type="search" id="shop-search" name="s"
+					placeholder="<?php esc_attr_e( 'What are you looking for?', 'base-theme' ); ?>" autocomplete="off">
 
-			<button type="submit" class="btn btn--primary"><?php esc_html_e( 'Search', 'base-theme' ); ?></button>
-		</form>
-
-		<!-- Populated live from myshop_live_search() as the customer types (see main.js). -->
-		<div class="search-overlay__results js-search-results" hidden></div>
-
-		<?php
-		// Chips come from Global Settings → Search Suggestions; none set = no block.
-		$popular = function_exists( 'myshop_search_suggest_terms' ) ? myshop_search_suggest_terms() : array();
-		if ( $popular ) :
-			?>
-			<div class="search-overlay__suggest">
-				<?php $suggest_label = myshop_search_suggest_label(); ?>
-				<?php if ( '' !== $suggest_label ) : ?>
-					<span class="search-overlay__suggest-label"><?php echo esc_html( $suggest_label ); ?></span>
+				<?php if ( $is_woo ) : ?>
+					<input type="hidden" name="post_type" value="product">
 				<?php endif; ?>
-				<ul>
-					<?php
-					foreach ( $popular as $term ) :
-						$url = add_query_arg(
-							array_filter(
-								array(
-									's'         => rawurlencode( $term ),
-									'post_type' => $is_woo ? 'product' : null,
-								)
-							),
-							home_url( '/' )
-						);
-						?>
-						<li><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $term ); ?></a></li>
-					<?php endforeach; ?>
-				</ul>
-			</div>
-		<?php endif; ?>
 
+				<button type="submit" class="btn btn--primary"><?php esc_html_e( 'Search', 'base-theme' ); ?></button>
+			</form>
+
+			<!-- Populated live from myshop_live_search() as the customer types (see main.js). -->
+			<div class="search-overlay__results js-search-results" hidden></div>
+
+			<?php
+			// Chips come from Global Settings → Search Suggestions; none set = no block.
+			$popular = function_exists( 'myshop_search_suggest_terms' ) ? myshop_search_suggest_terms() : array();
+			if ( $popular ) :
+				?>
+				<div class="search-overlay__suggest">
+					<?php $suggest_label = myshop_search_suggest_label(); ?>
+					<?php if ( '' !== $suggest_label ) : ?>
+						<span class="search-overlay__suggest-label"><?php echo esc_html( $suggest_label ); ?></span>
+					<?php endif; ?>
+					<ul>
+						<?php
+						foreach ( $popular as $term ) :
+							$url = add_query_arg(
+								array_filter(
+									array(
+										's'         => rawurlencode( $term ),
+										'post_type' => $is_woo ? 'product' : null,
+									)
+								),
+								home_url( '/' )
+							);
+							?>
+							<li><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $term ); ?></a></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endif; ?>
+		</div>
 	</div>
 </div>
 

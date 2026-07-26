@@ -90,15 +90,15 @@
     position: relative;
     overflow: hidden;
 
-    &::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        opacity: .5;
-        mix-blend-mode: soft-light;
-        background-image: url("../img/placeholders/grain.svg");
-        background-size: 220px;
-    }
+    // &::after {
+    //     content: "";
+    //     position: absolute;
+    //     inset: 0;
+    //     z-index: 1;
+    //     pointer-events: none;
+    //     opacity: .5;
+    //     mix-blend-mode: soft-light;
+    //     background-image: url("../img/placeholders/grain.svg");
+    //     background-size: 220px;
+    // }
 }

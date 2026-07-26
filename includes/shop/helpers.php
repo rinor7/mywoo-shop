@@ -330,38 +330,87 @@ function myshop_is_demo() {
  */
 function myshop_get_categories( $limit = 6 ) {
 	$categories = array();
+	// Terms without a usable thumbnail fall back to placeholder art —
+	// wp_get_attachment_image_url() returns false for a stale
+	// thumbnail_id, which would otherwise render a broken <img>.
+	// The cat- variants are transparent, so they sit on the tile's own
+	// gradient instead of showing a pasted-on rectangle.
+	$fallback_art = array( 'cat-bag', 'cat-watch', 'cat-headphones', 'cat-lamp', 'cat-sweater', 'cat-sneaker' );
 
 	if ( taxonomy_exists( 'product_cat' ) ) {
-		$terms = get_terms(
-			array(
-				'taxonomy'   => 'product_cat',
-				'hide_empty' => true,
-				'number'     => $limit,
-				'orderby'    => 'count',
-				'order'      => 'DESC',
-				'exclude'    => array( get_option( 'default_product_cat' ) ),
-			)
-		);
+		$picked_ids = array();
 
-		if ( $terms && ! is_wp_error( $terms ) ) {
-			// Terms without a usable thumbnail fall back to placeholder art —
-			// wp_get_attachment_image_url() returns false for a stale
-			// thumbnail_id, which would otherwise render a broken <img>.
-			// The cat- variants are transparent, so they sit on the tile's own
-			// gradient instead of showing a pasted-on rectangle.
-			$fallback_art = array( 'cat-bag', 'cat-watch', 'cat-headphones', 'cat-lamp', 'cat-sweater', 'cat-sneaker' );
+		// Admin's explicit picks first, in the order set (Frontpage → Categories).
+		$picks = function_exists( 'myshop_c' ) ? myshop_c( 'cat_picks', array() ) : array();
+		foreach ( $picks as $pick ) {
+			if ( count( $categories ) >= $limit ) {
+				break;
+			}
 
-			foreach ( $terms as $i => $term ) {
+			$term_id = ! empty( $pick['cp_term'] ) ? (int) $pick['cp_term'] : 0;
+			$term    = $term_id ? get_term( $term_id, 'product_cat' ) : null;
+			if ( ! $term || is_wp_error( $term ) ) {
+				continue;
+			}
+
+			$image = ! empty( $pick['cp_icon'] ) ? $pick['cp_icon'] : '';
+			if ( ! $image ) {
 				$thumb_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
 				$image    = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'large' ) : '';
+			}
 
-				$categories[] = array(
-					'name'  => $term->name,
-					'count' => $term->count,
-					'link'  => get_term_link( $term ),
-					'image' => $image ? $image : '',
-					'art'   => $image ? '' : myshop_placeholder( $fallback_art[ $i % count( $fallback_art ) ] ),
+			$bg = array();
+			if ( ! empty( $pick['cp_bg_enabled'] ) ) {
+				$bg = array(
+					'type'  => ! empty( $pick['cp_bg_type'] ) ? $pick['cp_bg_type'] : 'color',
+					'color' => ! empty( $pick['cp_bg_color'] ) ? $pick['cp_bg_color'] : '',
+					'css'   => ! empty( $pick['cp_bg_css'] ) ? $pick['cp_bg_css'] : '',
 				);
+			}
+
+			$picked_ids[]  = $term->term_id;
+			$categories[]  = array(
+				'name'  => $term->name,
+				'count' => $term->count,
+				'link'  => get_term_link( $term ),
+				'image' => $image ? $image : '',
+				'art'   => $image ? '' : myshop_placeholder( $fallback_art[ count( $categories ) % count( $fallback_art ) ] ),
+				'bg'    => $bg,
+			);
+		}
+
+		// Fill any remaining slots automatically — top categories by
+		// product count, skipping whatever's already been hand-picked.
+		if ( count( $categories ) < $limit ) {
+			$terms = get_terms(
+				array(
+					'taxonomy'   => 'product_cat',
+					'hide_empty' => true,
+					'number'     => $limit,
+					'orderby'    => 'count',
+					'order'      => 'DESC',
+					'exclude'    => array_merge( array( (int) get_option( 'default_product_cat' ) ), $picked_ids ),
+				)
+			);
+
+			if ( $terms && ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					if ( count( $categories ) >= $limit ) {
+						break;
+					}
+
+					$thumb_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
+					$image    = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'large' ) : '';
+
+					$categories[] = array(
+						'name'  => $term->name,
+						'count' => $term->count,
+						'link'  => get_term_link( $term ),
+						'image' => $image ? $image : '',
+						'art'   => $image ? '' : myshop_placeholder( $fallback_art[ count( $categories ) % count( $fallback_art ) ] ),
+						'bg'    => array(),
+					);
+				}
 			}
 		}
 	}
@@ -387,6 +436,7 @@ function myshop_get_categories( $limit = 6 ) {
 			'link'  => myshop_shop_url(),
 			'image' => '',
 			'art'   => myshop_placeholder( $item[2] ),
+			'bg'    => array(),
 		);
 	}
 

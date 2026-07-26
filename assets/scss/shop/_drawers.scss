@@ -483,7 +483,7 @@ body.is-locked {
     inset: 0;
     z-index: 130;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     /* Fully opaque — this is a full-screen takeover, not a light peek-through
        modal, and the near-transparent .97 let whatever section of the page
        was behind it (color blocks, images) show through the blur, most
@@ -499,18 +499,35 @@ body.is-locked {
         transform: none;
     }
 
+    /* Outside the scrolling __inner below (not just sticky inside it), so
+       it never moves — a long result list scrolls underneath it instead.
+       .is-scrolled (toggled in main.js from __inner's scroll position)
+       adds the separation shadow once there's something to separate from. */
+    &__head {
+        display: flex;
+        flex: none;
+        justify-content: flex-end;
+        padding: 18px var(--gutter) 0;
+        background: var(--bone);
+        transition: box-shadow var(--t) var(--ease);
+
+        &.is-scrolled {
+            box-shadow: 0 8px 16px -8px rgba(16, 17, 20, .18);
+        }
+    }
+
     &__inner {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding-bottom: 22px;
+    }
+
+    &__body {
         display: flex;
         flex-direction: column;
         gap: 22px;
         width: 100%;
-    }
-
-    &__close {
-        position: fixed;
-        top: 22px;
-        right: 22px;
-        background: var(--bone);
     }
 
     &__form {
