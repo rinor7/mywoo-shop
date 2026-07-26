@@ -297,6 +297,27 @@ function myshop_fix_search_title_page_suffix( $title ) {
 add_filter( 'woocommerce_page_title', 'myshop_fix_search_title_page_suffix' );
 
 /**
+ * Every search box on this site already restricts to products
+ * (post_type=product, set as a hidden field on every search form) — a
+ * bare /?s= URL that bypasses those forms has no post_type, so it falls
+ * through to WordPress's own plain search.php (unstyled, and this theme
+ * has no content-search.php, so results render blank). Forcing the same
+ * post_type here makes WooCommerce's template loader pick up
+ * archive-product.php instead, same as every other search on the site —
+ * one consistent, working results page regardless of entry point.
+ */
+function myshop_force_product_search( $query ) {
+	if ( is_admin() || ! $query->is_main_query() || ! $query->is_search() ) {
+		return;
+	}
+
+	if ( ! $query->get( 'post_type' ) ) {
+		$query->set( 'post_type', 'product' );
+	}
+}
+add_action( 'pre_get_posts', 'myshop_force_product_search' );
+
+/**
  * "Complete the ensemble" — manually-picked products when set (Global
  * Settings → Cart), otherwise cross-sells, otherwise newest products.
  * Never items already in the cart. Rendered by the cart template.

@@ -247,6 +247,21 @@
         scrollArea.addEventListener('scroll', function () {
             head.classList.toggle('is-scrolled', scrollArea.scrollTop > 4);
         });
+
+        // The on-screen keyboard is what actually breaks position:fixed/
+        // sticky on iOS Safari (confirmed: rotating to landscape, which
+        // dismisses the keyboard, makes the exact same layout behave
+        // correctly). Dismissing it right as a touch begins — before any
+        // drag/scroll motion — lets the keyboard start closing first, so
+        // the scroll gesture that follows isn't interrupted mid-way the
+        // way blurring on touchmove was. Skipped when the touch starts on
+        // the form itself so typing/tapping the input still works normally.
+        scrollArea.addEventListener('touchstart', function (e) {
+            var active = document.activeElement;
+            if (active && 'INPUT' === active.tagName && active.blur && !e.target.closest('.search-overlay__form')) {
+                active.blur();
+            }
+        }, { passive: true });
     }());
 
     /* ==========================================================
