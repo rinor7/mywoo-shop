@@ -4,11 +4,22 @@
 
 /* position:fixed (not just overflow:hidden) is what actually stops
    background scroll on iOS Safari — see lockBodyScroll() in main.js,
-   which sets `top` to the negative scroll offset before adding this. */
+   which sets `top` to the negative scroll offset before adding this.
+   Locking <body> alone isn't reliable on iOS Safari — the <html> root
+   still lets the page track a scroll/drag gesture underneath a fixed
+   overlay in some versions, so both need to be pinned. */
+html.is-locked {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
 body.is-locked {
     position: fixed;
     left: 0;
     right: 0;
+    width: 100%;
     overflow: hidden;
 }
 

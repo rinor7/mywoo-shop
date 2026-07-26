@@ -66,10 +66,15 @@
     function lockBodyScroll() {
         lockedScrollY = window.scrollY;
         document.body.style.top = ( -lockedScrollY ) + 'px';
+        // <html> needs locking too, not just <body> — iOS Safari has been
+        // reported to still let a scroll/drag gesture reach the page
+        // underneath a fixed overlay when only body is pinned.
+        document.documentElement.classList.add('is-locked');
         document.body.classList.add('is-locked');
     }
 
     function unlockBodyScroll() {
+        document.documentElement.classList.remove('is-locked');
         document.body.classList.remove('is-locked');
         document.body.style.top = '';
         window.scrollTo(0, lockedScrollY);
