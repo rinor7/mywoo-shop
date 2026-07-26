@@ -6,7 +6,9 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: clamp(12px, 1.5vw, 24px);
-
+    @media (max-width: 1400px) {
+         grid-template-columns: 1.8fr 1.2fr;
+    }
     @include md {
         grid-template-columns: 1fr;
     }
@@ -19,11 +21,13 @@
     align-items: center;
     gap: clamp(16px, 2vw, 32px);
     min-height: 360px;
-    padding: clamp(26px, 3vw, 46px);
+    padding: clamp(26px, 2.5vw, 46px);
     border-radius: var(--r-md);
     background: linear-gradient(130deg, var(--a), var(--b));
     isolation: isolate;
-
+    @media (max-width: 1400px) {
+         grid-template-columns: .8fr auto;
+    }
     @include sm {
         min-height: 300px;
     }

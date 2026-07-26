@@ -86,12 +86,18 @@
         if (backdrop) { backdrop.hidden = false; }
         lockBodyScroll();
 
+        // Focus synchronously, still inside the click handler's own call
+        // stack — mobile browsers only pop the on-screen keyboard for a
+        // .focus() that's part of the original tap gesture. Deferring it
+        // even one frame (requestAnimationFrame, a timeout) loses that:
+        // the field ends up focused in the DOM but keyboard-less until
+        // the user taps it again.
+        var focusTarget = el.querySelector('.js-search-input') || el.querySelector('button, a, input');
+        if (focusTarget) { focusTarget.focus(); }
+
         requestAnimationFrame(function () {
             el.classList.add('is-open');
             if (backdrop) { backdrop.classList.add('is-open'); }
-
-            var focusTarget = el.querySelector('.js-search-input') || el.querySelector('button, a, input');
-            if (focusTarget) { focusTarget.focus(); }
         });
     }
 
