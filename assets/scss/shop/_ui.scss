@@ -34,9 +34,15 @@
 }
 
 /* Shared CTA hover: dark lift + light sweep, byte-for-byte what .btn.btn--primary
-   does on the homepage hero banner. @extend this on WooCommerce-generated
-   buttons that can't take .btn classes. */
-%btn-dark-hover {
+   does on the homepage hero banner. @include this on WooCommerce-generated
+   buttons that can't take .btn classes.
+   A mixin, not a %placeholder — Sass's @extend silently drops base
+   declarations (position/overflow here) when the extending selector is a
+   compound one nested under a parent (e.g. ".pdp-panel__form button.x.y"),
+   which left the sweep with no positioning context on those buttons even
+   though the hover color/lift still worked. @include copies the rules
+   inline every time, so it can't lose properties like that. */
+@mixin btn-dark-hover {
     position: relative;
     overflow: hidden;
     transition: background-color var(--t) var(--ease),
@@ -201,6 +207,11 @@
 .link-arrow {
     position: relative;
     display: inline-flex;
+    /* Prevents a flex-column parent (e.g. .quickview__body) from stretching
+       this to the container's full width via its default align-items —
+       the underline below is width:100% of THIS box, so a stretched box
+       leaves a long bare line trailing past the text. */
+    align-self: flex-start;
     align-items: center;
     gap: 10px;
     padding-bottom: 4px;

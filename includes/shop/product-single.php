@@ -73,6 +73,24 @@ function myshop_register_product_story_fields() {
 				myshop_f( 'ps_b_title', __( 'Section B — title ( additional info/section )', 'base-theme' ), 'text', $half ),
 				myshop_f( 'ps_b_text', __( 'Section B — text', 'base-theme' ), 'textarea', array( 'rows' => 3 ) + $half ),
 				myshop_f(
+					'ps_perks',
+					__( 'Product page perks (empty = the global list from Global Settings → Single Product / if you fill it will overwritte, icons included)', 'base-theme' ),
+					'repeater',
+					array(
+						'layout'       => 'table',
+						'button_label' => __( 'Add perk', 'base-theme' ),
+						'max'          => 4,
+						'sub_fields'   => array(
+							myshop_f( 'perk_icon', __( 'Icon', 'base-theme' ), 'image', array(
+								'return_format' => 'url',
+								'preview_size'  => 'thumbnail',
+								'instructions'  => __( 'Upload a small square icon (PNG/WebP work best). Leave empty to use the default rotating icon.', 'base-theme' ),
+							) ),
+							myshop_f( 'perk_text', __( 'Text', 'base-theme' ), 'text' ),
+						),
+					)
+				),
+				myshop_f(
 					'ps_specs',
 					__( 'Specifications (empty = product attributes + dimensions / if you fill it will overwritte)', 'base-theme' ),
 					'repeater',

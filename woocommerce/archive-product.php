@@ -42,7 +42,15 @@ woocommerce_breadcrumb(
 	</div>
 </header>
 
-<?php myshop_shop_filterbar(); ?>
+<?php
+// Category pills link to plain /product-category/ URLs and their counts
+// are shop-wide — neither is aware of the search term, so on search
+// results they'd both drop it (clicking "Men" would show ALL men's
+// products, not "di" narrowed to Men) and show misleading counts.
+if ( ! is_search() ) {
+	myshop_shop_filterbar();
+}
+?>
 
 <?php
 if ( woocommerce_product_loop() ) {

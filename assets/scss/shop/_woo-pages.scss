@@ -515,7 +515,7 @@ body.woocommerce-cart .woocommerce-notices-wrapper {
     }
 
     &__apply {
-        @extend %btn-dark-hover;
+        @include btn-dark-hover;
         height: 46px;
         padding: 0 22px;
         background: var(--ink);
@@ -689,7 +689,7 @@ body.woocommerce-cart .woocommerce-notices-wrapper {
             }
 
             button[name="calc_shipping"] {
-                @extend %btn-dark-hover;
+                @include btn-dark-hover;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
@@ -732,7 +732,7 @@ body.woocommerce-cart .woocommerce-notices-wrapper {
         /* a.button.alt — outguns Woo's purple default */
         a.checkout-button.button.alt,
         .checkout-button {
-            @extend %btn-dark-hover;
+            @include btn-dark-hover;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1111,7 +1111,7 @@ body.woocommerce-checkout .woocommerce-notices-wrapper {
         }
 
         #place_order {
-            @extend %btn-dark-hover;
+            @include btn-dark-hover;
             display: flex;
             align-items: center;
             justify-content: center;

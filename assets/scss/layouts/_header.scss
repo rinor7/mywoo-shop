@@ -289,10 +289,19 @@
    navigation content") — same centered slot in the grid, hidden at the
    same breakpoint since mobile has its own search entry point (bottom
    bar + hamburger drawer) already. */
+.header__search-wrap {
+    position: relative;
+    display: flex;
+    justify-self: center;
+
+    @include md {
+        display: none;
+    }
+}
+
 .header__search {
     display: flex;
     align-items: center;
-    justify-self: center;
     gap: 10px;
     width: clamp(240px, 24vw, 360px);
     height: 44px;
@@ -314,9 +323,96 @@
         background: #fff;
         box-shadow: 0 0 0 4px rgba(16, 17, 20, .06);
     }
+}
 
-    @include md {
-        display: none;
+/* Dropdown — populated live from myshop_live_search() as the customer
+   types (see main.js). Reuses the same row styling as the search
+   overlay's results (thumb + name + price), just boxed as a floating
+   card since this sits in the header pill, not a full-screen panel. */
+.header__search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: #fff;
+    box-shadow: var(--shadow-md);
+
+    .search-overlay__list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-overlay__item a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 4px;
+        border-radius: var(--r-xs);
+        transition: background-color var(--t) var(--ease);
+
+        &:hover {
+            background: var(--bone-2);
+        }
+    }
+
+    .search-overlay__thumb {
+        flex: none;
+        width: 42px;
+        height: 42px;
+        border-radius: var(--r-xs);
+        overflow: hidden;
+        background: var(--bone-2);
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .search-overlay__info {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        min-width: 0;
+    }
+
+    .search-overlay__name {
+        overflow: hidden;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--ink);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .search-overlay__price {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .search-overlay__more {
+        display: block;
+        margin-top: 4px;
+        padding: 8px 4px 4px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .search-overlay__empty {
+        padding: 4px;
+        font-size: 13px;
+        color: var(--muted);
     }
 }
 
@@ -328,6 +424,11 @@
 
 .header__search-input {
     flex: 1;
+    /* Fills the pill's full 44px height — otherwise the input sits at its
+       own (shorter) line-height, vertically centered by the form's
+       align-items, leaving the padding above/below it unclickable even
+       though it looks like part of the same field. */
+    height: 100%;
     min-width: 0;
     border: 0;
     background: none;
@@ -532,6 +633,36 @@
 
 .icon-btn__count.is-empty {
     display: none;
+}
+
+.header__account-name {
+    display: none;
+}
+
+/* Desktop-only "chip": avatar + first name, replacing the plain icon
+   circle once there's room for it (tablet burger-nav widths in between
+   stay icon-only). No dropdown — same single link to My Account. Kept
+   light/outlined so it reads as one of the icon-btn row, not a separate
+   dark button competing with it. */
+@include min-md {
+    .header__account--named {
+        width: auto;
+        gap: 8px;
+        padding: 4px 16px 4px 4px;
+        border: 1px solid var(--line);
+
+        &:hover {
+            background: var(--bone-2);
+        }
+    }
+
+    .header__account-name {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap;
+    }
 }
 
 .skip-link:focus {

@@ -80,17 +80,22 @@
             </div>
 
             <?php if ( function_exists( 'myshop_nav_menu_content' ) && 'search' === myshop_nav_menu_content() ) : ?>
-                <form class="header__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-                    <i class="fa-solid fa-magnifying-glass header__search-icon" aria-hidden="true"></i>
+                <div class="header__search-wrap">
+                    <form class="header__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+                        <i class="fa-solid fa-magnifying-glass header__search-icon" aria-hidden="true"></i>
 
-                    <label class="screen-reader-text" for="header-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
-                    <input class="header__search-input" type="search" id="header-search" name="s"
-                        placeholder="<?php esc_attr_e( 'What are you looking for?', 'base-theme' ); ?>" autocomplete="off">
+                        <label class="screen-reader-text" for="header-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
+                        <input class="header__search-input js-header-search-input" type="search" id="header-search" name="s"
+                            placeholder="<?php esc_attr_e( 'What are you looking for?', 'base-theme' ); ?>" autocomplete="off">
 
-                    <?php if ( function_exists( 'WC' ) ) : ?>
-                        <input type="hidden" name="post_type" value="product">
-                    <?php endif; ?>
-                </form>
+                        <?php if ( function_exists( 'WC' ) ) : ?>
+                            <input type="hidden" name="post_type" value="product">
+                        <?php endif; ?>
+                    </form>
+
+                    <!-- Populated live from myshop_live_search() as the customer types (see main.js). -->
+                    <div class="header__search-results js-header-search-results" hidden></div>
+                </div>
             <?php else : ?>
                 <nav class="header__nav" aria-label="<?php esc_attr_e( 'Primary', 'base-theme' ); ?>">
                     <?php
@@ -118,11 +123,17 @@
                     </button>
                 <?php endif; ?>
 
-                <?php $user_initial = function_exists( 'myshop_user_initial' ) ? myshop_user_initial() : ''; ?>
-                <a class="icon-btn header__account" href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/' ) ); ?>"
-                    aria-label="<?php esc_attr_e( 'My account', 'base-theme' ); ?>">
+                <?php
+                $user_initial    = function_exists( 'myshop_user_initial' ) ? myshop_user_initial() : '';
+                $user_first_name = function_exists( 'myshop_user_first_name' ) ? myshop_user_first_name() : '';
+                ?>
+                <a class="icon-btn header__account<?php echo $user_first_name ? ' header__account--named' : ''; ?>" href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/' ) ); ?>"
+                    <?php if ( ! $user_first_name ) : ?>aria-label="<?php esc_attr_e( 'My account', 'base-theme' ); ?>"<?php endif; ?>>
                     <?php if ( $user_initial ) : ?>
                         <span class="icon-btn__avatar" aria-hidden="true"><?php echo esc_html( $user_initial ); ?></span>
+                        <?php if ( $user_first_name ) : ?>
+                            <span class="header__account-name"><?php echo esc_html( $user_first_name ); ?></span>
+                        <?php endif; ?>
                     <?php else : ?>
                         <i class="fa-regular fa-user" aria-hidden="true"></i>
                     <?php endif; ?>

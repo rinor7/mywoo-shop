@@ -192,6 +192,9 @@ $is_woo  = function_exists( 'WC' );
 			<button type="submit" class="btn btn--primary"><?php esc_html_e( 'Search', 'base-theme' ); ?></button>
 		</form>
 
+		<!-- Populated live from myshop_live_search() as the customer types (see main.js). -->
+		<div class="search-overlay__results js-search-results" hidden></div>
+
 		<?php
 		// Chips come from Global Settings → Search Suggestions; none set = no block.
 		$popular = function_exists( 'myshop_search_suggest_terms' ) ? myshop_search_suggest_terms() : array();

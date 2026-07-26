@@ -228,6 +228,16 @@
             color: var(--accent);
             width: 15px;
         }
+
+        /* Per-product custom perk icon (Product Story → Product page
+           perks), uploaded instead of a Font Awesome class — same slot
+           size as the icon above so both line up identically. */
+        img {
+            flex-shrink: 0;
+            width: 15px;
+            height: 15px;
+            object-fit: contain;
+        }
     }
 
     /* ----- Woo add-to-cart form restyle ----- */
@@ -392,7 +402,7 @@
         /* chained classes outgun Woo's purple .button.alt default */
         button.single_add_to_cart_button.button,
         .single_add_to_cart_button {
-            @extend %btn-dark-hover;
+            @include btn-dark-hover;
             flex: 1;
             min-width: 0;
             height: 56px;
@@ -514,7 +524,7 @@
     }
 
     &__add {
-        @extend %btn-dark-hover;
+        @include btn-dark-hover;
         display: inline-flex;
         align-items: center;
         gap: 8px;

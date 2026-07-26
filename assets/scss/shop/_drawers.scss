@@ -584,6 +584,91 @@ body.is-locked {
         text-transform: uppercase;
         color: var(--muted-2);
     }
+
+    /* Live results — populated from myshop_live_search() as the customer
+       types (see main.js). Capped server-side at 4 items; __more only
+       renders when the real match count is higher than that. */
+    &__results {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__item a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line-soft);
+        transition: opacity var(--t) var(--ease);
+
+        &:hover {
+            opacity: .65;
+        }
+    }
+
+    &__thumb {
+        flex: none;
+        width: 52px;
+        height: 52px;
+        border-radius: var(--r-xs);
+        overflow: hidden;
+        background: var(--bone-2);
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+
+    &__name {
+        overflow: hidden;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--ink);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__price {
+        font-size: 13px;
+        color: var(--muted);
+
+        .amount {
+            font-size: inherit;
+        }
+    }
+
+    &__more {
+        align-self: flex-start;
+        margin-top: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    &__empty {
+        font-size: 14px;
+        color: var(--muted);
+    }
 }
 
 /* ---------- Quick view ---------- */

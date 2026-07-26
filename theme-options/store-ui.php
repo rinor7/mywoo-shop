@@ -450,19 +450,49 @@ function myshop_announce_messages() {
 }
 
 /**
- * Product-page perk lines with rotating icons.
+ * Product-page perk lines with rotating icons — global default, unless
+ * $product has its own ps_perks rows (Product Story fields), which
+ * replace the global list entirely, icons included. Per-product rows can
+ * upload a custom icon image instead of using the default FA rotation.
  *
- * @return array[] [icon, text]
+ * @param WC_Product|null $product Product to check for a per-product override.
+ * @return array[] Each: [ 'icon' => fa-class|'', 'image' => url|'', 'text' => string ]
  */
-function myshop_pdp_perks() {
+function myshop_pdp_perks( $product = null ) {
 	$icons = array( 'fa-truck-fast', 'fa-rotate-left', 'fa-lock', 'fa-headset' );
+
+	if ( $product && function_exists( 'get_field' ) ) {
+		$rows = get_field( 'ps_perks', $product->get_id() );
+		if ( $rows ) {
+			$perks = array();
+			foreach ( $rows as $row ) {
+				if ( '' === $row['perk_text'] ) {
+					continue;
+				}
+				$image   = ! empty( $row['perk_icon'] ) ? $row['perk_icon'] : '';
+				$perks[] = array(
+					'icon'  => $image ? '' : $icons[ count( $perks ) % count( $icons ) ],
+					'image' => $image,
+					'text'  => $row['perk_text'],
+				);
+			}
+			if ( $perks ) {
+				return array_slice( $perks, 0, 4 );
+			}
+		}
+	}
+
 	$raw   = (string) myshop_opt( 'pdp_perks', '' );
 	$lines = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $raw ) ) );
 
 	$perks = array();
 
 	foreach ( array_slice( array_values( $lines ), 0, 4 ) as $i => $line ) {
-		$perks[] = array( $icons[ $i % count( $icons ) ], $line );
+		$perks[] = array(
+			'icon'  => $icons[ $i % count( $icons ) ],
+			'image' => '',
+			'text'  => $line,
+		);
 	}
 
 	return $perks;
@@ -585,9 +615,11 @@ function myshop_specs_title() {
 }
 
 /**
- * First letter of the logged-in user's display name, for the account
- * icon's avatar — empty string when logged out (fall back to the plain
- * person icon there).
+ * First letter of the logged-in user's name, for the account icon's
+ * avatar — empty string when logged out (fall back to the plain person
+ * icon there). Prefers first_name so it matches myshop_user_first_name()
+ * below instead of falling back to display_name/user_login (which can be
+ * a different string entirely, e.g. "admin" while first_name is "Rinor").
  */
 function myshop_user_initial() {
 	if ( ! is_user_logged_in() ) {
@@ -595,9 +627,23 @@ function myshop_user_initial() {
 	}
 
 	$user = wp_get_current_user();
-	$name = $user->display_name ? $user->display_name : $user->user_login;
+	$name = $user->first_name ? $user->first_name : ( $user->display_name ? $user->display_name : $user->user_login );
 
 	return $name ? strtoupper( mb_substr( $name, 0, 1 ) ) : '';
+}
+
+/**
+ * Logged-in user's first name, for the account button's desktop pill
+ * label — empty string when logged out or no first name is set.
+ */
+function myshop_user_first_name() {
+	if ( ! is_user_logged_in() ) {
+		return '';
+	}
+
+	$user = wp_get_current_user();
+
+	return $user->first_name ? $user->first_name : '';
 }
 
 /**

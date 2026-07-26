@@ -113,6 +113,7 @@
     }
 
     &__add {
+        @include btn-dark-hover;
         flex: 1;
         display: inline-flex;
         align-items: center;
@@ -127,9 +128,7 @@
         letter-spacing: .1em;
         text-transform: uppercase;
         white-space: nowrap;
-        transition: background-color var(--t) var(--ease);
 
-        &:hover,
         &:focus,
         &:active {
             background: var(--ink-soft);

@@ -174,7 +174,7 @@ table.shop_table.wishlist_table {
 
         a.button,
         a.add_to_cart_button {
-            @extend %btn-dark-hover;
+            @include btn-dark-hover;
             display: inline-flex !important;
             align-items: center;
             justify-content: center;
@@ -608,7 +608,7 @@ ul.wishlist_table {
 
         a.button,
         a.add_to_cart_button {
-            @extend %btn-dark-hover;
+            @include btn-dark-hover;
             display: inline-flex !important;
             align-items: center;
             justify-content: center;

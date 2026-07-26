@@ -2,8 +2,11 @@
 /**
  * Account dashboard — greeting, bento cards, curated products.
  *
+ * Every string here (and each bento card's visibility) comes from
+ * Global Settings → Account Dashboard — see theme-options/account-dashboard.php.
+ *
  * @package Base Theme
- * @version 4.4.0
+ * @version 5.3.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -21,165 +24,201 @@ $shipping = wc_get_account_formatted_address( 'shipping' );
 if ( ! $shipping ) {
 	$shipping = wc_get_account_formatted_address( 'billing' );
 }
+
+$greeting_title = myshop_account_greeting_title( $first );
+$greeting_text  = myshop_account_greeting_text(
+	array(
+		'orders'    => $orders_url,
+		'addresses' => $addresses_url,
+		'account'   => $edit_url,
+	)
+);
 ?>
 
-<header class="account-hero">
-	<h1 class="account-hero__title">
-		<?php
-		printf(
-			/* translators: %s: customer first name */
-			esc_html__( 'Welcome home, %s.', 'base-theme' ),
-			esc_html( $first )
-		);
-		?>
-	</h1>
+<?php if ( $greeting_title || $greeting_text ) : ?>
+	<header class="account-hero">
+		<?php if ( $greeting_title ) : ?>
+			<h1 class="account-hero__title"><?php echo esc_html( $greeting_title ); ?></h1>
+		<?php endif; ?>
 
-	<p class="account-hero__text">
-		<?php
-		printf(
-			wp_kses_post(
-				/* translators: 1: orders url, 2: addresses url, 3: account url */
-				__( 'From your dashboard you can review your <a href="%1$s">recent orders</a>, manage your <a href="%2$s">delivery addresses</a>, or refine your <a href="%3$s">account details</a>.', 'base-theme' )
-			),
-			esc_url( $orders_url ),
-			esc_url( $addresses_url ),
-			esc_url( $edit_url )
-		);
-		?>
-	</p>
-</header>
+		<?php if ( $greeting_text ) : ?>
+			<p class="account-hero__text"><?php echo wp_kses_post( $greeting_text ); ?></p>
+		<?php endif; ?>
+	</header>
+<?php endif; ?>
 
 <div class="account-bento">
 
-	<!-- Latest orders -->
-	<article class="acard acard--orders">
-		<div class="acard__top">
-			<span class="acard__icon"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
-			<?php if ( $snapshot['last'] ) : ?>
-				<span class="acard__tag">
-					<?php esc_html_e( 'Last order', 'base-theme' ); ?>
-					#<?php echo esc_html( $snapshot['last']->get_order_number() ); ?>
-				</span>
-			<?php else : ?>
-				<span class="acard__tag"><?php esc_html_e( 'Last 30 days', 'base-theme' ); ?></span>
+	<?php if ( myshop_account_card_enabled( 'acct_orders_enabled' ) ) : ?>
+		<!-- Latest orders -->
+		<article class="acard acard--orders">
+			<div class="acard__top">
+				<span class="acard__icon"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
+				<?php if ( $snapshot['last'] ) : ?>
+					<span class="acard__tag">
+						<?php esc_html_e( 'Last order', 'base-theme' ); ?>
+						#<?php echo esc_html( $snapshot['last']->get_order_number() ); ?>
+					</span>
+				<?php else : ?>
+					<span class="acard__tag"><?php esc_html_e( 'Last 30 days', 'base-theme' ); ?></span>
+				<?php endif; ?>
+			</div>
+
+			<?php $orders_title = myshop_account_dashboard_field( 'acct_orders_title' ); ?>
+			<?php if ( $orders_title ) : ?>
+				<h2 class="acard__title"><?php echo esc_html( $orders_title ); ?></h2>
 			<?php endif; ?>
-		</div>
 
-		<h2 class="acard__title"><?php esc_html_e( 'Latest Acquisitions', 'base-theme' ); ?></h2>
-
-		<p class="acard__text">
 			<?php
 			if ( $snapshot['count'] ) {
-				printf(
-					/* translators: %d: number of recent orders */
-					esc_html( _n( 'You have %d recent order in your history.', 'You have %d recent orders in your history.', $snapshot['count'], 'base-theme' ) ),
-					(int) $snapshot['count']
-				);
+				$orders_text = myshop_account_dashboard_field( 'acct_orders_text' );
+				$orders_text = $orders_text ? str_replace( '{count}', (int) $snapshot['count'], $orders_text ) : '';
 			} else {
-				esc_html_e( 'No orders yet — your first acquisition awaits.', 'base-theme' );
+				$orders_text = myshop_account_dashboard_field( 'acct_orders_empty_text' );
 			}
 			?>
-		</p>
-
-		<div class="acard__foot">
-			<a class="link-arrow" href="<?php echo esc_url( $snapshot['count'] ? $orders_url : myshop_shop_url() ); ?>">
-				<?php $snapshot['count'] ? esc_html_e( 'View order history', 'base-theme' ) : esc_html_e( 'Start shopping', 'base-theme' ); ?>
-				<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-			</a>
-
-			<?php if ( $snapshot['thumbs'] ) : ?>
-				<span class="acard__thumbs">
-					<?php foreach ( $snapshot['thumbs'] as $thumb ) : ?>
-						<img src="<?php echo esc_url( $thumb ); ?>" alt="" width="44" height="44" loading="lazy">
-					<?php endforeach; ?>
-				</span>
+			<?php if ( $orders_text ) : ?>
+				<p class="acard__text"><?php echo esc_html( $orders_text ); ?></p>
 			<?php endif; ?>
-		</div>
-	</article>
 
-	<!-- Security -->
-	<article class="acard acard--dark acard--security">
-		<span class="acard__icon acard__icon--accent"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
+			<div class="acard__foot">
+				<?php $orders_btn = $snapshot['count'] ? myshop_account_dashboard_field( 'acct_orders_btn' ) : myshop_account_dashboard_field( 'acct_orders_empty_btn' ); ?>
+				<?php if ( $orders_btn ) : ?>
+					<a class="link-arrow" href="<?php echo esc_url( $snapshot['count'] ? $orders_url : myshop_shop_url() ); ?>">
+						<?php echo esc_html( $orders_btn ); ?>
+						<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+					</a>
+				<?php endif; ?>
 
-		<h2 class="acard__title"><?php esc_html_e( 'Privacy & Security', 'base-theme' ); ?></h2>
+				<?php if ( $snapshot['thumbs'] ) : ?>
+					<span class="acard__thumbs">
+						<?php foreach ( $snapshot['thumbs'] as $thumb ) : ?>
+							<img src="<?php echo esc_url( $thumb ); ?>" alt="" width="44" height="44" loading="lazy">
+						<?php endforeach; ?>
+					</span>
+				<?php endif; ?>
+			</div>
+		</article>
+	<?php endif; ?>
 
-		<p class="acard__text">
-			<?php
-			printf(
-				/* translators: %s: account email */
-				esc_html__( 'Signed in as %s. Keep your password fresh and yours alone.', 'base-theme' ),
-				esc_html( $dash_user->user_email )
-			);
-			?>
-		</p>
+	<?php if ( myshop_account_card_enabled( 'acct_security_enabled' ) ) : ?>
+		<!-- Security -->
+		<article class="acard acard--dark acard--security">
+			<span class="acard__icon acard__icon--accent"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
 
-		<a class="acard__btn" href="<?php echo esc_url( $edit_url ); ?>"><?php esc_html_e( 'Security settings', 'base-theme' ); ?></a>
-	</article>
+			<?php $security_title = myshop_account_dashboard_field( 'acct_security_title' ); ?>
+			<?php if ( $security_title ) : ?>
+				<h2 class="acard__title"><?php echo esc_html( $security_title ); ?></h2>
+			<?php endif; ?>
 
-	<!-- Default shipping -->
-	<article class="acard acard--address">
-		<span class="acard__icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
+			<?php $security_text = myshop_account_dashboard_field( 'acct_security_text' ); ?>
+			<?php if ( $security_text ) : ?>
+				<p class="acard__text"><?php echo esc_html( str_replace( '{email}', $dash_user->user_email, $security_text ) ); ?></p>
+			<?php endif; ?>
 
-		<h2 class="acard__title"><?php esc_html_e( 'Default Shipping', 'base-theme' ); ?></h2>
+			<?php $security_btn = myshop_account_dashboard_field( 'acct_security_btn' ); ?>
+			<?php if ( $security_btn ) : ?>
+				<a class="acard__btn" href="<?php echo esc_url( $edit_url ); ?>"><?php echo esc_html( $security_btn ); ?></a>
+			<?php endif; ?>
+		</article>
+	<?php endif; ?>
 
-		<?php if ( $shipping ) : ?>
-			<address class="acard__address"><?php echo wp_kses_post( $shipping ); ?></address>
-		<?php else : ?>
-			<p class="acard__text"><?php esc_html_e( 'No address saved yet.', 'base-theme' ); ?></p>
-		<?php endif; ?>
+	<?php if ( myshop_account_card_enabled( 'acct_shipping_enabled' ) ) : ?>
+		<!-- Default shipping -->
+		<article class="acard acard--address">
+			<span class="acard__icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
 
-		<div class="acard__foot">
-			<a class="link-arrow" href="<?php echo esc_url( $addresses_url ); ?>">
-				<?php $shipping ? esc_html_e( 'Manage addresses', 'base-theme' ) : esc_html_e( 'Add address', 'base-theme' ); ?>
-				<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-			</a>
-		</div>
-	</article>
+			<?php $shipping_title = myshop_account_dashboard_field( 'acct_shipping_title' ); ?>
+			<?php if ( $shipping_title ) : ?>
+				<h2 class="acard__title"><?php echo esc_html( $shipping_title ); ?></h2>
+			<?php endif; ?>
 
-	<!-- Membership / perks -->
-	<article class="acard acard--dark acard--perks grain">
-		<span class="eyebrow eyebrow--light"><?php esc_html_e( 'Membership', 'base-theme' ); ?></span>
+			<?php if ( $shipping ) : ?>
+				<address class="acard__address"><?php echo wp_kses_post( $shipping ); ?></address>
+			<?php else : ?>
+				<?php $shipping_empty_text = myshop_account_dashboard_field( 'acct_shipping_empty_text' ); ?>
+				<?php if ( $shipping_empty_text ) : ?>
+					<p class="acard__text"><?php echo esc_html( $shipping_empty_text ); ?></p>
+				<?php endif; ?>
+			<?php endif; ?>
 
-		<h2 class="acard__title acard__title--lg"><?php esc_html_e( 'The Inner Circle', 'base-theme' ); ?></h2>
+			<div class="acard__foot">
+				<?php $shipping_btn = $shipping ? myshop_account_dashboard_field( 'acct_shipping_btn' ) : myshop_account_dashboard_field( 'acct_shipping_empty_btn' ); ?>
+				<?php if ( $shipping_btn ) : ?>
+					<a class="link-arrow" href="<?php echo esc_url( $addresses_url ); ?>">
+						<?php echo esc_html( $shipping_btn ); ?>
+						<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+					</a>
+				<?php endif; ?>
+			</div>
+		</article>
+	<?php endif; ?>
 
-		<p class="acard__text">
+	<?php if ( myshop_account_card_enabled( 'acct_membership_enabled' ) ) : ?>
+		<!-- Membership / perks -->
+		<article class="acard acard--dark acard--perks grain">
+			<?php $membership_eyebrow = myshop_account_dashboard_field( 'acct_membership_eyebrow' ); ?>
+			<?php if ( $membership_eyebrow ) : ?>
+				<span class="eyebrow eyebrow--light"><?php echo esc_html( $membership_eyebrow ); ?></span>
+			<?php endif; ?>
+
+			<?php $membership_title = myshop_account_dashboard_field( 'acct_membership_title' ); ?>
+			<?php if ( $membership_title ) : ?>
+				<h2 class="acard__title acard__title--lg"><?php echo esc_html( $membership_title ); ?></h2>
+			<?php endif; ?>
+
 			<?php
 			$myshop_perk_lines = array_map(
 				static function ( $perk ) {
-					return $perk[1];
+					return $perk['text'];
 				},
 				myshop_pdp_perks()
 			);
+
 			if ( $myshop_perk_lines ) {
-				printf(
-					/* translators: %s: comma-separated perk list from Global Settings */
-					esc_html__( '%s and first access to limited releases — yours with every order.', 'base-theme' ),
-					esc_html( implode( ', ', $myshop_perk_lines ) )
-				);
+				$membership_text = myshop_account_dashboard_field( 'acct_membership_text' );
+				$membership_text = $membership_text ? str_replace( '{perks}', implode( ', ', $myshop_perk_lines ), $membership_text ) : '';
 			} else {
-				esc_html_e( 'First access to limited releases — yours with every order.', 'base-theme' );
+				$membership_text = myshop_account_dashboard_field( 'acct_membership_empty_text' );
 			}
 			?>
-		</p>
+			<?php if ( $membership_text ) : ?>
+				<p class="acard__text"><?php echo esc_html( $membership_text ); ?></p>
+			<?php endif; ?>
 
-		<a class="acard__btn" href="<?php echo esc_url( myshop_shop_url() ); ?>"><?php esc_html_e( 'Explore the collection', 'base-theme' ); ?></a>
-	</article>
+			<?php $membership_btn = myshop_account_dashboard_field( 'acct_membership_btn' ); ?>
+			<?php if ( $membership_btn ) : ?>
+				<a class="acard__btn" href="<?php echo esc_url( myshop_shop_url() ); ?>"><?php echo esc_html( $membership_btn ); ?></a>
+			<?php endif; ?>
+		</article>
+	<?php endif; ?>
 
 </div>
 
 <!-- Curated -->
-<?php $curated = myshop_get_products( array( 'limit' => 4, 'type' => 'bestseller' ) ); ?>
+<?php $curated = myshop_account_card_enabled( 'acct_curated_enabled' ) ? myshop_get_products( array( 'limit' => 4, 'type' => 'bestseller' ) ) : array(); ?>
 <?php if ( $curated ) : ?>
 	<section class="account-curated">
 		<div class="sec-head">
 			<div class="sec-head__text">
-				<h2 class="sec-head__title account-curated__title"><?php esc_html_e( 'Curated for you', 'base-theme' ); ?></h2>
-				<p class="sec-head__sub"><?php esc_html_e( 'Hand-selected pieces from the current collection.', 'base-theme' ); ?></p>
+				<?php $curated_title = myshop_account_dashboard_field( 'acct_curated_title' ); ?>
+				<?php if ( $curated_title ) : ?>
+					<h2 class="sec-head__title account-curated__title"><?php echo esc_html( $curated_title ); ?></h2>
+				<?php endif; ?>
+
+				<?php $curated_subtitle = myshop_account_dashboard_field( 'acct_curated_subtitle' ); ?>
+				<?php if ( $curated_subtitle ) : ?>
+					<p class="sec-head__sub"><?php echo esc_html( $curated_subtitle ); ?></p>
+				<?php endif; ?>
 			</div>
-			<a class="link-arrow" href="<?php echo esc_url( myshop_shop_url() ); ?>">
-				<?php esc_html_e( 'View all', 'base-theme' ); ?>
-				<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-			</a>
+
+			<?php $curated_btn = myshop_account_dashboard_field( 'acct_curated_btn' ); ?>
+			<?php if ( $curated_btn ) : ?>
+				<a class="link-arrow" href="<?php echo esc_url( myshop_shop_url() ); ?>">
+					<?php echo esc_html( $curated_btn ); ?>
+					<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+				</a>
+			<?php endif; ?>
 		</div>
 
 		<div class="product-grid">

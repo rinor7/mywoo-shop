@@ -115,6 +115,98 @@
     });
 
     /* ==========================================================
+       Live search — search overlay + the inline header bar both
+       feed the same myshop_live_search() endpoint, each into their
+       own results box.
+    ========================================================== */
+    function initLiveSearch(input, box) {
+        if (!input || !box) { return null; }
+
+        var timer = null;
+        var currentTerm = '';
+
+        function reset() {
+            box.hidden = true;
+            box.innerHTML = '';
+        }
+
+        function render(data, term) {
+            // A slower, earlier request landing after a newer one — ignore it.
+            if (term !== currentTerm) { return; }
+
+            if (!data.products.length) {
+                box.innerHTML = '<p class="search-overlay__empty">' + (i18n.noResults || '') + '</p>';
+                box.hidden = false;
+                return;
+            }
+
+            var rows = data.products.map(function (p) {
+                return '<li class="search-overlay__item"><a href="' + p.permalink + '">' +
+                    '<span class="search-overlay__thumb"><img src="' + p.image + '" alt="" loading="lazy" width="52" height="52"></span>' +
+                    '<span class="search-overlay__info">' +
+                        '<span class="search-overlay__name">' + p.title + '</span>' +
+                        '<span class="search-overlay__price">' + p.price + '</span>' +
+                    '</span>' +
+                '</a></li>';
+            }).join('');
+
+            var more = '';
+            if (data.total > data.products.length && data.viewAll) {
+                var label = (i18n.viewAllResults || 'View all {count} results').replace('{count}', data.total);
+                more = '<a class="search-overlay__more" href="' + data.viewAll + '">' + label + '</a>';
+            }
+
+            box.innerHTML = '<ul class="search-overlay__list">' + rows + '</ul>' + more;
+            box.hidden = false;
+        }
+
+        function search(term) {
+            if (!MS.ajaxUrl) { return; }
+
+            fetch(MS.ajaxUrl + '?action=myshop_live_search&term=' + encodeURIComponent(term), {
+                credentials: 'same-origin'
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (data) { if (data) { render(data, term); } })
+                .catch(function () {});
+        }
+
+        input.addEventListener('input', function () {
+            var term = input.value.trim();
+            currentTerm = term;
+
+            clearTimeout(timer);
+
+            if (term.length < 2) {
+                reset();
+                return;
+            }
+
+            timer = setTimeout(function () { search(term); }, 300);
+        });
+
+        return {
+            reset: reset,
+            clear: function () { input.value = ''; currentTerm = ''; reset(); }
+        };
+    }
+
+    var overlaySearch = initLiveSearch(qs('.js-search-input'), qs('.js-search-results'));
+    var headerSearch = initLiveSearch(qs('.js-header-search-input'), qs('.js-header-search-results'));
+
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.js-search-open')) {
+            if (overlaySearch) { overlaySearch.clear(); }
+        }
+
+        // Header bar dropdown is always visible (not behind an overlay) —
+        // close it on any click outside the pill.
+        if (headerSearch && !e.target.closest('.header__search-wrap')) {
+            headerSearch.reset();
+        }
+    });
+
+    /* ==========================================================
        Announcement bar
     ========================================================== */
     (function () {
@@ -771,7 +863,7 @@
 
             // Absent when the "view full details" label (Global Settings → Shop) is cleared.
             var qvLink = qs('.js-qv-link', modal);
-            if (qvLink) { qvLink.href = data.url; }
+            if (qvLink) { qvLink.href = data.url; qvLink.hidden = false; }
 
             var addBtn = qs('.js-qv-add', modal);
             var addLabel = addBtn.querySelector('span');
@@ -786,10 +878,12 @@
                 if (addLabel) { addLabel.textContent = i18n.addToBag; }
                 if (qtyBox) { qtyBox.hidden = false; }
             } else if (!data.buy) {
-                // Needs options — the button becomes the way to the product page.
+                // Needs options — the button already goes to the product page,
+                // so a separate "view full details" link would just repeat it.
                 addBtn.dataset.goto = data.url;
                 if (addLabel) { addLabel.textContent = i18n.chooseOptions; }
                 if (qtyBox) { qtyBox.hidden = true; }
+                if (qvLink) { qvLink.hidden = true; }
             } else {
                 if (addLabel) { addLabel.textContent = i18n.addToBag; }
                 if (qtyBox) { qtyBox.hidden = false; }

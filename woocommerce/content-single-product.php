@@ -109,11 +109,18 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 					?>
 				</div>
 
-				<?php $pdp_perks = myshop_pdp_perks(); ?>
+				<?php $pdp_perks = myshop_pdp_perks( $product ); ?>
 				<?php if ( $pdp_perks ) : ?>
 					<ul class="pdp-panel__meta">
 						<?php foreach ( $pdp_perks as $perk ) : ?>
-							<li><i class="fa-solid <?php echo esc_attr( $perk[0] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $perk[1] ); ?></li>
+							<li>
+								<?php if ( $perk['image'] ) : ?>
+									<img src="<?php echo esc_url( $perk['image'] ); ?>" alt="" width="15" height="15" loading="lazy">
+								<?php else : ?>
+									<i class="fa-solid <?php echo esc_attr( $perk['icon'] ); ?>" aria-hidden="true"></i>
+								<?php endif; ?>
+								<?php echo esc_html( $perk['text'] ); ?>
+							</li>
 						<?php endforeach; ?>
 					</ul>
 				<?php endif; ?>

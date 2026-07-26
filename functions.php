@@ -34,6 +34,8 @@ function standard_scripts_and_style() {
 		array(
 			// WooCommerce's own AJAX endpoints; '%%endpoint%%' is swapped in JS.
 			'wcAjax'      => class_exists( 'WC_AJAX' ) ? WC_AJAX::get_endpoint( '%%endpoint%%' ) : '',
+			// Plain wp_ajax_ actions that aren't WooCommerce's own (e.g. live search).
+			'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
 			'cartUrl'     => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
 			// Global Settings → Cart → "Calculate cart totals automatically".
 			'cartAutoUpdate' => function_exists( 'myshop_cart_auto_update' ) && myshop_cart_auto_update(),
@@ -65,6 +67,8 @@ function standard_scripts_and_style() {
 				'unsaved'       => __( 'Removed from wishlist', 'base-theme' ),
 				'addToBag'      => __( 'Add to bag', 'base-theme' ),
 				'chooseOptions' => __( 'Choose options', 'base-theme' ),
+				'noResults'     => __( 'No products found', 'base-theme' ),
+				'viewAllResults' => __( 'View all {count} results', 'base-theme' ),
 			),
 		)
 	);
@@ -94,6 +98,7 @@ require get_template_directory() . '/theme-options/widgets.php';
 require get_template_directory() . '/theme-options/search-suggestions.php';
 require get_template_directory() . '/theme-options/multilingual.php';
 require get_template_directory() . '/theme-options/store-ui.php';
+require get_template_directory() . '/theme-options/account-dashboard.php';
 require get_template_directory() . '/theme-options/policy-page.php';
 require get_template_directory() . '/theme-options/container-admin-customize.php';
 // require get_template_directory() . '/theme-options/acf-navigation-background.php';

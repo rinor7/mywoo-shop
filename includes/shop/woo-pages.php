@@ -280,6 +280,23 @@ function myshop_shop_filterbar() {
 }
 
 /**
+ * WooCommerce's own woocommerce_page_title() appends "– Page N" whenever
+ * get_query_var('paged') is truthy — but the catalog ordering dropdown
+ * resubmits with a hidden paged=1 field on every sort change (to reset
+ * pagination), and "1" is truthy, so sorting on page 1 wrongly showed
+ * "– Page 1" even though the user never left the first page.
+ */
+function myshop_fix_search_title_page_suffix( $title ) {
+	if ( is_search() && (int) get_query_var( 'paged' ) <= 1 ) {
+		/* translators: %s: search query */
+		$title = sprintf( __( 'Search results: &ldquo;%s&rdquo;', 'woocommerce' ), get_search_query() );
+	}
+
+	return $title;
+}
+add_filter( 'woocommerce_page_title', 'myshop_fix_search_title_page_suffix' );
+
+/**
  * "Complete the ensemble" — manually-picked products when set (Global
  * Settings → Cart), otherwise cross-sells, otherwise newest products.
  * Never items already in the cart. Rendered by the cart template.
