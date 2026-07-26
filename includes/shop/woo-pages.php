@@ -301,21 +301,25 @@ add_filter( 'woocommerce_page_title', 'myshop_fix_search_title_page_suffix' );
  * (post_type=product, set as a hidden field on every search form) — a
  * bare /?s= URL that bypasses those forms has no post_type, so it falls
  * through to WordPress's own plain search.php (unstyled, and this theme
- * has no content-search.php, so results render blank). Forcing the same
- * post_type here makes WooCommerce's template loader pick up
- * archive-product.php instead, same as every other search on the site —
- * one consistent, working results page regardless of entry point.
+ * has no content-search.php, so results render blank).
+ *
+ * Forcing the same post_type via pre_get_posts doesn't work here — by
+ * the time that fires, WP_Query::parse_query() has already computed and
+ * locked in is_post_type_archive() from the ORIGINAL request, and that's
+ * what WooCommerce's template loader checks to pick archive-product.php.
+ * The `request` filter runs earlier (in WP::parse_request(), before the
+ * main query is even built), so setting post_type here lets that flag
+ * compute correctly from the start — same result as every other search
+ * on the site, regardless of entry point.
  */
-function myshop_force_product_search( $query ) {
-	if ( is_admin() || ! $query->is_main_query() || ! $query->is_search() ) {
-		return;
+function myshop_force_product_search( $vars ) {
+	if ( isset( $vars['s'] ) && ! isset( $vars['post_type'] ) ) {
+		$vars['post_type'] = 'product';
 	}
 
-	if ( ! $query->get( 'post_type' ) ) {
-		$query->set( 'post_type', 'product' );
-	}
+	return $vars;
 }
-add_action( 'pre_get_posts', 'myshop_force_product_search' );
+add_filter( 'request', 'myshop_force_product_search' );
 
 /**
  * "Complete the ensemble" — manually-picked products when set (Global
