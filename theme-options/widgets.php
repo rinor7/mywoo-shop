@@ -46,6 +46,24 @@ function standard_widgets_init() {
 			'before_title'  => '<span class="widget-title">',
 			'after_title'   => '</span>',)
 	);
+	register_sidebar(
+		array('name'          => esc_html__( 'Primary Sidebar', 'base-theme' ),
+			'id'            => 'sidebar-1',
+			'description'   => esc_html__( 'Add widgets here to appear in your site footer.', 'base-theme' ),
+			'before_widget' => '<div class="widget-wrapper">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<span class="widget-title">',
+			'after_title'   => '</span>',)
+	);
+	register_sidebar(
+		array('name'          => esc_html__( 'Contact Modal', 'base-theme' ),
+			'id'            => 'contact-modal',
+			'description'   => esc_html__( 'Add a Custom HTML widget with your Contact Form 7 shortcode (or anything else). A "Contact us" button appears site-wide and opens this in a popup — empty = no button shows at all.', 'base-theme' ),
+			'before_widget' => '<div class="widget-wrapper">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<span class="widget-title">',
+			'after_title'   => '</span>',)
+	);
 }
 add_action( 'widgets_init', 'standard_widgets_init' );
 

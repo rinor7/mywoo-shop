@@ -313,7 +313,7 @@ add_filter( 'woocommerce_page_title', 'myshop_fix_search_title_page_suffix' );
  * on the site, regardless of entry point.
  */
 function myshop_force_product_search( $vars ) {
-	if ( isset( $vars['s'] ) && ! isset( $vars['post_type'] ) ) {
+	if ( ! is_admin() && isset( $vars['s'] ) && ! isset( $vars['post_type'] ) ) {
 		$vars['post_type'] = 'product';
 	}
 

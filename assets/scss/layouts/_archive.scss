@@ -1,55 +1,374 @@
 /*Archive Start*/
 .site-archive {
-    &.archive-page {
-        &-main-posts {
+    padding-block: clamp(28px, 3.5vw, 52px);
 
-        }
-    }
     .archive-layout {
         display: flex;
-        gap: 30px;
-        padding: 40px 0;
+        align-items: flex-start;
+        gap: clamp(32px, 4vw, 64px);
 
-        @media (max-width: 991.98px) {
+        @include md {
             flex-direction: column;
-            gap: 20px;
+            gap: 32px;
         }
     }
 
-     .archive-content {
-            flex: 1;
-            min-width: 0; // Prevents flex item from overflowing
+    .archive-content {
+        flex: 1;
+        min-width: 0; // prevents a flex item from overflowing its column
 
-            .page-header {
-                margin-bottom: 10px;
+        .page-header {
+            margin-bottom: clamp(20px, 2.5vw, 32px);
 
-                .page-title {}
-            }
-
-            .articles {
-                display: flex;
-                flex-direction: column;
-                row-gap: 10px;
-
-                article {
-                    .entry-header {
-                        .entry-title {
-                            a {}
-                        }
-                    }
-                }
+            .page-title {
+                font-size: clamp(30px, 3.4vw, 44px);
+                font-weight: 800;
+                letter-spacing: -.02em;
+                color: var(--ink);
             }
         }
 
-    #secondary {
-        background-color: red;
-        flex: 0 0 300px; // Fixed width for sidebar
-        max-width: 300px;
+        .articles {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+    }
 
-        @media (max-width: 991.98px) {
+    /* Same automatic-fallback trick as everywhere else on this site — no
+       need for a flex-basis hack: with #secondary absent (empty sidebar,
+       see sidebar.php's is_active_sidebar check), .archive-content is the
+       only flex child and naturally takes the full row width. */
+    #secondary {
+        position: sticky;
+        /* Clears the sticky site header instead of tucking under it. */
+        top: calc(var(--bar-h) + 24px);
+        flex: 0 0 300px;
+        max-width: 300px;
+        max-height: calc(100vh - var(--bar-h) - 48px);
+        overflow-y: auto;
+
+        @include md {
+            position: static;
             flex: none;
             max-width: 100%;
+            max-height: none;
+            overflow-y: visible;
         }
+    }
+}
+
+/* ---------- Post card ---------- */
+.post-card {
+    display: flex;
+    gap: 20px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line-soft);
+
+    &:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
+    @include xs {
+        flex-direction: column;
+    }
+
+    &__media {
+        display: block;
+        flex: none;
+        width: 220px;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border-radius: var(--r-sm);
+        background: var(--bone-2);
+
+        @include xs {
+            width: 100%;
+        }
+    }
+
+    &__img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--t-slow) var(--ease-out);
+    }
+
+    &:hover &__img {
+        transform: scale(1.05);
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    &__date {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+        color: var(--muted-2);
+    }
+
+    &__title {
+        font-size: clamp(18px, 2vw, 22px);
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--ink);
+
+        a {
+            color: inherit;
+            transition: color var(--t) var(--ease);
+
+            &:hover {
+                color: var(--accent);
+            }
+        }
+    }
+
+    &__excerpt {
+        font-size: 14px;
+        line-height: 1.65;
+        color: var(--muted);
+    }
+}
+
+/* ---------- Pagination ---------- */
+.site-archive .pagination,
+.site-archive .navigation.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: clamp(28px, 3vw, 44px);
+
+    .page-numbers {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xs);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+        transition: background-color var(--t) var(--ease), color var(--t) var(--ease), border-color var(--t) var(--ease);
+
+        &:hover {
+            border-color: var(--ink);
+        }
+
+        &.current {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: #fff;
+        }
+
+        &.dots {
+            border-color: transparent;
+        }
+    }
+}
+
+/* ---------- Sidebar widgets ---------- */
+#secondary {
+    .widget-wrapper {
+        padding-bottom: 28px;
+        margin-bottom: 28px;
+        border-bottom: 1px solid var(--line-soft);
+
+        &:last-child {
+            padding-bottom: 0;
+            margin-bottom: 0;
+            border-bottom: 0;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        a {
+            color: inherit;
+            transition: color var(--t) var(--ease);
+
+            &:hover {
+                color: var(--ink);
+            }
+        }
+    }
+
+    .widget-title {
+        display: block;
+        margin-bottom: 16px;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+        color: var(--ink);
+    }
+
+    /* WooCommerce's own "Products" widget — a richer li (image + title +
+       rating + price, image and title inside <a>, rating/price as
+       siblings after it) than the plain link lists above, so it needs
+       its own layout instead of the generic ul/li/a reset. */
+    .product_list_widget {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        li {
+            display: grid;
+            grid-template-columns: 56px 1fr;
+            column-gap: 12px;
+            align-items: start;
+            font-size: 13px;
+        }
+
+        // Lets the <a>'s own children (img + title) act as direct grid
+        // items of the li above, instead of being boxed as one column.
+        a {
+            display: contents;
+        }
+
+        img {
+            grid-row: 1 / 3;
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: var(--r-xs);
+            background: var(--bone-2);
+        }
+
+        .product-title {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.35;
+            color: var(--ink);
+        }
+
+        .star-rating {
+            margin: 2px 0 0;
+            font-size: 12px;
+        }
+
+        .amount {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        del {
+            margin-right: 6px;
+            font-weight: 400;
+            color: var(--muted-2);
+        }
+
+        ins {
+            text-decoration: none;
+        }
+    }
+}
+
+/* WooCommerce's Product Search widget — its own product-searchform.php
+   template (woocommerce-product-search / search-field), separate from
+   the theme's plain searchform.php used by core's Search widget above. */
+.woocommerce-product-search {
+    display: flex;
+    gap: 8px;
+
+    .search-field {
+        flex: 1;
+        min-width: 0;
+        height: 46px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xs);
+        background: #fff;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--ink);
+        transition: border-color var(--t) var(--ease);
+
+        &::placeholder {
+            color: var(--muted-2);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--ink);
+        }
+    }
+
+    button {
+        @include btn-dark-hover;
+        flex: none;
+        height: 46px;
+        padding: 0 18px;
+        border-radius: var(--r-xs);
+        background: var(--ink);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+    }
+}
+
+.widget-search-form {
+    display: flex;
+    gap: 8px;
+
+    &__input {
+        flex: 1;
+        min-width: 0;
+        height: 46px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xs);
+        background: #fff;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--ink);
+        transition: border-color var(--t) var(--ease);
+
+        &::placeholder {
+            color: var(--muted-2);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--ink);
+        }
+    }
+
+    &__submit {
+        @include btn-dark-hover;
+        display: grid;
+        place-items: center;
+        flex: none;
+        width: 46px;
+        height: 46px;
+        border-radius: var(--r-xs);
+        background: var(--ink);
+        color: #fff;
+        font-size: 14px;
     }
 }
 

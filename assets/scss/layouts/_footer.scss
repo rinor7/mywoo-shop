@@ -184,6 +184,75 @@
     margin-top: 24px;
 }
 
+/* Contact Form 7 dropped into a footer column via a Custom HTML widget —
+   dark-background version of the same form-control look used elsewhere
+   (CF7's own generic classes, not tied to any specific field set). */
+.footer__col {
+    .wpcf7-form-control-wrap {
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .wpcf7-form-control:not(.wpcf7-submit):not([type="checkbox"]):not([type="radio"]) {
+        display: block;
+        width: 100%;
+        height: 46px;
+        padding: 0 14px;
+        border: 1px solid rgba(255, 255, 255, .18);
+        border-radius: var(--r-xs);
+        background: rgba(255, 255, 255, .06);
+        font-family: inherit;
+        font-size: 14px;
+        color: #fff;
+        transition: border-color var(--t) var(--ease);
+
+        &::placeholder {
+            color: rgba(255, 255, 255, .4);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: #fff;
+        }
+    }
+
+    textarea.wpcf7-form-control {
+        height: auto;
+        min-height: 100px;
+        padding-top: 12px;
+        resize: vertical;
+    }
+
+    .wpcf7-submit {
+        @include btn-dark-hover;
+        height: 46px;
+        padding: 0 24px;
+        border-radius: var(--r-xs);
+        background: #fff;
+        color: var(--ink);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+    }
+
+    .wpcf7-not-valid-tip {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--sale);
+    }
+
+    .wpcf7-response-output {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border: 1px solid rgba(255, 255, 255, .18);
+        border-radius: var(--r-xs);
+        font-size: 13px;
+        color: rgba(255, 255, 255, .8);
+    }
+}
+
 /* ---------- Bottom bar ---------- */
 .footer__bottom {
     display: flex;

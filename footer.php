@@ -66,6 +66,13 @@ $is_woo  = function_exists( 'WC' );
 				&copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'base-theme' ); ?> <a href="<?php echo esc_url( 'https://www.puzzle-enterprise.com' ); ?>" target="_blank" rel="noopener">Puzzle Enterprise</a>
 			</p>
 
+			<?php if ( is_active_sidebar( 'contact-modal' ) ) : ?>
+				<button type="button" class="footer__contact-btn link-arrow js-contact-open">
+					<?php esc_html_e( 'Contact us', 'base-theme' ); ?>
+					<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+				</button>
+			<?php endif; ?>
+
 			<?php if ( function_exists( 'myshop_payment_icons' ) ) { myshop_payment_icons(); } ?>
 		</div>
 
@@ -188,50 +195,50 @@ $is_woo  = function_exists( 'WC' );
 		<span class="eyebrow"><?php esc_html_e( 'Search', 'base-theme' ); ?></span>
 
 		<form class="search-overlay__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<i class="fa-solid fa-magnifying-glass search-overlay__icon" aria-hidden="true"></i>
+			<i class="fa-solid fa-magnifying-glass search-overlay__icon" aria-hidden="true"></i>
 
-				<label class="screen-reader-text" for="shop-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
-				<input class="search-overlay__input js-search-input" type="search" id="shop-search" name="s"
-					placeholder="<?php esc_attr_e( 'What are you looking for?', 'base-theme' ); ?>" autocomplete="off">
+			<label class="screen-reader-text" for="shop-search"><?php esc_html_e( 'Search products', 'base-theme' ); ?></label>
+			<input class="search-overlay__input js-search-input" type="search" id="shop-search" name="s"
+				placeholder="<?php esc_attr_e( 'What are you looking for?', 'base-theme' ); ?>" autocomplete="off">
 
-				<?php if ( $is_woo ) : ?>
-					<input type="hidden" name="post_type" value="product">
-				<?php endif; ?>
-
-				<button type="submit" class="btn btn--primary"><?php esc_html_e( 'Search', 'base-theme' ); ?></button>
-			</form>
-
-			<!-- Populated live from myshop_live_search() as the customer types (see main.js). -->
-			<div class="search-overlay__results js-search-results" hidden></div>
-
-			<?php
-			// Chips come from Global Settings → Search Suggestions; none set = no block.
-			$popular = function_exists( 'myshop_search_suggest_terms' ) ? myshop_search_suggest_terms() : array();
-			if ( $popular ) :
-				?>
-				<div class="search-overlay__suggest">
-					<?php $suggest_label = myshop_search_suggest_label(); ?>
-					<?php if ( '' !== $suggest_label ) : ?>
-						<span class="search-overlay__suggest-label"><?php echo esc_html( $suggest_label ); ?></span>
-					<?php endif; ?>
-					<ul>
-						<?php
-						foreach ( $popular as $term ) :
-							$url = add_query_arg(
-								array_filter(
-									array(
-										's'         => rawurlencode( $term ),
-										'post_type' => $is_woo ? 'product' : null,
-									)
-								),
-								home_url( '/' )
-							);
-							?>
-							<li><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $term ); ?></a></li>
-						<?php endforeach; ?>
-					</ul>
-				</div>
+			<?php if ( $is_woo ) : ?>
+				<input type="hidden" name="post_type" value="product">
 			<?php endif; ?>
+
+			<button type="submit" class="btn btn--primary"><?php esc_html_e( 'Search', 'base-theme' ); ?></button>
+		</form>
+
+		<!-- Populated live from myshop_live_search() as the customer types (see main.js). -->
+		<div class="search-overlay__results js-search-results" hidden></div>
+
+		<?php
+		// Chips come from Global Settings → Search Suggestions; none set = no block.
+		$popular = function_exists( 'myshop_search_suggest_terms' ) ? myshop_search_suggest_terms() : array();
+		if ( $popular ) :
+			?>
+			<div class="search-overlay__suggest">
+				<?php $suggest_label = myshop_search_suggest_label(); ?>
+				<?php if ( '' !== $suggest_label ) : ?>
+					<span class="search-overlay__suggest-label"><?php echo esc_html( $suggest_label ); ?></span>
+				<?php endif; ?>
+				<ul>
+					<?php
+					foreach ( $popular as $term ) :
+						$url = add_query_arg(
+							array_filter(
+								array(
+									's'         => rawurlencode( $term ),
+									'post_type' => $is_woo ? 'product' : null,
+								)
+							),
+							home_url( '/' )
+						);
+						?>
+						<li><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $term ); ?></a></li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>
 

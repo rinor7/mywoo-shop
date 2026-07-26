@@ -1,17 +1,29 @@
 /*Single page Start*/
 
-.site-single {
-    .intro {
-        height: 250px;
+.single-hero {
+    display: flex;
+    align-items: flex-end;
+    height: clamp(220px, 28vw, 320px);
+    /* --bg-override (Post Hero fields, per-post) wins when set — a solid
+       color or raw gradient/CSS string. Falls back to this gradient. */
+    background: var(--bg-override, linear-gradient(150deg, var(--ink-soft), var(--ink)));
+
+    .container {
+        width: 100%;
+        padding-block: 32px;
     }
 
-    .content {
-        // margin-top: 40px;
-
-        h1 {}
-
-        p {}
+    &__title {
+        color: #fff;
+        font-size: clamp(28px, 4vw, 48px);
+        font-weight: 800;
+        letter-spacing: -.02em;
+        line-height: 1.1;
     }
-} 
+}
+
+.site-single .content {
+    padding-block: clamp(28px, 3.5vw, 52px);
+}
 
 /*Single page END*/

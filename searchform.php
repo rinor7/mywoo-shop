@@ -1,12 +1,9 @@
-<form action="/" method="get">
-    <label for="search">Search in <?php echo home_url( '/' ); ?></label>
-    <input type="text" name="s" id="search" value="<?php the_search_query(); ?>" />
-    <input 
-        type="image" 
-        alt="Search" 
-        src="<?php bloginfo( 'template_url' ); ?>/assets/img/search.png" 
-        width="26" 
-        height="26" 
-    />
-	<!-- <input type="hidden" value="post" name="post_type" id="post_type" /> -->
+<form class="widget-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get">
+    <label class="screen-reader-text" for="widget-search"><?php esc_html_e( 'Search', 'base-theme' ); ?></label>
+    <input class="widget-search-form__input" type="text" name="s" id="widget-search"
+        value="<?php echo esc_attr( get_search_query() ); ?>"
+        placeholder="<?php esc_attr_e( 'Search…', 'base-theme' ); ?>">
+    <button class="widget-search-form__submit" type="submit" aria-label="<?php esc_attr_e( 'Search', 'base-theme' ); ?>">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    </button>
 </form>

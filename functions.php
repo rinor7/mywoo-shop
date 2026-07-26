@@ -87,6 +87,7 @@ require get_template_directory() . '/includes/shop/woo-pages.php';
 require get_template_directory() . '/includes/shop/product-single.php';
 require get_template_directory() . '/includes/shop/account.php';
 require get_template_directory() . '/includes/shop/orders.php';
+require get_template_directory() . '/includes/blog-single.php';
 
 // Include files from the 'theme-options' directory
 require get_template_directory() . '/theme-options/global-colors.php';
@@ -101,7 +102,6 @@ require get_template_directory() . '/theme-options/store-ui.php';
 require get_template_directory() . '/theme-options/account-dashboard.php';
 require get_template_directory() . '/theme-options/policy-page.php';
 require get_template_directory() . '/theme-options/container-admin-customize.php';
-// require get_template_directory() . '/theme-options/acf-navigation-background.php';
 require get_template_directory() . '/theme-options/general-functions.php';
 require get_template_directory() . '/theme-options/taxonomies.php';
 require get_template_directory() . '/theme-options/update-alt-tags.php';
