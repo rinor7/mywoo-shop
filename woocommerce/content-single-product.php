@@ -22,14 +22,16 @@ if ( ! $product || post_password_required() ) {
 $gallery_ids = myshop_product_gallery_ids( $product );
 $specs       = myshop_product_specs( $product );
 $pairings    = myshop_product_pairings( $product, 4 );
+$gallery_bg  = myshop_product_gallery_background( $product );
 
 $terms   = get_the_terms( $product->get_id(), 'product_cat' );
 $eyebrow = $product->is_on_sale()
 	? __( 'Limited offer', 'base-theme' )
 	: ( $terms && ! is_wp_error( $terms ) ? $terms[0]->name : __( 'The collection', 'base-theme' ) );
 
-$quote  = function_exists( 'get_field' ) ? get_field( 'ps_quote', $product->get_id() ) : '';
-$story  = array();
+$quote         = function_exists( 'get_field' ) ? get_field( 'ps_quote', $product->get_id() ) : '';
+$quote_eyebrow = function_exists( 'get_field' ) ? get_field( 'ps_quote_eyebrow', $product->get_id() ) : '';
+$story         = array();
 foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2_label', 'ps_a_eyebrow', 'ps_a_title', 'ps_a_text', 'ps_b_eyebrow', 'ps_b_title', 'ps_b_text' ) as $ps_key ) {
 	$story[ $ps_key ] = function_exists( 'get_field' ) ? get_field( $ps_key, $product->get_id() ) : '';
 }
@@ -42,7 +44,14 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 	<!-- ============ Hero ============ -->
 	<section class="pdp-hero">
 
-		<div class="pdp-gallery js-pdp" data-count="<?php echo esc_attr( count( $gallery_ids ) ); ?>">
+		<div class="pdp-gallery js-pdp<?php echo $gallery_bg ? ' pdp-gallery--custom-bg' : ''; ?>" data-count="<?php echo esc_attr( count( $gallery_ids ) ); ?>"<?php echo $gallery_bg ? ' style="background: ' . esc_attr( $gallery_bg ) . ';"' : ''; ?>>
+			<?php $pdp_in_wishlist = function_exists( 'myshop_in_wishlist' ) && myshop_in_wishlist( $product->get_id() ); ?>
+			<button type="button" class="pdp-gallery__wish js-wishlist<?php echo $pdp_in_wishlist ? ' is-active' : ''; ?>"
+				data-id="<?php echo esc_attr( $product->get_id() ); ?>"
+				aria-label="<?php esc_attr_e( 'Save to wishlist', 'base-theme' ); ?>">
+				<i class="<?php echo $pdp_in_wishlist ? 'fa-solid' : 'fa-regular'; ?> fa-heart" aria-hidden="true"></i>
+			</button>
+
 			<?php if ( ! empty( $gallery_ids ) ) : ?>
 				<div class="swiper pdp-gallery__main js-pdp-main">
 					<div class="swiper-wrapper">
@@ -137,7 +146,9 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 	<?php if ( $quote ) : ?>
 		<section class="pdp-quote">
 			<div class="shop-container">
-				<span class="eyebrow eyebrow--center"><?php esc_html_e( 'Crafted for the modern professional', 'base-theme' ); ?></span>
+				<?php if ( $quote_eyebrow ) : ?>
+					<span class="eyebrow eyebrow--center"><?php echo esc_html( $quote_eyebrow ); ?></span>
+				<?php endif; ?>
 				<blockquote class="pdp-quote__text">&ldquo;<?php echo esc_html( $quote ); ?>&rdquo;</blockquote>
 
 				<?php if ( $story['ps_stat1_value'] || $story['ps_stat2_value'] ) : ?>
@@ -212,11 +223,19 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 	<?php endif; ?>
 
 	<!-- ============ Specifications ============ -->
+	<?php
+	$specs_eyebrow = myshop_specs_eyebrow();
+	$specs_title   = myshop_specs_title();
+	?>
 	<?php if ( ! empty( $specs ) ) : ?>
 		<section class="pdp-specs">
 			<div class="shop-container">
-				<span class="eyebrow"><?php esc_html_e( 'Document 02', 'base-theme' ); ?></span>
-				<h2 class="pdp-specs__title"><?php esc_html_e( 'Specifications', 'base-theme' ); ?></h2>
+				<?php if ( $specs_eyebrow ) : ?>
+					<span class="eyebrow"><?php echo esc_html( $specs_eyebrow ); ?></span>
+				<?php endif; ?>
+				<?php if ( $specs_title ) : ?>
+					<h2 class="pdp-specs__title"><?php echo esc_html( $specs_title ); ?></h2>
+				<?php endif; ?>
 
 				<dl class="pdp-specs__list">
 					<?php foreach ( $specs as $spec ) : ?>
@@ -240,18 +259,31 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 	<?php endif; ?>
 
 	<!-- ============ Complete the look ============ -->
+	<?php
+	$pairings_eyebrow = myshop_pairings_eyebrow();
+	$pairings_title   = myshop_pairings_title();
+	$pairings_cta     = myshop_pairings_cta();
+	?>
 	<?php if ( ! empty( $pairings ) ) : ?>
 		<section class="pdp-pairings">
 			<div class="shop-container">
 				<div class="sec-head">
-					<div class="sec-head__text">
-						<span class="eyebrow"><?php esc_html_e( 'Curated pairings', 'base-theme' ); ?></span>
-						<h2 class="sec-head__title"><?php esc_html_e( 'Complete the look', 'base-theme' ); ?></h2>
-					</div>
-					<a class="link-arrow" href="<?php echo esc_url( myshop_shop_url() ); ?>">
-						<?php esc_html_e( 'Explore full collection', 'base-theme' ); ?>
-						<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-					</a>
+					<?php if ( $pairings_eyebrow || $pairings_title ) : ?>
+						<div class="sec-head__text">
+							<?php if ( $pairings_eyebrow ) : ?>
+								<span class="eyebrow"><?php echo esc_html( $pairings_eyebrow ); ?></span>
+							<?php endif; ?>
+							<?php if ( $pairings_title ) : ?>
+								<h2 class="sec-head__title"><?php echo esc_html( $pairings_title ); ?></h2>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+					<?php if ( $pairings_cta ) : ?>
+						<a class="link-arrow" href="<?php echo esc_url( myshop_shop_url() ); ?>">
+							<?php echo esc_html( $pairings_cta ); ?>
+							<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+						</a>
+					<?php endif; ?>
 				</div>
 
 				<div class="product-grid">

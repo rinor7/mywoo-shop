@@ -40,6 +40,14 @@
         object-fit: cover;
     }
 
+    /* Custom per-product background (Product Story fields): the photo is
+       expected to have a transparent background, so it must be shown in
+       full rather than cropped to fill the frame. */
+    &--custom-bg &__img,
+    &--custom-bg .swiper-slide img {
+        object-fit: contain;
+    }
+
     @include md {
         aspect-ratio: 4 / 3.4;
     }
@@ -67,6 +75,44 @@
         transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
 
         &:hover {
+            background: var(--ink);
+            color: #fff;
+        }
+
+        /* First/last image — the gallery doesn't loop, so this signals
+           there's nothing further in that direction instead of the arrow
+           just silently doing nothing. */
+        &.swiper-button-disabled {
+            opacity: .35;
+            box-shadow: none;
+            color: var(--muted);
+            pointer-events: none;
+        }
+    }
+
+    &__wish {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 5;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: var(--r-pill);
+        background: rgba(255, 255, 255, .92);
+        backdrop-filter: blur(8px);
+        color: var(--ink);
+        font-size: 15px;
+        box-shadow: var(--shadow-sm);
+        transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+
+        &:hover {
+            background: var(--ink);
+            color: #fff;
+        }
+
+        &.is-active {
             background: var(--ink);
             color: #fff;
         }
@@ -264,6 +310,18 @@
                 font-size: 13px;
                 color: var(--muted);
             }
+
+            .woocommerce-variation-description {
+                margin-bottom: 10px;
+                font-style: italic;
+                line-height: 1.6;
+                color: var(--muted-2);
+
+                p {
+                    margin: 0 0 8px;
+                    font-size: 13.5px;
+                }
+            }
         }
 
         .woocommerce-variation-add-to-cart {
@@ -364,6 +422,16 @@
                 color: #fff !important;
                 opacity: .4;
                 pointer-events: none;
+            }
+
+            /* Woo core's own `.woocommerce a.button.alt:hover` (in its bundled
+               stylesheet) outguns the chained classes above on real specificity
+               (it carries an extra .woocommerce + .alt), so it wins the cascade
+               and this button hovers Woo's purple instead of the theme's dark
+               lift. Only !important reliably beats that, same as .disabled above. */
+            &:hover {
+                background: var(--ink-soft) !important;
+                color: #fff !important;
             }
         }
 

@@ -133,6 +133,30 @@
             "toggle": 0,
             "save_custom": 0,
             "custom_choice_button_text": "Add new choice"
+        },
+        {
+            "key": "field_ms_nav_menu_content",
+            "label": "Header Navigation Content",
+            "name": "nav_menu_content",
+            "aria-label": "",
+            "type": "button_group",
+            "instructions": "What shows in place of the nav menu — the desktop header's middle nav bar, and the top of the mobile hamburger menu. With only a few pages, a quick search is more useful than a repeated nav list — switch back to the menu once there are more pages to link to.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "search": "Search input",
+                "nav": "Navigation menu"
+            },
+            "default_value": "search",
+            "return_format": "value",
+            "allow_null": 0,
+            "layout": "horizontal",
+            "allow_in_bindings": 0
         }
     ],
     "location": [

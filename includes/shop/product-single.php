@@ -26,20 +26,55 @@ function myshop_register_product_story_fields() {
 			'key'      => 'group_myshop_product_story',
 			'title'    => __( 'Product Story', 'base-theme' ),
 			'fields'   => array(
+				myshop_f( 'ps_bg_enabled', __( 'Add custom background for this product?', 'base-theme' ), 'true_false', array(
+					'ui'           => 1,
+					'instructions' => __( 'Fills the gallery panel behind the product photo — meant for images with a transparent background. Leave off to use the default background.', 'base-theme' ),
+				) ),
+				myshop_f( 'ps_bg_type', __( 'Background type', 'base-theme' ), 'button_group', array(
+					'choices'           => array(
+						'color'    => __( 'Pick a color', 'base-theme' ),
+						'gradient' => __( 'Custom CSS / gradient', 'base-theme' ),
+					),
+					'default_value'     => 'color',
+					'conditional_logic' => array(
+						array(
+							array( 'field' => 'field_ms_ps_bg_enabled', 'operator' => '==', 'value' => '1' ),
+						),
+					),
+				) ),
+				myshop_f( 'ps_bg_color_1', __( 'Background color', 'base-theme' ), 'color_picker', array(
+					'conditional_logic' => array(
+						array(
+							array( 'field' => 'field_ms_ps_bg_enabled', 'operator' => '==', 'value' => '1' ),
+							array( 'field' => 'field_ms_ps_bg_type', 'operator' => '==', 'value' => 'color' ),
+						),
+					),
+				) ),
+				myshop_f( 'ps_bg_css', __( 'Linear gradient / custom CSS', 'base-theme' ), 'text', array(
+					'placeholder'       => 'linear-gradient(135deg, #ff5f6d, #6a11cb)',
+					'instructions'      => __( 'Paste any valid CSS `background` value — angle, more than two colors, a radial gradient, anything CSS accepts.', 'base-theme' ),
+					'conditional_logic' => array(
+						array(
+							array( 'field' => 'field_ms_ps_bg_enabled', 'operator' => '==', 'value' => '1' ),
+							array( 'field' => 'field_ms_ps_bg_type', 'operator' => '==', 'value' => 'gradient' ),
+						),
+					),
+				) ),
+				myshop_f( 'ps_quote_eyebrow', __( 'Editorial quote — eyebrow', 'base-theme' ), 'text', array( 'default_value' => __( 'Crafted for the modern professional', 'base-theme' ), 'instructions' => __( 'Small label above the editorial quote. Leave empty to hide it.', 'base-theme' ) ) ),
 				myshop_f( 'ps_quote', __( 'Editorial quote', 'base-theme' ), 'textarea', array( 'rows' => 2 ) ),
 				myshop_f( 'ps_stat1_value', __( 'Stat 1 — value (e.g. 2024)', 'base-theme' ), 'text', $half ),
 				myshop_f( 'ps_stat1_label', __( 'Stat 1 — label (e.g. Inception)', 'base-theme' ), 'text', $half ),
 				myshop_f( 'ps_stat2_value', __( 'Stat 2 — value (e.g. 99.9%)', 'base-theme' ), 'text', $half ),
 				myshop_f( 'ps_stat2_label', __( 'Stat 2 — label (e.g. Purity)', 'base-theme' ), 'text', $half ),
 				myshop_f( 'ps_a_eyebrow', __( 'Section A — eyebrow (01 — Core principles)', 'base-theme' ), 'text' ),
-				myshop_f( 'ps_a_title', __( 'Section A — title', 'base-theme' ), 'text', $half ),
+				myshop_f( 'ps_a_title', __( 'Section A — title ( additional info/section )', 'base-theme' ), 'text', $half ),
 				myshop_f( 'ps_a_text', __( 'Section A — text', 'base-theme' ), 'textarea', array( 'rows' => 3 ) + $half ),
 				myshop_f( 'ps_b_eyebrow', __( 'Section B — eyebrow (Technical story)', 'base-theme' ), 'text' ),
-				myshop_f( 'ps_b_title', __( 'Section B — title', 'base-theme' ), 'text', $half ),
+				myshop_f( 'ps_b_title', __( 'Section B — title ( additional info/section )', 'base-theme' ), 'text', $half ),
 				myshop_f( 'ps_b_text', __( 'Section B — text', 'base-theme' ), 'textarea', array( 'rows' => 3 ) + $half ),
 				myshop_f(
 					'ps_specs',
-					__( 'Specifications (empty = product attributes + dimensions)', 'base-theme' ),
+					__( 'Specifications (empty = product attributes + dimensions / if you fill it will overwritte)', 'base-theme' ),
 					'repeater',
 					array(
 						'layout'       => 'table',
@@ -137,6 +172,85 @@ function myshop_product_gallery_ids( $product ) {
 	);
 
 	return array_values( array_unique( array_filter( array_map( 'intval', $ids ) ) ) );
+}
+
+/**
+ * Only lets through what a color_picker field can actually produce
+ * (hex, or rgb/rgba if opacity is ever enabled) before it reaches an
+ * inline style attribute.
+ */
+function myshop_sanitize_css_color( $value ) {
+	$value = trim( (string) $value );
+
+	if ( preg_match( '/^#[0-9a-f]{3,8}$/i', $value ) || preg_match( '/^rgba?\([0-9.,%\s]+\)$/i', $value ) ) {
+		return $value;
+	}
+
+	return '';
+}
+
+/**
+ * Gallery panel background for products shot with a transparent
+ * background. Checked in order:
+ *  1. This product's own background (ACF "Product Story" fields
+ *     ps_bg_enabled/ps_bg_type/ps_bg_color_1/ps_bg_css on the product
+ *     edit screen) — always wins when set.
+ *  2. The shop-wide default (Global Settings → Shop).
+ *  3. '' — the CSS default (`--bone-2`) applies as-is.
+ *
+ * The fields live on the parent product post, but cart/order/wishlist
+ * items carry the specific *variation* the customer picked — reading
+ * get_id() there would look up the variation's own (empty) postmeta, so
+ * variations resolve to their parent first.
+ *
+ * @param WC_Product $product Product (simple, variable, or variation).
+ * @return string CSS `background` value, or '' for the default.
+ */
+function myshop_product_gallery_background( $product ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return '';
+	}
+
+	$post_id = $product->get_parent_id() ? $product->get_parent_id() : $product->get_id();
+
+	if ( get_field( 'ps_bg_enabled', $post_id ) ) {
+		$value = 'gradient' === get_field( 'ps_bg_type', $post_id )
+			? trim( wp_strip_all_tags( (string) get_field( 'ps_bg_css', $post_id ) ) )
+			: myshop_sanitize_css_color( get_field( 'ps_bg_color_1', $post_id ) );
+
+		if ( $value ) {
+			return $value;
+		}
+	}
+
+	if ( function_exists( 'myshop_opt' ) && myshop_opt( 'shop_bg_enabled', 0 ) ) {
+		$value = 'gradient' === myshop_opt( 'shop_bg_type', 'color' )
+			? trim( wp_strip_all_tags( (string) myshop_opt( 'shop_bg_css', '' ) ) )
+			: myshop_sanitize_css_color( myshop_opt( 'shop_bg_color', '' ) );
+
+		if ( $value ) {
+			return $value;
+		}
+	}
+
+	return '';
+}
+
+/**
+ * Inline `style` value for any thumbnail of this product — cart row,
+ * checkout review, mini-cart drawer, order history, quick-view, product
+ * cards, PDP gallery. `object-fit: contain` is bundled in so the photo's
+ * transparent margins actually reveal the background instead of being
+ * cropped away by whatever `object-fit: cover` the component normally uses.
+ * Empty string (no attribute) when the product has no override.
+ *
+ * @param WC_Product $product Product.
+ * @return string
+ */
+function myshop_product_thumb_bg_style( $product ) {
+	$bg = $product ? myshop_product_gallery_background( $product ) : '';
+
+	return $bg ? 'background: ' . $bg . '; object-fit: contain;' : '';
 }
 
 /**

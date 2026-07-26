@@ -5,9 +5,17 @@
 body.woocommerce-account {
     background: var(--bone);
 
-    .site-default > .container {
+    /* Shared with .woocommerce-notices-wrapper — same reasoning as the
+       cart/checkout version in _woo-pages.scss: one rule, so a flash
+       notice always matches whatever this page's content width is. */
+    .site-default > .container,
+    .woocommerce-notices-wrapper {
         max-width: calc(var(--container) + var(--gutter) * 2);
         padding-inline: var(--gutter);
+    }
+
+    .woocommerce-notices-wrapper {
+        margin-inline: auto;
     }
 
     .site-default {

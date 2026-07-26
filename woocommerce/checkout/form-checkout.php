@@ -139,7 +139,7 @@ $fields = $checkout->get_checkout_fields( 'billing' );
 						<div class="checkout-summary__coupon-msg js-coupon-msg" aria-live="polite"></div>
 						<div class="checkout-summary__coupon-row">
 							<label class="screen-reader-text" for="coupon_code"><?php esc_html_e( 'Coupon code', 'base-theme' ); ?></label>
-							<input type="text" name="coupon_code" class="input-text" placeholder="<?php esc_attr_e( 'Gift card or discount code', 'base-theme' ); ?>" id="coupon_code" value="">
+							<input type="text" name="coupon_code" class="input-text" placeholder="<?php echo esc_attr( function_exists( 'myshop_coupon_placeholder' ) ? myshop_coupon_placeholder() : '' ); ?>" id="coupon_code" value="">
 							<button type="button" class="checkout-summary__apply js-coupon-apply"><?php esc_html_e( 'Apply', 'base-theme' ); ?></button>
 						</div>
 					</div>

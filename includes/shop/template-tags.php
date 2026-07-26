@@ -159,6 +159,7 @@ function myshop_section_head( $args = array() ) {
 function myshop_product_card( $product, $index = 0 ) {
 	$is_demo     = ! empty( $product['is_demo'] );
 	$purchasable = ! empty( $product['purchasable'] );
+	$bg          = isset( $product['bg'] ) ? $product['bg'] : '';
 
 	$payload = wp_json_encode(
 		array(
@@ -173,13 +174,14 @@ function myshop_product_card( $product, $index = 0 ) {
 			'url'      => $product['permalink'],
 			'demo'     => $is_demo,
 			'buy'      => $purchasable,
+			'bg'       => $bg,
 		)
 	);
 
 	$delay = ( $index % 4 ) * 80;
 	?>
 	<article class="pcard reveal" style="--reveal-delay:<?php echo (int) $delay; ?>ms" data-product="<?php echo esc_attr( $payload ); ?>">
-		<div class="pcard__media">
+		<div class="pcard__media<?php echo $bg ? ' pcard__media--custom-bg' : ''; ?>"<?php echo $bg ? ' style="background: ' . esc_attr( $bg ) . ';"' : ''; ?>>
 			<a class="pcard__link" href="<?php echo esc_url( $product['permalink'] ); ?>" tabindex="-1" aria-hidden="true">
 				<img class="pcard__img" src="<?php echo esc_url( $product['image'] ); ?>" alt="" width="600" height="750" loading="lazy" decoding="async">
 				<?php if ( ! empty( $product['image_hover'] ) && $product['image_hover'] !== $product['image'] ) : ?>

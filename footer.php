@@ -83,7 +83,10 @@ $is_woo  = function_exists( 'WC' );
 <aside id="cart-drawer" class="drawer cart-drawer js-cart-drawer" role="dialog" aria-modal="true"
 	aria-label="<?php esc_attr_e( 'Shopping bag', 'base-theme' ); ?>" hidden>
 	<header class="drawer__head">
-		<h2 class="drawer__title"><?php esc_html_e( 'Your bag', 'base-theme' ); ?></h2>
+		<?php $cart_drawer_title = function_exists( 'myshop_cart_title' ) ? myshop_cart_title() : ''; ?>
+		<?php if ( $cart_drawer_title ) : ?>
+			<h2 class="drawer__title"><?php echo esc_html( $cart_drawer_title ); ?></h2>
+		<?php endif; ?>
 		<button type="button" class="icon-btn js-drawer-close" aria-label="<?php esc_attr_e( 'Close', 'base-theme' ); ?>">
 			<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 		</button>
@@ -229,7 +232,7 @@ $is_woo  = function_exists( 'WC' );
 			<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 		</button>
 
-		<div class="quickview__media">
+		<div class="quickview__media js-qv-media">
 			<img class="js-qv-image" src="" alt="" width="600" height="750">
 		</div>
 
@@ -259,10 +262,13 @@ $is_woo  = function_exists( 'WC' );
 				</button>
 			</div>
 
-			<a class="link-arrow js-qv-link" href="#">
-				<?php esc_html_e( 'View full details', 'base-theme' ); ?>
-				<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-			</a>
+			<?php $quickview_link_label = function_exists( 'myshop_quickview_link_label' ) ? myshop_quickview_link_label() : ''; ?>
+			<?php if ( $quickview_link_label ) : ?>
+				<a class="link-arrow js-qv-link" href="#">
+					<?php echo esc_html( $quickview_link_label ); ?>
+					<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+				</a>
+			<?php endif; ?>
 		</div>
 	</div>
 </div>

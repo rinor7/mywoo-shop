@@ -221,6 +221,7 @@ function myshop_normalize_product( $product ) {
 		'is_demo'      => false,
 		'purchasable'  => $product->is_purchasable() && $product->is_in_stock() && $product->is_type( 'simple' ),
 		'add_to_cart'  => $product->add_to_cart_url(),
+		'bg'           => function_exists( 'myshop_product_gallery_background' ) ? myshop_product_gallery_background( $product ) : '',
 		'tags'         => array(),
 	);
 }
@@ -393,12 +394,47 @@ function myshop_get_categories( $limit = 6 ) {
 }
 
 /**
- * Free-shipping threshold used by the cart drawer progress bar.
+ * Minimum order amount from WooCommerce's own "Free Shipping" method —
+ * whichever shipping zone has one enabled and requiring an amount ("A
+ * minimum order amount" / "Either" / "Both") — the actual rule applied at
+ * checkout. Checks every zone, including "Rest of the World" (zone 0,
+ * which WC_Shipping_Zones::get_zones() itself omits). Built for a single
+ * relevant zone: with more than one, whichever match turns up first wins.
+ *
+ * @return float|null Minimum amount, or null when no such method is enabled anywhere.
+ */
+function myshop_wc_free_shipping_min_amount() {
+	if ( ! class_exists( 'WC_Shipping_Zones' ) ) {
+		return null;
+	}
+
+	$zone_ids   = array_keys( WC_Shipping_Zones::get_zones() );
+	$zone_ids[] = 0;
+
+	foreach ( $zone_ids as $zone_id ) {
+		$zone = WC_Shipping_Zones::get_zone( $zone_id );
+		if ( ! $zone ) {
+			continue;
+		}
+
+		foreach ( $zone->get_shipping_methods( true ) as $method ) {
+			if ( 'free_shipping' === $method->id && in_array( $method->requires, array( 'min_amount', 'either', 'both' ), true ) ) {
+				return (float) $method->min_amount;
+			}
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Free-shipping threshold used by the cart drawer progress bar — 0 (bar
+ * hidden) whenever WooCommerce has no enabled amount-based Free Shipping
+ * method, so disabling/removing it there is the only step needed to stop
+ * the message showing; there's no separate number to also remember to change.
  */
 function myshop_free_shipping_threshold() {
-	$threshold = function_exists( 'myshop_opt' )
-		? (float) myshop_opt( 'free_shipping_threshold', 100 )
-		: 100;
+	$threshold = myshop_wc_free_shipping_min_amount();
 
-	return (float) apply_filters( 'myshop_free_shipping_threshold', $threshold );
+	return (float) apply_filters( 'myshop_free_shipping_threshold', null === $threshold ? 0 : $threshold );
 }

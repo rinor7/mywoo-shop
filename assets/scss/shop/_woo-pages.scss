@@ -40,7 +40,8 @@ body.woocommerce-checkout {
    `.woocommerce form .form-row-first` (0,2,1). The element tag ties the
    specificity, and the theme sheet loading last breaks the tie. */
 .myshop-cart,
-form.myshop-checkout {
+form.myshop-checkout,
+.woocommerce-shipping-calculator {
     .form-row,
     .form-row-first,
     .form-row-last,
@@ -157,16 +158,20 @@ form.myshop-checkout {
         }
 
         .select2-selection__arrow {
+            position: absolute;
             top: 0;
             right: 6px;
             height: 54px;
             width: 40px;
 
             b {
+                position: absolute;
+                top: 50%;
+                left: 50%;
                 border-color: var(--ink-soft) transparent transparent;
                 border-width: 5px 4px 0;
-                margin-top: -2px;
-                margin-left: -8px;
+                margin-top: -4px;
+                margin-left: -4px;
             }
         }
     }
@@ -233,6 +238,16 @@ form.myshop-checkout {
     max-width: 1220px;
     margin-inline: auto;
     margin-bottom: clamp(28px, 3vw, 44px);
+}
+
+/* A flash notice (coupon errors etc.) sits above this, inside the same
+   .site-default > .container — but the cart content itself is narrower
+   than that outer container (this exact 1220px), so the notice needs its
+   own match here instead of the wider container width, or it hangs
+   further left/right than "Your Bag" and everything under it. */
+body.woocommerce-cart .woocommerce-notices-wrapper {
+    max-width: 1220px;
+    margin-inline: auto;
 }
 
 .myshop-cart__title {
@@ -490,8 +505,6 @@ form.myshop-checkout {
             border: 0;
             font-family: inherit;
             font-size: 16px;
-            letter-spacing: .08em;
-            text-transform: uppercase;
 
             @include sm {
                 flex: 1;
@@ -511,6 +524,12 @@ form.myshop-checkout {
         font-weight: 600;
         letter-spacing: var(--tracking);
         text-transform: uppercase;
+
+        /* Sits flush against the coupon input — the shared lift misaligns it
+           from that neighbor on hover, so this one skips the lift only. */
+        &:hover {
+            transform: none;
+        }
     }
 
     &__update {
@@ -641,12 +660,52 @@ form.myshop-checkout {
             color: var(--muted-2);
         }
 
+        .cart-shipping-note {
+            display: block;
+            margin-top: 2px;
+            font-size: 11px;
+            font-style: italic;
+            color: var(--muted-2);
+        }
+
         .shipping-calculator-button {
             font-size: 12px;
             font-weight: 600;
             text-decoration: underline;
             text-underline-offset: 3px;
             color: var(--ink-soft);
+        }
+
+        /* Woo core's own template, no theme override — .form-row/.input-text/
+           select styling comes from the shared block up top (this class is
+           included in its selector list); this just adds the form's own
+           layout, since that block only covers individual fields. */
+        .shipping-calculator-form {
+            margin-top: 14px;
+            text-align: left;
+
+            .form-row {
+                margin-bottom: 14px;
+            }
+
+            button[name="calc_shipping"] {
+                @extend %btn-dark-hover;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                height: 46px;
+                padding: 0 22px;
+                border: 0;
+                border-radius: var(--r-xs);
+                background: var(--ink);
+                color: #fff;
+                font-family: inherit;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: var(--tracking);
+                text-transform: uppercase;
+                cursor: pointer;
+            }
         }
 
         .order-total {
@@ -691,6 +750,12 @@ form.myshop-checkout {
             line-height: 1;
             white-space: nowrap;
 
+            /* Same fight as .single_add_to_cart_button — Woo core's own
+               .woocommerce a.button.alt:hover only reliably loses to !important. */
+            &:hover {
+                background: var(--ink-soft) !important;
+                color: #fff !important;
+            }
         }
     }
 }
@@ -778,6 +843,13 @@ form.myshop-checkout {
     @include lg {
         grid-template-columns: 1fr;
     }
+}
+
+/* Same reasoning as the cart version above — matches this grid's own
+   1220px, not the wider .site-default > .container it sits inside. */
+body.woocommerce-checkout .woocommerce-notices-wrapper {
+    max-width: 1220px;
+    margin-inline: auto;
 }
 
 @include lg {
@@ -1194,8 +1266,15 @@ form.myshop-checkout {
 
 /* Review table → clean rows */
 .co-review {
+    /* Real <table> auto-layout can't be trusted here: <tfoot> rows use
+       colspan="2" for their labels, and browsers try to reconcile column
+       widths across a table's sections — that was starving the item
+       rows' body column down to ~120px (matching media's width) instead
+       of giving it the remaining space. Grid sidesteps the whole problem,
+       on every breakpoint (the @include sm below only overrides the
+       column sizes that actually differ at that width). */
+    display: block;
     width: 100%;
-    border-collapse: collapse;
 
     td,
     th {
@@ -1203,7 +1282,21 @@ form.myshop-checkout {
         border: 0;
     }
 
+    thead {
+        display: none;
+    }
+
+    tbody,
+    tfoot {
+        display: block;
+    }
+
     &__items tr {
+        display: grid;
+        grid-template-columns: 120px minmax(0, 1fr);
+        grid-template-areas: "media body";
+        column-gap: 0;
+        align-items: start;
         border-bottom: 1px solid var(--line-soft);
 
         &:last-child {
@@ -1215,14 +1308,11 @@ form.myshop-checkout {
         /* woo's table.shop_table td border-top outranks the base reset */
         padding: 16px 0;
         border: 0 !important;
-        /* top-aligned so the price lines up with the title's own line,
-           instead of centering against the row's full height (which grows
-           when a .variation line is present under the title). */
-        vertical-align: top;
     }
 
     &__media {
-        width: 104px;
+        grid-area: media;
+        width: 120px;
     }
 
     &__thumb {
@@ -1231,7 +1321,7 @@ form.myshop-checkout {
 
         img {
             display: block;
-            width: 88px;
+            width: 104px;
             height: 110px;
             object-fit: cover;
             border-radius: var(--r-xs);
@@ -1256,7 +1346,11 @@ form.myshop-checkout {
     }
 
     &__body {
+        grid-area: body;
         padding-left: 14px !important;
+        @include min-sm {
+            align-self: center;
+        }
 
         .variation {
             display: block;
@@ -1302,29 +1396,47 @@ form.myshop-checkout {
         }
     }
 
+    /* Sits under the title/variation now, not in its own column, so the
+       name gets the media/price columns' leftover width instead of
+       wrapping onto 3-4 lines in this narrow (400-460px) sidebar. */
     &__price {
-        text-align: right;
+        display: block;
+        margin-top: 4px;
         font-size: 13.5px;
         font-weight: 600;
         line-height: 1.35;
-        white-space: nowrap;
         color: var(--ink);
     }
 
-    /* totals */
+    /* totals — tr is flex now (see tbody/tfoot above), so a dividing
+       border belongs on the row, not split across th/td, otherwise it
+       renders as two segments with a gap where the row's own gap sits. */
     &__totals {
+        tr {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        tr:first-child {
+            margin-top: 6px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+
+            th,
+            td {
+                padding-top: 0;
+                border-top: 0;
+            }
+        }
+
         th,
         td {
             padding: 8px 0;
             font-size: 12px;
             letter-spacing: .08em;
             text-transform: uppercase;
-        }
-
-        tr:first-child th,
-        tr:first-child td {
-            padding-top: 20px;
-            border-top: 1px solid var(--line);
         }
 
         th {
@@ -1355,104 +1467,15 @@ form.myshop-checkout {
         }
     }
 
-    /* Narrow screens: free the rows from table sizing — the auto algorithm
-       crushes the thumb column and wraps names word-by-word. */
-    @include sm {
-        display: block;
-
-        thead {
-            display: none;
-        }
-
-        tbody,
-        tfoot {
-            display: block;
-        }
-
-        /* thumb | name, price tucked under the name — the name gets the
-           full remaining width instead of fighting the price column */
-        &__items tr {
-            display: grid;
-            grid-template-columns: 74px minmax(0, 1fr);
-            grid-template-areas:
-                "media body"
-                "media price";
-            column-gap: 14px;
-            row-gap: 3px;
-            align-items: start;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--line-soft);
-
-            &:last-child {
-                border-bottom: 0;
-            }
-        }
-
-        &__items td {
-            padding: 0;
-        }
-
-        &__media {
-            grid-area: media;
-            width: auto;
-            align-self: center;
-        }
-
-        &__thumb img {
-            width: 74px;
-            height: 90px;
-        }
-
-        &__body {
-            grid-area: body;
-            padding-left: 0 !important;
-        }
-
-        &__items &__price {
-            grid-area: price;
-            text-align: left;
-        }
-
-        &__totals tr {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            gap: 16px;
-        }
-
-        /* flex rows: the divider belongs to the row, not each cell —
-           per-cell borders render as broken segments */
-        &__totals tr:first-child {
-            margin-top: 6px;
-            padding-top: 14px;
-            border-top: 1px solid var(--line);
-
-            th,
-            td {
-                padding-top: 0;
-                border-top: 0;
-            }
-        }
-
-        &__total {
-            margin-top: 6px;
-            padding-top: 14px;
-            border-top: 1px solid var(--line);
-
-            /* the desktop cell rule sits later in the source — force it off */
-            th,
-            td {
-                padding-top: 0 !important;
-                border-top: 0 !important;
-            }
-        }
-    }
-
     &__total {
+        margin-top: 6px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+
         th,
         td {
-            padding-top: 18px !important;
-            border-top: 1px solid var(--line);
+            padding-top: 0;
+            border-top: 0;
             font-size: 14px;
             font-weight: 700;
             color: var(--ink);
@@ -1461,6 +1484,34 @@ form.myshop-checkout {
         td .amount {
             font-size: 24px;
             letter-spacing: -.02em;
+        }
+    }
+
+    /* Narrow screens: only the column sizes differ here now — grid/block
+       structure itself is set unconditionally above. */
+    @include sm {
+        &__items tr {
+            grid-template-columns: 90px minmax(0, 1fr);
+            column-gap: 14px;
+            padding: 14px 0;
+        }
+
+        &__items td {
+            padding: 0;
+        }
+
+        &__media {
+            width: auto;
+            align-self: center;
+        }
+
+        &__thumb img {
+            width: 90px;
+            height: 90px;
+        }
+
+        &__body {
+            padding-left: 0 !important;
         }
     }
 }

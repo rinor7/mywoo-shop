@@ -52,15 +52,17 @@ function myshop_cart_progress() {
 		<p class="cart-progress__label">
 			<?php if ( $remaining > 0 ) : ?>
 				<?php
-				printf(
-					/* translators: %s: formatted amount remaining */
-					esc_html__( 'Spend %s more for free shipping', 'base-theme' ),
-					wp_kses_post( myshop_price_html( $remaining ) )
-				);
+				$text = function_exists( 'myshop_cart_progress_text' ) ? myshop_cart_progress_text() : '';
+				if ( $text ) {
+					echo wp_kses_post( str_replace( '{amount}', myshop_price_html( $remaining ), $text ) );
+				}
 				?>
 			<?php else : ?>
-				<i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-				<?php esc_html_e( 'You have unlocked free shipping', 'base-theme' ); ?>
+				<?php $complete_text = function_exists( 'myshop_cart_progress_complete_text' ) ? myshop_cart_progress_complete_text() : ''; ?>
+				<?php if ( $complete_text ) : ?>
+					<i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+					<?php echo wp_kses_post( str_replace( '{amount}', myshop_price_html( $threshold ), $complete_text ) ); ?>
+				<?php endif; ?>
 			<?php endif; ?>
 		</p>
 		<div class="cart-progress__track">
@@ -104,10 +106,11 @@ function myshop_cart_drawer_content() {
 					$image    = $image_id
 						? wp_get_attachment_image_url( $image_id, 'woocommerce_thumbnail' )
 						: wc_placeholder_img_src( 'woocommerce_thumbnail' );
+					$item_bg_style = myshop_product_thumb_bg_style( $product );
 					?>
 					<li class="cart-item">
 						<a class="cart-item__media" href="<?php echo esc_url( $product->get_permalink() ); ?>">
-							<img src="<?php echo esc_url( $image ); ?>" alt="" width="80" height="100" loading="lazy">
+							<img src="<?php echo esc_url( $image ); ?>" alt="" width="80" height="100" loading="lazy"<?php echo $item_bg_style ? ' style="' . esc_attr( $item_bg_style ) . '"' : ''; ?>>
 						</a>
 
 						<div class="cart-item__body">
@@ -182,6 +185,17 @@ function myshop_set_cart_qty() {
 	WC_AJAX::get_refreshed_fragments();
 }
 add_action( 'wc_ajax_myshop_set_qty', 'myshop_set_cart_qty' );
+
+/**
+ * wc-ajax: no change to make, just the current header count + drawer
+ * content. Used by the cart page's own auto-update (Global Settings →
+ * Cart) to sync those after WooCommerce's own AJAX cart-quantity update —
+ * a completely separate flow with no idea those fragments exist.
+ */
+function myshop_refresh_cart_fragments() {
+	WC_AJAX::get_refreshed_fragments();
+}
+add_action( 'wc_ajax_myshop_refresh_fragments', 'myshop_refresh_cart_fragments' );
 
 /**
  * Register both fragments with WooCommerce.

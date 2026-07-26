@@ -14,12 +14,22 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'woocommerce_before_cart' );
 ?>
 
+<?php
+$cart_title    = function_exists( 'myshop_cart_title' ) ? myshop_cart_title() : '';
+$cart_subtitle = function_exists( 'myshop_cart_subtitle' ) ? myshop_cart_subtitle() : '';
+?>
 <div class="myshop-cart">
 
-	<header class="myshop-cart__head">
-		<h1 class="myshop-cart__title"><?php esc_html_e( 'Your Bag', 'base-theme' ); ?></h1>
-		<p class="myshop-cart__sub"><?php esc_html_e( 'Review your selected pieces before checking out.', 'base-theme' ); ?></p>
-	</header>
+	<?php if ( $cart_title || $cart_subtitle ) : ?>
+		<header class="myshop-cart__head">
+			<?php if ( $cart_title ) : ?>
+				<h1 class="myshop-cart__title"><?php echo esc_html( $cart_title ); ?></h1>
+			<?php endif; ?>
+			<?php if ( $cart_subtitle ) : ?>
+				<p class="myshop-cart__sub"><?php echo esc_html( $cart_subtitle ); ?></p>
+			<?php endif; ?>
+		</header>
+	<?php endif; ?>
 
 	<div class="myshop-cart__grid">
 
@@ -67,7 +77,13 @@ do_action( 'woocommerce_before_cart' );
 
 								<span class="cart-row__media">
 									<?php
-									$thumbnail = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image( 'woocommerce_thumbnail' ), $cart_item, $cart_item_key );
+									$row_bg_style = myshop_product_thumb_bg_style( $_product );
+									$thumbnail    = apply_filters(
+										'woocommerce_cart_item_thumbnail',
+										$_product->get_image( 'woocommerce_thumbnail', $row_bg_style ? array( 'style' => $row_bg_style ) : array() ),
+										$cart_item,
+										$cart_item_key
+									);
 									if ( $product_permalink ) {
 										printf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $thumbnail ); // phpcs:ignore WordPress.Security.EscapeOutput
 									} else {
@@ -151,13 +167,24 @@ do_action( 'woocommerce_before_cart' );
 				<?php if ( wc_coupons_enabled() ) : ?>
 					<div class="cart-actions__coupon">
 						<label class="screen-reader-text" for="coupon_code"><?php esc_html_e( 'Coupon code', 'base-theme' ); ?></label>
-						<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php esc_attr_e( 'Coupon code', 'base-theme' ); ?>">
+						<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php echo esc_attr( function_exists( 'myshop_coupon_placeholder' ) ? myshop_coupon_placeholder() : '' ); ?>">
 						<button type="submit" class="cart-actions__apply" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'base-theme' ); ?>"><?php esc_html_e( 'Apply', 'base-theme' ); ?></button>
 						<?php do_action( 'woocommerce_cart_coupon' ); ?>
 					</div>
 				<?php endif; ?>
 
 				<button type="submit" class="cart-actions__update" name="update_cart" value="<?php esc_attr_e( 'Update bag', 'base-theme' ); ?>"><?php esc_html_e( 'Update bag', 'base-theme' ); ?></button>
+
+				<?php
+				// A submit button's value only serializes when it was actually clicked — the
+				// auto-update JS never clicks it, just triggers WooCommerce's own `wc_update_cart`
+				// event, which serializes the form as-is. Without this always-present field,
+				// WC_Form_Handler::update_cart_action() sees an empty $_POST['update_cart'] and
+				// silently skips the whole update, so quantities just snap back on re-render.
+				if ( function_exists( 'myshop_cart_auto_update' ) && myshop_cart_auto_update() ) :
+					?>
+					<input type="hidden" name="update_cart" value="1">
+				<?php endif; ?>
 
 				<?php do_action( 'woocommerce_cart_actions' ); ?>
 				<?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce' ); ?>

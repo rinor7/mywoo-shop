@@ -79,11 +79,16 @@ function myshop_move_checkout_coupon() {
 add_action( 'init', 'myshop_move_checkout_coupon' );
 
 /**
- * Reassurance line under the place-order button.
+ * Reassurance line under the place-order button — same field/text as the
+ * cart page's own note (Global Settings), so the two can't drift apart.
  */
 function myshop_secure_note() {
-	echo '<p class="checkout-secure-note"><i class="fa-solid fa-lock" aria-hidden="true"></i> '
-		. esc_html__( 'All transactions are secure and encrypted.', 'base-theme' ) . '</p>';
+	$note = function_exists( 'myshop_opt' ) ? trim( (string) myshop_opt( 'cart_secure_note', '' ) ) : '';
+	if ( '' === $note ) {
+		return;
+	}
+
+	echo '<p class="checkout-secure-note"><i class="fa-solid fa-lock" aria-hidden="true"></i> ' . esc_html( $note ) . '</p>';
 }
 add_action( 'woocommerce_review_order_after_submit', 'myshop_secure_note' );
 
@@ -118,13 +123,16 @@ function myshop_shipping_cards() {
 				? wc_price( (float) $rate->get_cost() + (float) $rate->get_shipping_tax() )
 				: wc_price( 0 );
 
+			$eta      = myshop_shipping_eta( $rate );
+			$eta_html = $eta ? '<span class="ship-card__eta">' . esc_html( $eta ) . '</span>' : '';
+
 			printf(
 				'<label class="ship-card" for="%1$s">
 					<input type="radio" name="shipping_method[%2$d]" data-index="%2$d" id="%1$s" value="%3$s" class="shipping_method" %4$s>
 					<span class="ship-card__radio" aria-hidden="true"></span>
 					<span class="ship-card__body">
 						<span class="ship-card__name">%5$s</span>
-						<span class="ship-card__eta">%6$s</span>
+						%6$s
 					</span>
 					<span class="ship-card__price">%7$s</span>
 				</label>',
@@ -133,7 +141,7 @@ function myshop_shipping_cards() {
 				esc_attr( $rate->get_id() ),
 				$checked, // phpcs:ignore WordPress.Security.EscapeOutput
 				esc_html( $rate->get_label() ),
-				esc_html( myshop_shipping_eta( $rate ) ),
+				$eta_html, // phpcs:ignore WordPress.Security.EscapeOutput
 				wp_kses_post( $price )
 			);
 		}
@@ -143,18 +151,23 @@ function myshop_shipping_cards() {
 }
 
 /**
- * Small ETA line per shipping method. Filterable per rate id.
+ * Small ETA line per shipping method (Global Settings → Shop), matched by
+ * the method's real type — not guessed from its label text, which broke
+ * as soon as a method was named anything other than what the guess
+ * expected. Empty string ('') when nothing's set for that method, so the
+ * caller can just skip rendering the line entirely.
  */
 function myshop_shipping_eta( $rate ) {
 	$method = $rate->get_method_id();
 
-	$eta = 'free_shipping' === $method || false !== stripos( $rate->get_label(), 'standard' )
-		? __( '3–5 business days', 'base-theme' )
-		: __( '1–2 business days', 'base-theme' );
+	$field_by_method = array(
+		'flat_rate'     => 'shipping_eta_flat_rate',
+		'free_shipping' => 'shipping_eta_free_shipping',
+	);
 
-	if ( 'local_pickup' === $method ) {
-		$eta = __( 'Ready today at the store', 'base-theme' );
-	}
+	$eta = isset( $field_by_method[ $method ] ) && function_exists( 'myshop_opt' )
+		? myshop_opt( $field_by_method[ $method ], '' )
+		: '';
 
 	return apply_filters( 'myshop_shipping_eta', $eta, $rate );
 }
@@ -175,6 +188,34 @@ function myshop_chosen_shipping_label() {
 	}
 
 	return '';
+}
+
+/**
+ * Checkout shipping row, while no method has resolved yet: the free-shipping
+ * progress message (Global Settings → Shop "Free shipping progress message"
+ * — the same field and number driving the cart drawer's bar) when that's
+ * specifically why nothing's available — the cart hasn't reached the real
+ * WooCommerce Free Shipping minimum yet. '' otherwise, so the caller falls
+ * back to its own generic "still calculating" text.
+ */
+function myshop_checkout_shipping_placeholder() {
+	if ( ! function_exists( 'myshop_free_shipping_threshold' ) || ! function_exists( 'WC' ) || ! WC()->cart ) {
+		return '';
+	}
+
+	$threshold = myshop_free_shipping_threshold();
+	if ( $threshold <= 0 ) {
+		return '';
+	}
+
+	$remaining = $threshold - (float) WC()->cart->get_subtotal();
+	if ( $remaining <= 0 ) {
+		return '';
+	}
+
+	$text = function_exists( 'myshop_cart_progress_text' ) ? myshop_cart_progress_text() : '';
+
+	return $text ? str_replace( '{amount}', myshop_price_html( $remaining ), $text ) : '';
 }
 
 /**
@@ -239,8 +280,9 @@ function myshop_shop_filterbar() {
 }
 
 /**
- * "Complete the ensemble" — cross-sells when set, newest products otherwise,
- * never items already in the cart. Rendered by the cart template.
+ * "Complete the ensemble" — manually-picked products when set (Global
+ * Settings → Cart), otherwise cross-sells, otherwise newest products.
+ * Never items already in the cart. Rendered by the cart template.
  */
 function myshop_cart_ensemble() {
 	$in_cart = array();
@@ -250,13 +292,27 @@ function myshop_cart_ensemble() {
 
 	$products = array();
 
-	// Real cross-sells first.
-	$cross_ids = WC()->cart->get_cross_sells();
-	if ( ! empty( $cross_ids ) ) {
-		foreach ( array_slice( $cross_ids, 0, 4 ) as $id ) {
-			$product = wc_get_product( $id );
-			if ( $product && 'publish' === $product->get_status() ) {
-				$products[] = myshop_normalize_product( $product );
+	// Admin's explicit picks first, in the order they were set.
+	$picked_ids = function_exists( 'myshop_cart_ensemble_product_ids' ) ? myshop_cart_ensemble_product_ids() : array();
+	foreach ( $picked_ids as $id ) {
+		$product = wc_get_product( $id );
+		if ( $product && 'publish' === $product->get_status() && ! in_array( $id, $in_cart, true ) ) {
+			$products[] = myshop_normalize_product( $product );
+		}
+		if ( count( $products ) >= 4 ) {
+			break;
+		}
+	}
+
+	// Real cross-sells next.
+	if ( empty( $products ) ) {
+		$cross_ids = WC()->cart->get_cross_sells();
+		if ( ! empty( $cross_ids ) ) {
+			foreach ( array_slice( $cross_ids, 0, 4 ) as $id ) {
+				$product = wc_get_product( $id );
+				if ( $product && 'publish' === $product->get_status() ) {
+					$products[] = myshop_normalize_product( $product );
+				}
 			}
 		}
 	}
@@ -281,9 +337,13 @@ function myshop_cart_ensemble() {
 	if ( empty( $products ) ) {
 		return;
 	}
+
+	$title = function_exists( 'myshop_cart_ensemble_title' ) ? myshop_cart_ensemble_title() : '';
 	?>
 	<section class="cart-ensemble">
-		<h2 class="cart-ensemble__title"><?php esc_html_e( 'Complete the ensemble', 'base-theme' ); ?></h2>
+		<?php if ( $title ) : ?>
+			<h2 class="cart-ensemble__title"><?php echo esc_html( $title ); ?></h2>
+		<?php endif; ?>
 		<div class="product-grid">
 			<?php foreach ( $products as $i => $product ) : ?>
 				<?php myshop_product_card( $product, $i ); ?>

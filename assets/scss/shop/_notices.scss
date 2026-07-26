@@ -36,6 +36,17 @@
     }
 }
 
+/* Cart/checkout/account render notices inline, ahead of .site-default's own
+   .container, with no width limit of their own by default (see the toast
+   version below for the other page types). Left alone, that means the
+   notice card runs edge-to-edge inside the (wide, 1440px) outer container
+   instead of matching the actual content width.
+   - Account has no narrower wrapper of its own, so it's matched to
+     .site-default > .container directly (_account.scss).
+   - Cart/checkout content is narrower than that outer container — matched
+     to .myshop-cart__head / .myshop-checkout__grid's own 1220px instead
+     (_woo-pages.scss), not this wider one. */
+
 body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account) .woocommerce-notices-wrapper {
     position: fixed;
     top: calc(var(--bar-h) + 18px);
@@ -98,6 +109,14 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
     &.is-leaving {
         opacity: 0;
         transform: translateY(-8px);
+    }
+
+    /* Woo core's own stylesheet adds a float-era clearfix here
+       (`::after { content:" "; display:table; }`) that nothing below
+       claims — left alone it still renders as a flex item (or, on
+       .woocommerce-error's grid layout, its own extra row). */
+    &::after {
+        display: none;
     }
 
     /* Icon badge — replaces Woo's absolutely-positioned glyph */
@@ -186,7 +205,10 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
 /* ---------- Error ---------- */
 .woocommerce-error {
     /* Errors arrive as a <ul> — grid keeps multiple messages aligned
-       beside a single icon. */
+       beside a single icon. The shared block above already neutralizes
+       Woo core's leftover ::after clearfix, which is what was otherwise
+       auto-placing into its own empty grid row here (the "too tall /
+       not centered" look). */
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
@@ -235,11 +257,6 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
         background: var(--bone-2);
         color: var(--ink);
     }
-}
-
-/* The error list keeps its icon on the first row — pin the dismiss to the top. */
-.woocommerce-error .notice-dismiss {
-    top: 22px;
 }
 
 /* ---------- Empty-cart panel (page content, not a flash notice) ---------- */

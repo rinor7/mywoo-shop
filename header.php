@@ -57,7 +57,8 @@
     <?php endif; ?>
 
     <!-- Header -->
-    <header id="header-site" class="site-header js-header">
+    <?php $header_always_sticky = function_exists( 'myshop_header_always_sticky' ) && myshop_header_always_sticky(); ?>
+    <header id="header-site" class="site-header js-header<?php echo $header_always_sticky ? ' js-header--always-sticky' : ''; ?>">
         <div class="shop-container header__inner">
 
             <?php if ( ! function_exists( 'myshop_nav_menu_content' ) || 'search' !== myshop_nav_menu_content() ) : ?>

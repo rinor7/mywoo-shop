@@ -29,16 +29,18 @@ defined( 'ABSPATH' ) || exit;
 			}
 
 			$product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
+			$review_bg_style   = myshop_product_thumb_bg_style( $_product );
+			$review_bg_attr    = $review_bg_style ? array( 'style' => $review_bg_style ) : array();
 			?>
 			<tr class="<?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>">
 				<td class="co-review__media">
 					<span class="co-review__thumb">
 						<?php if ( $product_permalink ) : ?>
 							<a href="<?php echo esc_url( $product_permalink ); ?>" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-								<?php echo $_product->get_image( 'woocommerce_thumbnail' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+								<?php echo $_product->get_image( 'woocommerce_thumbnail', $review_bg_attr ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 							</a>
 						<?php else : ?>
-							<?php echo $_product->get_image( 'woocommerce_thumbnail' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+							<?php echo $_product->get_image( 'woocommerce_thumbnail', $review_bg_attr ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 						<?php endif; ?>
 						<span class="co-review__qty" aria-hidden="true"><?php echo esc_html( $cart_item['quantity'] ); ?></span>
 					</span>
@@ -54,10 +56,10 @@ defined( 'ABSPATH' ) || exit;
 						<?php endif; ?>
 					</span>
 					<?php echo wc_get_formatted_cart_item_data( $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+					<span class="co-review__price">
+						<?php echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+					</span>
 					<span class="screen-reader-text"><?php echo esc_html( sprintf( _n( 'Quantity: %d', 'Quantity: %d', $cart_item['quantity'], 'base-theme' ), $cart_item['quantity'] ) ); ?></span>
-				</td>
-				<td class="co-review__price">
-					<?php echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				</td>
 			</tr>
 			<?php
@@ -93,9 +95,15 @@ defined( 'ABSPATH' ) || exit;
 				<td>
 					<?php
 					$shipping_total = WC()->cart->get_shipping_total() + array_sum( WC()->cart->get_shipping_taxes() );
-					echo $chosen_label
-						? wp_kses_post( wc_price( $shipping_total ) )
-						: '<em>' . esc_html__( 'Calculated at next step', 'base-theme' ) . '</em>';
+					$free_shipping_hint = $chosen_label ? '' : myshop_checkout_shipping_placeholder();
+
+					if ( $chosen_label ) {
+						echo wp_kses_post( wc_price( $shipping_total ) );
+					} elseif ( $free_shipping_hint ) {
+						echo wp_kses_post( $free_shipping_hint );
+					} else {
+						echo '<em>' . esc_html__( 'Calculated at next step', 'base-theme' ) . '</em>';
+					}
 					?>
 				</td>
 			</tr>

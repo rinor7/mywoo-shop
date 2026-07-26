@@ -647,6 +647,12 @@ body.is-locked {
             aspect-ratio: 4 / 5;
             object-fit: cover;
         }
+
+        /* Custom per-product background (Product Story fields), applied via JS
+           when the quick-view popup opens — see main.js .js-qv-media. */
+        &--custom-bg img {
+            object-fit: contain;
+        }
     }
 
     &__body {

@@ -167,6 +167,10 @@
         var header = qs('.js-header');
         if (!header) { return; }
 
+        // Theme setting (Global Settings → Header Settings → Header Sticky):
+        // keep the header pinned at all times instead of hiding on scroll-down.
+        var alwaysSticky = header.classList.contains('js-header--always-sticky');
+
         var lastY = window.scrollY;
         var ticking = false;
 
@@ -179,8 +183,10 @@
 
             header.classList.toggle('is-stuck', y > 10);
 
-            // Only start hiding once well past the fold, and never while an overlay is open.
-            if (!openEl && y > 400) {
+            if (alwaysSticky) {
+                header.classList.remove('is-hidden');
+            } else if (!openEl && y > 400) {
+                // Only start hiding once well past the fold, and never while an overlay is open.
                 header.classList.toggle('is-hidden', y > lastY);
             } else {
                 header.classList.remove('is-hidden');
@@ -747,13 +753,25 @@
 
             qs('.js-qv-image', modal).src = data.image;
             qs('.js-qv-image', modal).alt = data.name;
+
+            // Products shot with a transparent background (Product Story fields)
+            // carry their own gallery background through to every card/quick-view.
+            var qvMedia = qs('.js-qv-media', modal);
+            if (qvMedia) {
+                qvMedia.classList.toggle('quickview__media--custom-bg', !!data.bg);
+                qvMedia.style.background = data.bg || '';
+            }
+
             qs('.js-qv-cat', modal).textContent = data.category || '';
             qs('.js-qv-title', modal).textContent = data.name;
             qs('.js-qv-price', modal).innerHTML = data.price;
             qs('.js-qv-excerpt', modal).textContent = data.excerpt || '';
             qs('.js-qv-stars', modal).innerHTML = data.rating ? starsHtml(data.rating) : '';
             qs('.js-qv-count', modal).textContent = data.count ? '(' + data.count + ')' : '';
-            qs('.js-qv-link', modal).href = data.url;
+
+            // Absent when the "view full details" label (Global Settings → Shop) is cleared.
+            var qvLink = qs('.js-qv-link', modal);
+            if (qvLink) { qvLink.href = data.url; }
 
             var addBtn = qs('.js-qv-add', modal);
             var addLabel = addBtn.querySelector('span');
@@ -908,6 +926,85 @@
         input.value = Math.min(max, Math.max(min, value));
         input.dispatchEvent(new Event('change', { bubbles: true }));
     });
+
+    /* ==========================================================
+       Cart page: optional automatic recalculation
+       Global Settings → Cart → "Calculate cart totals automatically".
+
+       Debounced so rapid +/- clicks or typing don't fire an AJAX call per
+       change; reuses WooCommerce's own `wc_update_cart` event — the same
+       one its "Update bag" button relies on — instead of reimplementing
+       the AJAX call, so the blocking overlay / error handling stay
+       exactly what WooCommerce already ships.
+
+       WooCommerce replaces `.woocommerce-cart-form` wholesale (a fresh,
+       visible button included) after every update, so the button has to
+       be re-hidden via MutationObserver rather than a one-off call —
+       `.myshop-cart` is the nearest ancestor that survives that swap. The
+       same observer also syncs the header bubble / off-canvas drawer:
+       WooCommerce's own AJAX update only knows about `.woocommerce-cart-form`
+       and `.cart_totals` — it has no idea those other two exist, so left
+       alone they'd stay stale until a hard refresh.
+
+       Emptying the cart entirely (last item's qty → 0) is a special case:
+       WooCommerce's AJAX div-patching needs a `.woocommerce-cart-form__contents`
+       element inside a `.woocommerce` wrapper to swap in the empty-cart
+       notice, and this theme's markup has neither — the manual "Update bag"
+       button only ever looked like it handled this correctly because that
+       same missing class makes WooCommerce's click-handler bail out and let
+       the browser submit the form for real instead of intercepting it. So
+       when a change would empty the cart, submit the form the same way
+       instead of dispatching the AJAX event, rather than leaving stale
+       cart contents on screen next to a correct-but-orphaned empty notice.
+    ========================================================== */
+    (function () {
+        if (!MS.cartAutoUpdate) { return; }
+
+        var wrapper = qs('.myshop-cart');
+        if (!wrapper) { return; }
+
+        function hideUpdateBtn() {
+            var btn = wrapper.querySelector('[name="update_cart"]');
+            if (btn) { btn.hidden = true; }
+        }
+
+        var fragmentTimer = null;
+        function syncFragments() {
+            clearTimeout(fragmentTimer);
+            fragmentTimer = setTimeout(function () {
+                post('myshop_refresh_fragments', {}, function (json) {
+                    applyFragments(json.fragments);
+                });
+            }, 300);
+        }
+
+        hideUpdateBtn();
+        new MutationObserver(function () {
+            hideUpdateBtn();
+            syncFragments();
+        }).observe(wrapper, { childList: true, subtree: true });
+
+        var timer = null;
+        wrapper.addEventListener('change', function (e) {
+            if (!e.target.classList.contains('qty')) { return; }
+
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var form = wrapper.querySelector('.woocommerce-cart-form');
+                var qtys = form ? qsa('input.qty', form) : [];
+                var emptying = qtys.length > 0 && qtys.every(function (q) {
+                    return (parseFloat(q.value) || 0) <= 0;
+                });
+
+                if (emptying && form) {
+                    form.submit();
+                    return;
+                }
+
+                document.body.dispatchEvent(new Event('wc_update_cart', { bubbles: true }));
+            }, 600);
+        });
+    }());
 
     /* ==========================================================
        Newsletter (front-end only for now)

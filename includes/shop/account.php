@@ -162,3 +162,44 @@ function myshop_account_social_login() {
 	<?php
 }
 add_action( 'woocommerce_login_form_end', 'myshop_account_social_login' );
+
+/**
+ * Wishlist page thumbnail background (Product Story fields), same as
+ * every other product image on the site.
+ *
+ * YITH's wishlist-view.php has no filter around its `$product->get_image()`
+ * call to attach a style to directly, only "before/after thumbnail" actions
+ * that fire around it — so those bracket a global just for that one <img>,
+ * read back by a permanently-registered `wp_get_attachment_image_attributes`
+ * filter. The bracket keeps this from touching any other image on the page.
+ */
+$myshop_wishlist_thumb_style = '';
+
+function myshop_wishlist_thumb_bg_start( $item ) {
+	global $myshop_wishlist_thumb_style;
+
+	$product = is_callable( array( $item, 'get_product' ) ) ? $item->get_product() : null;
+
+	$myshop_wishlist_thumb_style = ( $product && function_exists( 'myshop_product_thumb_bg_style' ) )
+		? myshop_product_thumb_bg_style( $product )
+		: '';
+}
+add_action( 'yith_wcwl_table_before_product_thumbnail', 'myshop_wishlist_thumb_bg_start' );
+
+function myshop_wishlist_thumb_bg_stop() {
+	global $myshop_wishlist_thumb_style;
+	$myshop_wishlist_thumb_style = '';
+}
+add_action( 'yith_wcwl_table_after_product_thumbnail', 'myshop_wishlist_thumb_bg_stop' );
+
+function myshop_wishlist_thumb_bg_attr( $attr ) {
+	global $myshop_wishlist_thumb_style;
+
+	if ( ! empty( $myshop_wishlist_thumb_style ) ) {
+		$existing        = isset( $attr['style'] ) ? rtrim( trim( $attr['style'] ), ';' ) . '; ' : '';
+		$attr['style'] = $existing . $myshop_wishlist_thumb_style;
+	}
+
+	return $attr;
+}
+add_filter( 'wp_get_attachment_image_attributes', 'myshop_wishlist_thumb_bg_attr' );

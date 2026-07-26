@@ -13,6 +13,13 @@
         overflow: hidden;
         border-radius: var(--r-sm);
         background: var(--bone);
+
+        /* Custom per-product background (Product Story fields): the photo is
+           expected to have a transparent background, so it must be shown in
+           full rather than cropped to fill the frame. */
+        &--custom-bg .pcard__img {
+            object-fit: contain;
+        }
     }
 
     &__link {

@@ -49,9 +49,14 @@ function myshop_order_items_panel( $order ) {
 		<ul class="order-panel__items">
 			<?php
 			foreach ( $items as $item ) :
-				$product   = $item->get_product();
-				$permalink = $product ? $product->get_permalink( $item ) : '';
-				$thumbnail = $product ? $product->get_image( 'woocommerce_gallery_thumbnail', array( 'class' => 'order-panel__img' ) ) : '';
+				$product        = $item->get_product();
+				$permalink      = $product ? $product->get_permalink( $item ) : '';
+				$order_bg_style = myshop_product_thumb_bg_style( $product );
+				$order_img_attr = array( 'class' => 'order-panel__img' );
+				if ( $order_bg_style ) {
+					$order_img_attr['style'] = $order_bg_style;
+				}
+				$thumbnail = $product ? $product->get_image( 'woocommerce_gallery_thumbnail', $order_img_attr ) : '';
 				$meta_html = wc_display_item_meta( $item, array( 'echo' => false ) );
 				?>
 				<li class="order-panel__item">

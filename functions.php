@@ -35,6 +35,8 @@ function standard_scripts_and_style() {
 			// WooCommerce's own AJAX endpoints; '%%endpoint%%' is swapped in JS.
 			'wcAjax'      => class_exists( 'WC_AJAX' ) ? WC_AJAX::get_endpoint( '%%endpoint%%' ) : '',
 			'cartUrl'     => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
+			// Global Settings → Cart → "Calculate cart totals automatically".
+			'cartAutoUpdate' => function_exists( 'myshop_cart_auto_update' ) && myshop_cart_auto_update(),
 			// Checkout coupon box posts to wc-ajax apply_coupon (see main.js).
 			'couponNonce' => wp_create_nonce( 'apply-coupon' ),
 			'checkoutUrl' => function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '',

@@ -33,8 +33,9 @@
     }
 }
 
-/* Shared CTA hover: dark lift + light sweep (the frontpage treatment).
-   @extend this on WooCommerce-generated buttons that can't take .btn classes. */
+/* Shared CTA hover: dark lift + light sweep, byte-for-byte what .btn.btn--primary
+   does on the homepage hero banner. @extend this on WooCommerce-generated
+   buttons that can't take .btn classes. */
 %btn-dark-hover {
     position: relative;
     overflow: hidden;
