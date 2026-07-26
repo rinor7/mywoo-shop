@@ -55,15 +55,6 @@ function standard_widgets_init() {
 			'before_title'  => '<span class="widget-title">',
 			'after_title'   => '</span>',)
 	);
-	register_sidebar(
-		array('name'          => esc_html__( 'Contact Modal', 'base-theme' ),
-			'id'            => 'contact-modal',
-			'description'   => esc_html__( 'Add a Custom HTML widget with your Contact Form 7 shortcode (or anything else). A "Contact us" button appears site-wide and opens this in a popup — empty = no button shows at all.', 'base-theme' ),
-			'before_widget' => '<div class="widget-wrapper">',
-			'after_widget'  => '</div>',
-			'before_title'  => '<span class="widget-title">',
-			'after_title'   => '</span>',)
-	);
 }
 add_action( 'widgets_init', 'standard_widgets_init' );
 
@@ -250,4 +241,105 @@ function myshop_social_links() {
 	}
 
 	return $links;
+}
+
+/**
+ * Contact button widget — drag it into any widget area (a footer column
+ * alongside other contact details, the primary sidebar, wherever). It
+ * renders a button right where it's placed; the button opens a shared
+ * popup showing whatever's typed into this widget's own "Content" field
+ * (a Contact Form 7 shortcode, plain text, anything do_shortcode/wpautop
+ * can handle).
+ */
+class MyShop_Contact_Widget extends WP_Widget {
+
+	public function __construct() {
+		parent::__construct(
+			'myshop_contact',
+			esc_html__( 'MyShop: Contact Button', 'base-theme' ),
+			array( 'description' => esc_html__( 'A button that opens a popup with whatever you put in its Content field — a Contact Form 7 shortcode, for example.', 'base-theme' ) )
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		$label = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'Contact us', 'base-theme' );
+
+		echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput
+		?>
+		<button type="button" class="btn btn--outline-light js-contact-open">
+			<?php echo esc_html( $label ); ?>
+		</button>
+		<?php
+		echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput
+	}
+
+	public function form( $instance ) {
+		$title   = $instance['title'] ?? '';
+		$content = $instance['content'] ?? '';
+		?>
+		<p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Button label:', 'base-theme' ); ?></label>
+			<input class="widefat" type="text" placeholder="<?php esc_attr_e( 'Contact us', 'base-theme' ); ?>"
+				id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+				name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
+				value="<?php echo esc_attr( $title ); ?>">
+		</p>
+		<p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'content' ) ); ?>"><?php esc_html_e( 'Popup content:', 'base-theme' ); ?></label>
+			<textarea class="widefat" rows="4" placeholder="[contact-form-7 title=&quot;Standard Form&quot;]"
+				id="<?php echo esc_attr( $this->get_field_id( 'content' ) ); ?>"
+				name="<?php echo esc_attr( $this->get_field_name( 'content' ) ); ?>"><?php echo esc_textarea( $content ); ?></textarea>
+		</p>
+		<?php
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		return array(
+			'title'   => sanitize_text_field( $new_instance['title'] ?? '' ),
+			'content' => wp_kses_post( $new_instance['content'] ?? '' ),
+		);
+	}
+}
+
+add_action(
+	'widgets_init',
+	function () {
+		register_widget( 'MyShop_Contact_Widget' );
+	}
+);
+
+/**
+ * The first placed Contact Button widget's popup content, shortcodes
+ * already processed — '' when none is placed anywhere, which hides the
+ * shared popup markup entirely (see footer.php).
+ */
+function myshop_contact_widget_content() {
+	$instances = get_option( 'widget_myshop_contact', array() );
+
+	if ( ! is_array( $instances ) ) {
+		return '';
+	}
+
+	$placed = array();
+	foreach ( wp_get_sidebars_widgets() as $sidebar_id => $widget_ids ) {
+		if ( 'wp_inactive_widgets' === $sidebar_id || ! is_array( $widget_ids ) ) {
+			continue;
+		}
+		foreach ( $widget_ids as $widget_id ) {
+			if ( 0 === strpos( $widget_id, 'myshop_contact-' ) ) {
+				$placed[] = (int) substr( $widget_id, strlen( 'myshop_contact-' ) );
+			}
+		}
+	}
+
+	foreach ( $placed as $number ) {
+		if ( ! empty( $instances[ $number ]['content'] ) ) {
+			// wpautop before do_shortcode, same order as the_content — running
+			// it after would risk wpautop mangling a shortcode's own expanded
+			// HTML (e.g. Contact Form 7's <form> markup) instead of plain text.
+			return do_shortcode( wpautop( $instances[ $number ]['content'] ) );
+		}
+	}
+
+	return '';
 }

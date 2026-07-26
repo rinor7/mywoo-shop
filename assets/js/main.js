@@ -135,6 +135,9 @@
         } else if (e.target.closest('.js-search-open')) {
             e.preventDefault();
             openOverlay(qs('.js-search-overlay'));
+        } else if (e.target.closest('.js-contact-open')) {
+            e.preventDefault();
+            openOverlay(qs('.js-contact-modal'));
         } else if (e.target.closest('.js-drawer-close') || e.target === backdrop) {
             closeOverlay();
         }

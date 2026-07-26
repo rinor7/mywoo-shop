@@ -818,6 +818,223 @@ body.is-locked {
     }
 }
 
+/* ---------- Contact modal ---------- */
+/* Content is whatever's dropped into the "Contact Modal" widget area
+   (Appearance → Widgets) — a Custom HTML widget with a Contact Form 7
+   shortcode, most likely. No button/modal shows at all unless that area
+   has something in it (is_active_sidebar check in footer.php). */
+.contact-modal .modal__panel {
+    display: block;
+    width: min(560px, 100%);
+    padding: clamp(32px, 4vw, 48px);
+    /* Same frosted-glass recipe as .mobile-bar, just lighter (higher
+       opacity) — this panel holds actual form content that needs to stay
+       legible, not just icons. */
+    border: 1px solid rgba(255, 255, 255, .6);
+    background: rgba(255, 255, 255, .88);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 24px 60px -16px rgba(16, 17, 20, .35), inset 0 1px 0 rgba(255, 255, 255, .6);
+    @include xs {
+        padding: 40px 16px
+    }
+}
+
+.contact-modal__body {
+    .widget-title {
+        display: block;
+        margin-bottom: 16px;
+        font-size: clamp(22px, 2.2vw, 28px);
+        font-weight: 700;
+        letter-spacing: -.02em;
+        color: var(--ink);
+    }
+
+    p {
+        margin: 0 0 18px;
+        font-size: 14.5px;
+        line-height: 1.7;
+        color: var(--muted);
+    }
+
+    /* CF7's default template nests the field inside the label itself
+       (<label>Your name [text* your-name]</label>) rather than as a
+       sibling — same label look as the cart/checkout .form-row, with the
+       wrap forced onto its own line below the label text. */
+    label {
+        display: block;
+        margin: 0 0 22px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+    }
+
+    .wpcf7-form-control-wrap {
+        display: block;
+        margin-top: 4px;
+    }
+
+    .wpcf7-form-control:not(.wpcf7-submit):not([type="checkbox"]):not([type="radio"]) {
+        display: block;
+        width: 100%;
+        min-height: 46px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xs);
+        background: #fff;
+        font-family: inherit;
+        font-size: 15px;
+        color: var(--ink);
+        transition: border-color var(--t) var(--ease);
+
+        &::placeholder {
+            color: var(--muted-2);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--ink);
+        }
+
+        /* CF7 adds this class straight to the input itself when it fails
+           validation (see includes/js/index.js) — border-only feedback,
+           no separate tip text (removed below). */
+        &.wpcf7-not-valid,
+        &.wpcf7-not-valid:focus {
+            border-color: var(--sale);
+        }
+    }
+
+    textarea.wpcf7-form-control {
+        min-height: 120px;
+        padding-top: 14px;
+        resize: vertical;
+    }
+
+    /* NOT @include btn-dark-hover here — Contact Form 7's [submit] tag
+       always renders as <input type="submit"> (see wpcf7_submit_form_tag_handler()
+       in the plugin's own submit.php), never a <button>, and ::after/::before
+       cannot generate on <input> at all — a hard CSS limitation, not a
+       specificity fight. The mixin's sweep silently does nothing here no
+       matter how it's applied. Same lift/shadow/colors as every other
+       dark button, but the "sweep" is faked with a background-position
+       animation instead, since that DOES work on <input>. */
+    .wpcf7-submit {
+        position: relative;
+        height: 46px;
+        padding: 0 32px;
+        border-radius: var(--r-xs);
+        background-color: var(--ink);
+        background-image: linear-gradient(100deg, transparent, rgba(255, 255, 255, .22), transparent);
+        background-repeat: no-repeat;
+        background-size: 40% 100%;
+        background-position: -60% 0;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: var(--tracking);
+        text-transform: uppercase;
+        transition: background-color var(--t) var(--ease),
+                    color var(--t) var(--ease),
+                    transform var(--t-fast) var(--ease),
+                    box-shadow var(--t) var(--ease),
+                    background-position var(--t-slow) var(--ease-out);
+
+        &:hover {
+            background-color: var(--ink-soft);
+            background-position: 160% 0;
+            color: #fff;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* Same :focus-visible treatment as .btn everywhere else on the
+           site (_ui.scss) — no bespoke focus style here. The actual
+           "yellow" complaint was Contact Form 7's own response-output
+           border color below, not this button. */
+        &:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+        @include xs {
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+    }
+
+    /* Border-only feedback on the input itself (above) is enough —
+       skip the per-field text tip entirely. */
+    .wpcf7-not-valid-tip {
+        display: none;
+    }
+
+    /* Same reasoning as the per-field tips above — absolute so it can't
+       grow the modal, but that means the form needs its own reserved
+       space for it (padding-bottom), otherwise the panel would shrink to
+       exclude it and the message would render outside the visible glass
+       card entirely instead of just being hidden. Only reserved once
+       there's actually a message to show (CF7's own state classes —
+       "init" has none) — no dead space while the form just sits there. */
+    form {
+        position: relative;
+
+    }
+    .invalid {
+        .wpcf7-response-output { 
+            background-color: rgb(179 64 47 / 72%);;
+            color: white!important;
+        }
+    }
+    .wpcf7-response-output {
+        position: absolute;
+        left: 0;
+        right: 0;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xs);
+        font-size: 13px;
+        color: var(--muted);
+        bottom: -60px;
+        margin: 0 0 12px 0!important;
+        @include xs {
+            font-size: 11px;
+        }
+    }
+
+    .sent {
+        .wpcf7-response-output {
+            background-color: #2f7d5d5c;
+            color: black!important;
+            @include xs {
+                margin: 0 0 20px 0!important;
+            }
+        }
+    }
+
+    /* Contact Form 7's own bundled CSS hardcodes a different color per
+       state (blue/green/red/orange/yellow) on this same element — these
+       win the cascade tie (equal specificity, loaded after) since they're
+       the more specific `form.sent .wpcf7-response-output`-style rules.
+       Re-asserting with the theme's own error/success colors instead. */
+    form.sent .wpcf7-response-output {
+        border-color: var(--success);
+        color: var(--success);
+    }
+
+    form.failed .wpcf7-response-output,
+    form.aborted .wpcf7-response-output,
+    form.spam .wpcf7-response-output,
+    form.invalid .wpcf7-response-output,
+    form.unaccepted .wpcf7-response-output,
+    form.payment-required .wpcf7-response-output {
+        border-color: var(--sale);
+        color: var(--sale);
+    }
+}
+
 .qty {
     display: flex;
     align-items: center;

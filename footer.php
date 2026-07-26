@@ -66,13 +66,6 @@ $is_woo  = function_exists( 'WC' );
 				&copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'base-theme' ); ?> <a href="<?php echo esc_url( 'https://www.puzzle-enterprise.com' ); ?>" target="_blank" rel="noopener">Puzzle Enterprise</a>
 			</p>
 
-			<?php if ( is_active_sidebar( 'contact-modal' ) ) : ?>
-				<button type="button" class="footer__contact-btn link-arrow js-contact-open">
-					<?php esc_html_e( 'Contact us', 'base-theme' ); ?>
-					<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-				</button>
-			<?php endif; ?>
-
 			<?php if ( function_exists( 'myshop_payment_icons' ) ) { myshop_payment_icons(); } ?>
 		</div>
 
@@ -290,6 +283,23 @@ $is_woo  = function_exists( 'WC' );
 		</div>
 	</div>
 </div>
+
+<!-- Contact -->
+<?php $contact_content = function_exists( 'myshop_contact_widget_content' ) ? myshop_contact_widget_content() : ''; ?>
+<?php if ( $contact_content ) : ?>
+	<div class="modal contact-modal js-contact-modal" role="dialog" aria-modal="true"
+		aria-label="<?php esc_attr_e( 'Contact us', 'base-theme' ); ?>" hidden>
+		<div class="modal__panel">
+			<button type="button" class="modal__close icon-btn js-drawer-close" aria-label="<?php esc_attr_e( 'Close', 'base-theme' ); ?>">
+				<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+			</button>
+
+			<div class="contact-modal__body">
+				<?php echo $contact_content; // phpcs:ignore WordPress.Security.EscapeOutput -- already wpautop/do_shortcode-processed in myshop_contact_widget_content(), and the widget's own update() sanitizes what's saved. ?>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
 
 <!-- Mobile bottom bar -->
 <?php
