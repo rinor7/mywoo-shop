@@ -823,7 +823,8 @@ body.is-locked {
    (Appearance → Widgets) — a Custom HTML widget with a Contact Form 7
    shortcode, most likely. No button/modal shows at all unless that area
    has something in it (is_active_sidebar check in footer.php). */
-.contact-modal .modal__panel {
+.contact-modal .modal__panel,
+.review-modal .modal__panel {
     display: block;
     width: min(560px, 100%);
     padding: clamp(32px, 4vw, 48px);
@@ -1032,6 +1033,107 @@ body.is-locked {
     form.payment-required .wpcf7-response-output {
         border-color: var(--sale);
         color: var(--sale);
+    }
+}
+
+/* ---------- Review modal (PDP reviews "Write a review") ----------
+   The panel itself reuses .contact-modal's frosted-glass recipe (see
+   the shared selector above). Native WooCommerce/WP comment-form markup
+   has no wpcf7-style classes to hook into, so inputs are targeted by
+   their own comment-form-* wrapper/id instead — same visual result as
+   .contact-modal__body's inputs (46px height, same label treatment). */
+.review-modal__body {
+    #reply-title,
+    .comment-reply-title {
+        display: block;
+        margin: 0 0 20px;
+        font-size: clamp(20px, 2vw, 24px);
+        font-weight: 700;
+        letter-spacing: -.02em;
+        color: var(--ink);
+    }
+
+    p {
+        margin: 0 0 20px;
+    }
+
+    label {
+        display: block;
+        margin: 0 0 8px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+    }
+
+    .required {
+        color: var(--sale);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+        display: block;
+        width: 100%;
+        min-height: 46px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xs);
+        background: #fff;
+        font-family: inherit;
+        font-size: 15px;
+        color: var(--ink);
+        transition: border-color var(--t) var(--ease);
+
+        &::placeholder {
+            color: var(--muted-2);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--ink);
+        }
+    }
+
+    textarea {
+        min-height: 120px;
+        padding: 14px 16px;
+        resize: vertical;
+    }
+
+    select {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-right: 40px;
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232c2f35' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        cursor: pointer;
+    }
+
+    .form-submit {
+        margin: 0;
+
+        .btn {
+            width: 100%;
+        }
+    }
+
+    .must-log-in,
+    .woocommerce-verification-required {
+        margin: 0;
+        font-size: 14.5px;
+        line-height: 1.7;
+        color: var(--muted);
+
+        a {
+            font-weight: 600;
+            color: var(--ink);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
     }
 }
 

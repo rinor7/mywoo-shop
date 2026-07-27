@@ -21,9 +21,14 @@ function df_remove_comments_admin_bar() {
     $wp_admin_bar->remove_menu('comments');
 }
 add_action('wp_before_admin_bar_render', 'df_remove_comments_admin_bar');
-// Remove comments and trackbacks support from post types
+// Remove comments and trackbacks support from post types — 'product' is
+// exempt so WooCommerce reviews (which run on this same comment system)
+// keep working; this was previously blanket-disabling them site-wide.
 function df_remove_comment_support() {
     foreach (get_post_types() as $post_type) {
+        if ('product' === $post_type) {
+            continue;
+        }
         if (post_type_supports($post_type, 'comments')) {
             remove_post_type_support($post_type, 'comments');
             remove_post_type_support($post_type, 'trackbacks');
@@ -40,16 +45,23 @@ function df_redirect_comments_page() {
     }
 }
 add_action('admin_init', 'df_redirect_comments_page');
-// Close comments on the front-end
-function df_disable_comments_status() {
+// Close comments on the front-end — except for products, so WooCommerce
+// reviews aren't forced closed regardless of their own comment_status.
+function df_disable_comments_status($open, $post_id) {
+    if ('product' === get_post_type($post_id)) {
+        return $open;
+    }
     return false;
 }
 add_filter('comments_open', 'df_disable_comments_status', 20, 2);
 add_filter('pings_open', 'df_disable_comments_status', 20, 2);
-// Hide existing comments
-function df_hide_existing_comments($comments) {
-    $comments = array();
-    return $comments;
+// Hide existing comments — except reviews on products, which this was
+// wiping out unconditionally even when they existed in the database.
+function df_hide_existing_comments($comments, $post_id) {
+    if ('product' === get_post_type($post_id)) {
+        return $comments;
+    }
+    return array();
 }
 add_filter('comments_array', 'df_hide_existing_comments', 10, 2);
 //Function for rendering section headers

@@ -229,38 +229,49 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 		</section>
 	<?php endif; ?>
 
-	<!-- ============ Specifications ============ -->
+	<!-- ============ Specifications & Reviews ============ -->
 	<?php
-	$specs_eyebrow = myshop_specs_eyebrow();
-	$specs_title   = myshop_specs_title();
+	$specs_eyebrow   = myshop_specs_eyebrow();
+	$specs_title     = myshop_specs_title();
+	$reviews_enabled = comments_open() || get_comments_number();
 	?>
-	<?php if ( ! empty( $specs ) ) : ?>
+	<?php if ( ! empty( $specs ) || $reviews_enabled ) : ?>
 		<section class="pdp-specs">
 			<div class="shop-container">
-				<?php if ( $specs_eyebrow ) : ?>
-					<span class="eyebrow"><?php echo esc_html( $specs_eyebrow ); ?></span>
-				<?php endif; ?>
-				<?php if ( $specs_title ) : ?>
-					<h2 class="pdp-specs__title"><?php echo esc_html( $specs_title ); ?></h2>
+				<?php if ( ! empty( $specs ) ) : ?>
+					<?php if ( $specs_eyebrow ) : ?>
+						<span class="eyebrow"><?php echo esc_html( $specs_eyebrow ); ?></span>
+					<?php endif; ?>
+					<?php if ( $specs_title ) : ?>
+						<h2 class="pdp-specs__title"><?php echo esc_html( $specs_title ); ?></h2>
+					<?php endif; ?>
+
+					<dl class="pdp-specs__list">
+						<?php foreach ( $specs as $spec ) : ?>
+							<div class="pdp-specs__row reveal">
+								<dt><?php echo esc_html( $spec[0] ); ?></dt>
+								<dd><?php echo esc_html( $spec[1] ); ?></dd>
+							</div>
+						<?php endforeach; ?>
+					</dl>
 				<?php endif; ?>
 
-				<dl class="pdp-specs__list">
-					<?php foreach ( $specs as $spec ) : ?>
-						<div class="pdp-specs__row reveal">
-							<dt><?php echo esc_html( $spec[0] ); ?></dt>
-							<dd><?php echo esc_html( $spec[1] ); ?></dd>
+				<?php if ( $reviews_enabled ) : ?>
+					<div class="pdp-reviews-accordion">
+						<button type="button" class="pdp-reviews-accordion__toggle js-reviews-toggle" aria-expanded="false" aria-controls="pdp-reviews-panel">
+							<span class="pdp-reviews-accordion__label">
+								<?php esc_html_e( 'Reviews', 'base-theme' ); ?>
+								<?php if ( get_comments_number() ) : ?>
+									<span class="pdp-reviews-accordion__count">(<?php echo esc_html( number_format_i18n( get_comments_number() ) ); ?>)</span>
+								<?php endif; ?>
+							</span>
+							<i class="fa-solid fa-chevron-down pdp-reviews-accordion__icon" aria-hidden="true"></i>
+						</button>
+						<div class="pdp-reviews-accordion__panel js-reviews-panel" id="pdp-reviews-panel" hidden>
+							<?php comments_template(); ?>
 						</div>
-					<?php endforeach; ?>
-				</dl>
-			</div>
-		</section>
-	<?php endif; ?>
-
-	<!-- ============ Reviews (kept, restyled) ============ -->
-	<?php if ( comments_open() || get_comments_number() ) : ?>
-		<section class="pdp-reviews">
-			<div class="shop-container">
-				<?php comments_template(); ?>
+					</div>
+				<?php endif; ?>
 			</div>
 		</section>
 	<?php endif; ?>

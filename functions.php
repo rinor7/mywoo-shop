@@ -69,6 +69,8 @@ function standard_scripts_and_style() {
 				'chooseOptions' => __( 'Choose options', 'base-theme' ),
 				'noResults'     => __( 'No products found', 'base-theme' ),
 				'viewAllResults' => __( 'View all {count} results', 'base-theme' ),
+				'reviewPosted'  => __( 'Thanks for your review!', 'base-theme' ),
+				'reviewPending' => __( 'Thanks — your review is awaiting approval.', 'base-theme' ),
 			),
 		)
 	);

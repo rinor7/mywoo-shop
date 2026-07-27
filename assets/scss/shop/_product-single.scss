@@ -768,10 +768,204 @@
     }
 }
 
-/* ---------- Reviews & pairings ---------- */
-.pdp-reviews {
-    padding-block: clamp(40px, 5vw, 72px);
-    background: #fff;
+/* ---------- Reviews accordion (lives inside .pdp-specs) ---------- */
+.pdp-reviews-accordion {
+    /* No border-top here — when specs exist above, their own last-row
+       border-bottom (.pdp-specs__row:last-child) is already the divider;
+       adding a second one right under it just doubled the line. When
+       there are no specs, this is the first thing in the section, so no
+       divider is needed at all. */
+    margin-top: 8px;
+
+    &__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        width: 100%;
+        padding: 20px 0;
+        background: none;
+        text-align: left;
+
+        &:hover .pdp-reviews-accordion__label {
+            color: var(--ink-soft);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+    }
+
+    &__label {
+        font-size: clamp(20px, 2.2vw, 26px);
+        font-weight: 700;
+        letter-spacing: -.02em;
+        color: var(--ink);
+        transition: color var(--t) var(--ease);
+    }
+
+    &__count {
+        margin-left: 4px;
+        font-weight: 500;
+        color: var(--muted-2);
+    }
+
+    &__icon {
+        flex: none;
+        font-size: 14px;
+        color: var(--ink-soft);
+        transition: transform var(--t) var(--ease);
+    }
+
+    &__panel {
+        padding: clamp(20px, 3vw, 32px) 0 4px;
+    }
+}
+
+.pdp-reviews-accordion__toggle[aria-expanded="true"] .pdp-reviews-accordion__icon {
+    transform: rotate(180deg);
+}
+
+/* ---------- Reviews list + write-a-review action ---------- */
+.pdp-reviews__grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 24px;
+    margin-bottom: 8px;
+
+    @include xs {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pdp-reviews__list-col {
+    min-width: 0;
+}
+
+.pdp-reviews__write-btn {
+    white-space: nowrap;
+
+    @include xs {
+        width: 100%;
+    }
+}
+
+/* WooCommerce's own bundled woocommerce.css (not dequeued — .star-rating's
+   glyph font-face lives there) styles this exact markup itself, with
+   selectors 2 IDs deep (#reviews #comments ol.commentlist li ...) — higher
+   specificity than any reasonable selector here. The properties that fight
+   it need !important, same reasoning as .button.disabled/.button.alt:hover
+   overrides elsewhere in this file. */
+#comments {
+    .woocommerce-noreviews {
+        margin: 0;
+        font-size: 14.5px;
+        color: var(--muted);
+    }
+
+    .commentlist {
+        margin: 0;
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .commentlist > li {
+        margin: 0 !important;
+    }
+
+    .comment_container {
+        position: relative;
+        display: flex;
+        gap: 14px;
+        padding: 20px 0;
+        border-top: 1px solid var(--line);
+    }
+
+    > .commentlist > li:first-child .comment_container {
+        border-top: 0;
+        padding-top: 0;
+    }
+
+    .avatar {
+        position: static !important;
+        float: none !important;
+        flex: none;
+        width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: var(--bone) !important;
+        border: 0 !important;
+        border-radius: 50%;
+    }
+
+    .comment-text {
+        flex: 1;
+        min-width: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .star-rating {
+        float: none !important;
+        display: block !important;
+        margin: 0 0 6px !important;
+    }
+
+    .meta {
+        margin: 0 0 6px !important;
+        font-size: 12px !important;
+        color: var(--muted-2) !important;
+    }
+
+    .woocommerce-review__author {
+        font-weight: 600;
+        color: var(--ink);
+    }
+
+    .woocommerce-review__dash {
+        margin: 0 4px;
+    }
+
+    .description p {
+        margin: 0 !important;
+        font-size: 14.5px;
+        line-height: 1.7;
+        color: var(--ink-soft);
+    }
+
+    .woocommerce-pagination {
+        margin-top: 16px;
+
+        ul {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-xs);
+            font-size: 13px;
+            transition: border-color var(--t) var(--ease), background-color var(--t) var(--ease);
+
+            &:hover {
+                background: var(--bone-2);
+                border-color: var(--ink);
+            }
+        }
+    }
 }
 
 .pdp-pairings {

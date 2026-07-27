@@ -322,6 +322,28 @@ function myshop_force_product_search( $vars ) {
 add_filter( 'request', 'myshop_force_product_search' );
 
 /**
+ * Products always get comment_status=open (reviews) on save, regardless
+ * of the WordPress "allow comments on new posts" default or how the
+ * product was created — admin UI, bulk import, REST API. Reviews are a
+ * per-product WordPress setting separate from WooCommerce's own "Enable
+ * product reviews" toggle; without this, each new product (or a batch of
+ * 1000 imported ones) silently keeps comments closed unless someone
+ * remembers to flip it manually every time.
+ *
+ * Gated on WooCommerce's own "Enable product reviews" setting (Settings →
+ * Products → General) — no separate on/off switch needed here, turning
+ * that off already stops this too.
+ */
+function myshop_force_product_comments_open( $data, $postarr ) {
+	if ( 'product' === $data['post_type'] && 'yes' === get_option( 'woocommerce_enable_reviews' ) ) {
+		$data['comment_status'] = 'open';
+	}
+
+	return $data;
+}
+add_filter( 'wp_insert_post_data', 'myshop_force_product_comments_open', 10, 2 );
+
+/**
  * "Complete the ensemble" — manually-picked products when set (Global
  * Settings → Cart), otherwise cross-sells, otherwise newest products.
  * Never items already in the cart. Rendered by the cart template.

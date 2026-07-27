@@ -138,6 +138,9 @@
         } else if (e.target.closest('.js-contact-open')) {
             e.preventDefault();
             openOverlay(qs('.js-contact-modal'));
+        } else if (e.target.closest('.js-review-open')) {
+            e.preventDefault();
+            openOverlay(qs('.js-review-modal'));
         } else if (e.target.closest('.js-drawer-close') || e.target === backdrop) {
             closeOverlay();
         }
@@ -1334,6 +1337,43 @@
                 'fa-heart'
             );
         });
+    }());
+
+    /* ==========================================================
+       PDP reviews accordion (inside the Specifications section)
+    ========================================================== */
+    (function () {
+        var toggle = qs('.js-reviews-toggle');
+        var panel = qs('.js-reviews-panel');
+        if (!toggle || !panel) { return; }
+
+        toggle.addEventListener('click', function () {
+            var open = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', String(!open));
+            panel.hidden = open;
+        });
+
+        // After submitting a review, WordPress redirects back with
+        // #comment-<id> in the hash (and ?unapproved=<id> in the query
+        // string if it's held for moderation) — the accordion and the
+        // review-modal form itself are both collapsed/hidden by default on
+        // a fresh page load, so without this the submitter's own review (or
+        // the "awaiting approval" state) would land invisibly.
+        var hash = window.location.hash;
+        if (/^#comment-\d+$/.test(hash)) {
+            var target = document.getElementById(hash.slice(1));
+            if (target) {
+                panel.hidden = false;
+                toggle.setAttribute('aria-expanded', 'true');
+
+                var pending = /[?&]unapproved=\d+/.test(window.location.search);
+                toast(pending ? i18n.reviewPending : i18n.reviewPosted, 'fa-comment-dots');
+
+                requestAnimationFrame(function () {
+                    target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+                });
+            }
+        }
     }());
 
     /* ==========================================================
