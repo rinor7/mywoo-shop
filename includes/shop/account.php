@@ -58,12 +58,42 @@ function myshop_wishlist_count() {
 }
 
 /**
- * Account menu: icons map is CSS-side; here we inject Wishlist after Orders
- * and relabel a couple of endpoints to match the design.
+ * WooCommerce always lists "Downloads" in the account menu (see
+ * wc_get_account_menu_items()) even for stores that never sell a
+ * downloadable product — every customer just gets a permanently empty tab.
+ * Cached for the request since the menu can render more than once (e.g.
+ * both the sidebar nav and a mobile dropdown built from the same items).
+ */
+function myshop_store_has_downloadable_products() {
+	static $has = null;
+
+	if ( null === $has ) {
+		$ids = wc_get_products(
+			array(
+				'downloadable' => true,
+				'status'       => 'publish',
+				'limit'        => 1,
+				'return'       => 'ids',
+			)
+		);
+		$has = ! empty( $ids );
+	}
+
+	return $has;
+}
+
+/**
+ * Account menu: icons map is CSS-side; here we inject Wishlist after Orders,
+ * relabel a couple of endpoints to match the design, and drop "Downloads"
+ * when the store has nothing downloadable to show there.
  */
 function myshop_account_menu_items( $items ) {
 	$items['edit-address'] = __( 'Addresses', 'base-theme' );
 	$items['edit-account'] = __( 'Account Info', 'base-theme' );
+
+	if ( ! myshop_store_has_downloadable_products() ) {
+		unset( $items['downloads'] );
+	}
 
 	if ( ! myshop_yith_active() ) {
 		return $items;
