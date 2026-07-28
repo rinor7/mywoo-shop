@@ -1219,6 +1219,8 @@
         var notices = qsa('.woocommerce-message, .woocommerce-error, .woocommerce-info');
         if (!notices.length) { return; }
 
+        var AUTO_DISMISS_MS = 6000;
+
         notices.forEach(function (notice) {
             // The empty cart "info" box is part of the page, not a flash notice.
             if (notice.classList.contains('cart-empty')) { return; }
@@ -1238,9 +1240,15 @@
 
             // Success messages slip away on their own; errors stay until read.
             if (notice.classList.contains('woocommerce-message')) {
+                var bar = document.createElement('span');
+                bar.className = 'notice-progress';
+                bar.style.setProperty('--notice-duration', AUTO_DISMISS_MS + 'ms');
+                notice.appendChild(bar);
+                requestAnimationFrame(function () { bar.classList.add('is-running'); });
+
                 setTimeout(function () {
                     if (document.body.contains(notice)) { close.click(); }
-                }, 6000);
+                }, AUTO_DISMISS_MS);
             }
         });
     }());

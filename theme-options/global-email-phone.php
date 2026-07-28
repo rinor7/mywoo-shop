@@ -23,14 +23,15 @@ function get_global_phone_clean() {
     return preg_replace('/[^0-9+]/', '', $phone);
 }
 
-// Return clickable phone
+// Return clickable phone (icon included, so a bare [phone] shortcode
+// is a complete, self-contained widget line — no attributes needed)
 function get_phone_link() {
     $display = get_global_phone_display();
     $clean   = get_global_phone_clean();
 
     if (!$display || !$clean) return '';
 
-    return '<a href="tel:' . esc_attr($clean) . '" class="phone-link" class="phone-link">' . esc_html($display) . '</a>';
+    return '<a href="tel:' . esc_attr($clean) . '" class="phone-link"><i class="fa-solid fa-phone" aria-hidden="true"></i> ' . esc_html($display) . '</a>';
 }
 
 // ==============================
@@ -60,19 +61,22 @@ function phone_shortcode($atts) {
 add_shortcode('phone', 'phone_shortcode');
 
 // ==============================
-// EMAIL HELPERS (SIMPLIFIED)
+// EMAIL HELPERS
 // ==============================
 
+// Get raw email (used for both mailto: and display — one field)
 function get_global_email() {
     return get_field('email_address', 'option');
 }
 
+// Return clickable email (icon included, so a bare [email] shortcode
+// is a complete, self-contained widget line — no attributes needed)
 function get_email_link() {
     $email = get_global_email();
 
     if (!$email) return '';
 
-    return '<a href="mailto:' . esc_attr($email) . '" class="email-link">' . esc_html($email) . '</a>';
+    return '<a href="mailto:' . esc_attr($email) . '" class="email-link"><i class="fa-regular fa-envelope" aria-hidden="true"></i> ' . esc_html($email) . '</a>';
 }
 
 // ==============================

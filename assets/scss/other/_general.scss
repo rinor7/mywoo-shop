@@ -120,6 +120,17 @@ h3 {
 body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-default {
     padding-block: clamp(36px, 7vw, 64px) var(--section-y);
 
+    /* Templates that ship their own hero banner (page-policy.php's
+       "Default Page w Hero") already give the title its own framing —
+       this generic top gap would just double up as dead white space
+       between the header and that hero, so it's zeroed here instead of
+       fighting it with !important. Bottom padding is untouched: .policy's
+       own rule sets the same var(--section-y) value regardless of which
+       one wins the specificity tie. */
+    &.policy {
+        padding-top: 0;
+    }
+
     > .container {
         max-width: 760px;
 

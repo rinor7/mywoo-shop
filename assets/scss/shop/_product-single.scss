@@ -12,6 +12,15 @@
     grid-template-columns: minmax(0, 1.15fr) minmax(420px, .85fr);
     min-height: min(86vh, 860px);
 
+    /* Default grid stretch would otherwise size the gallery column to
+       match whatever height the text panel needs (long description,
+       many perks, variations...), blowing the image up far past its
+       intended height. Pin the gallery to its own height instead and
+       let the panel scroll independently past it. */
+    @include min-md {
+        align-items: start;
+    }
+
     @include md {
         grid-template-columns: 1fr;
         min-height: 0;
@@ -23,6 +32,12 @@
     position: relative;
     overflow: hidden;
     background: var(--bone-2);
+
+    @include min-md {
+        position: sticky;
+        top: calc(var(--bar-h) + 16px);
+        height: min(86vh, 860px);
+    }
 
     &__main {
         height: 100%;
