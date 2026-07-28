@@ -244,6 +244,9 @@
     &__form {
         width: 100%;
         font-size: 13px;
+        .stock {
+            margin-bottom: 8px;
+        }
         form.cart {
             display: flex;
             flex-wrap: wrap;
