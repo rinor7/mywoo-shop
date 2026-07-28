@@ -714,9 +714,10 @@
     padding-block: clamp(40px, 5vw, 72px);
     background: #fff;
 
-    /* Eyebrow reads plain ink, not the accent color — title is optional,
-       so the section can show only the eyebrow on its own. */
-    > .shop-container > .eyebrow {
+    /* Eyebrow reads plain ink ONLY when the title below it is empty
+       (eyebrow standing alone) — with a title present, it keeps the
+       normal accent color like everywhere else. */
+    > .shop-container:not(:has(.pdp-desc__title)) > .eyebrow {
         color: var(--ink);
     }
 
@@ -802,9 +803,10 @@
     padding-block: clamp(48px, 6vw, 96px);
     background: var(--bone);
 
-    /* Eyebrow reads plain ink, not the accent color — title is optional,
-       so the section can show only the eyebrow on its own. */
-    > .shop-container > .eyebrow {
+    /* Eyebrow reads plain ink ONLY when the title below it is empty
+       (eyebrow standing alone) — with a title present, it keeps the
+       normal accent color like everywhere else. */
+    > .shop-container:not(:has(.pdp-specs__title)) > .eyebrow {
         color: var(--ink);
     }
 
@@ -1060,9 +1062,10 @@
     padding-block: clamp(56px, 7vw, 104px);
     background: #fff;
 
-    /* Eyebrow reads plain ink, not the accent color — title/subtitle are
-       optional, so the section often shows only the eyebrow on its own. */
-    .sec-head .eyebrow {
+    /* Eyebrow reads plain ink ONLY when the title below it is empty
+       (eyebrow standing alone) — with a title present, it keeps the
+       normal accent color like everywhere else. */
+    .sec-head__text:not(:has(.sec-head__title)) .eyebrow {
         color: var(--ink);
     }
 }

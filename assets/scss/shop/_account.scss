@@ -370,9 +370,10 @@ body.woocommerce-account {
     padding-top: clamp(32px, 4vw, 52px);
     border-top: 1px solid var(--line);
 
-    /* Eyebrow reads plain ink, not the accent color — title/subtitle are
-       optional, so the section can show only the eyebrow on its own. */
-    .sec-head .eyebrow {
+    /* Eyebrow reads plain ink ONLY when the title below it is empty
+       (eyebrow standing alone) — with a title present, it keeps the
+       normal accent color like everywhere else. */
+    .sec-head__text:not(:has(.sec-head__title)) .eyebrow {
         color: var(--ink);
     }
 }
