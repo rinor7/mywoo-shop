@@ -221,10 +221,22 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 	<?php endif; ?>
 
 	<!-- ============ Full description ============ -->
+	<?php
+	$desc_eyebrow = myshop_desc_eyebrow();
+	$desc_title   = myshop_desc_title();
+	?>
 	<?php if ( get_the_content() ) : ?>
 		<section class="pdp-desc">
-			<div class="shop-container pdp-desc__inner">
-				<?php the_content(); ?>
+			<div class="shop-container">
+				<?php if ( $desc_eyebrow ) : ?>
+					<span class="eyebrow"><?php echo esc_html( $desc_eyebrow ); ?></span>
+				<?php endif; ?>
+				<?php if ( $desc_title ) : ?>
+					<h2 class="pdp-desc__title"><?php echo esc_html( $desc_title ); ?></h2>
+				<?php endif; ?>
+				<div class="pdp-desc__inner">
+					<?php the_content(); ?>
+				</div>
 			</div>
 		</section>
 	<?php endif; ?>
@@ -280,7 +292,11 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 	<?php
 	$pairings_eyebrow = myshop_pairings_eyebrow();
 	$pairings_title   = myshop_pairings_title();
-	$pairings_cta     = myshop_pairings_cta();
+	$pairings_enabled = myshop_pairings_enabled();
+	$pairings_link    = myshop_pairings_link();
+	$pairings_url     = ! empty( $pairings_link['url'] ) ? $pairings_link['url'] : myshop_shop_url();
+	$pairings_label   = ! empty( $pairings_link['title'] ) ? $pairings_link['title'] : __( 'Explore full collection', 'base-theme' );
+	$pairings_target  = ! empty( $pairings_link['target'] ) ? $pairings_link['target'] : '';
 	?>
 	<?php if ( ! empty( $pairings ) ) : ?>
 		<section class="pdp-pairings">
@@ -296,9 +312,9 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 							<?php endif; ?>
 						</div>
 					<?php endif; ?>
-					<?php if ( $pairings_cta ) : ?>
-						<a class="link-arrow" href="<?php echo esc_url( myshop_shop_url() ); ?>">
-							<?php echo esc_html( $pairings_cta ); ?>
+					<?php if ( $pairings_enabled ) : ?>
+						<a class="link-arrow" href="<?php echo esc_url( $pairings_url ); ?>"<?php echo $pairings_target ? ' target="' . esc_attr( $pairings_target ) . '"' : ''; ?>>
+							<?php echo esc_html( $pairings_label ); ?>
 							<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
 						</a>
 					<?php endif; ?>

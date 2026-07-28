@@ -37,13 +37,29 @@ $tones = array(
 	<div class="shop-container">
 
 		<?php
+		$btn_enabled = true;
+		if ( function_exists( 'get_field' ) ) {
+			$raw = get_field( 'cat_btn_enabled', myshop_front_id() );
+			if ( '' !== $raw && null !== $raw ) {
+				$btn_enabled = (bool) $raw;
+			}
+		}
+
+		// Label and URL travel together in one ACF "link" field — empty =
+		// today's default ("All categories" straight to the shop page).
+		$btn_link   = myshop_c( 'cat_btn_link', array() );
+		$btn_url    = ! empty( $btn_link['url'] ) ? $btn_link['url'] : myshop_shop_url();
+		$btn_label  = ! empty( $btn_link['title'] ) ? $btn_link['title'] : __( 'All categories', 'base-theme' );
+		$btn_target = ! empty( $btn_link['target'] ) ? $btn_link['target'] : '';
+
 		myshop_section_head(
 			array(
-				'eyebrow'   => myshop_c( 'cat_eyebrow', __( 'Browse', 'base-theme' ) ),
-				'title'     => myshop_c( 'cat_title', __( 'Shop by category', 'base-theme' ) ),
-				'sub'       => myshop_c( 'cat_sub', __( 'Six edits, each kept deliberately small. Everything here earned its place.', 'base-theme' ) ),
-				'link_url'  => myshop_shop_url(),
-				'link_text' => __( 'All categories', 'base-theme' ),
+				'eyebrow'     => myshop_c( 'cat_eyebrow' ),
+				'title'       => myshop_c( 'cat_title' ),
+				'sub'         => myshop_c( 'cat_sub' ),
+				'link_url'    => $btn_enabled ? $btn_url : '',
+				'link_text'   => $btn_enabled ? $btn_label : '',
+				'link_target' => $btn_enabled ? $btn_target : '',
 			)
 		);
 		?>
@@ -58,7 +74,7 @@ $tones = array(
 				}
 				?>
 
-				<a class="cat-card cat-card--<?php echo esc_attr( $variant ); ?><?php echo empty( $cat['image'] ) ? ' cat-card--noimg' : ''; ?> reveal"
+				<a class="cat-card cat-card--<?php echo esc_attr( $variant ); ?><?php echo empty( $cat['image'] ) ? ' cat-card--noimg' : ''; ?><?php echo $bg_override ? ' cat-card--custom-bg' : ''; ?> reveal"
 					href="<?php echo esc_url( $cat['link'] ); ?>"
 					style="--reveal-delay:<?php echo (int) ( $i * 80 ); ?>ms;--ca:<?php echo esc_attr( $tones[ $i ][0] ); ?>;--cb:<?php echo esc_attr( $tones[ $i ][1] ); ?><?php echo $bg_override ? ';--bg-override:' . esc_attr( $bg_override ) : ''; ?>">
 

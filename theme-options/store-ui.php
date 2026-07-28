@@ -382,13 +382,50 @@ add_action(
 
 		acf_add_local_field(
 			array(
-				'key'           => 'field_ms_pairings_cta',
+				'key'           => 'field_ms_pairings_enabled',
 				'parent'        => $parent,
-				'name'          => 'pairings_cta',
-				'label'         => __( '"Complete the look" button label', 'base-theme' ),
+				'name'          => 'pairings_enabled',
+				'label'         => __( '"Complete the look" — show button', 'base-theme' ),
+				'type'          => 'true_false',
+				'default_value' => 1,
+				'ui'            => 1,
+				'ui_on_text'    => __( 'Shown', 'base-theme' ),
+				'ui_off_text'   => __( 'Hidden', 'base-theme' ),
+			)
+		);
+
+		acf_add_local_field(
+			array(
+				'key'          => 'field_ms_pairings_link',
+				'parent'       => $parent,
+				'name'         => 'pairings_link',
+				'label'        => __( '"Complete the look" — button (empty = "Explore full collection" → the shop page)', 'base-theme' ),
+				'type'         => 'link',
+				'instructions' => __( 'Both the label and the URL come from this one field. Leave empty to keep the default label pointing at the shop.', 'base-theme' ),
+			)
+		);
+
+		acf_add_local_field(
+			array(
+				'key'           => 'field_ms_desc_eyebrow',
+				'parent'        => $parent,
+				'name'          => 'desc_eyebrow',
+				'label'         => __( '"Full description" eyebrow', 'base-theme' ),
 				'type'          => 'text',
-				'default_value' => __( 'Explore full collection', 'base-theme' ),
-				'instructions'  => __( 'Button linking to the shop, shown next to the related-products heading. Leave empty to hide the button.', 'base-theme' ),
+				'default_value' => __( 'Document 01', 'base-theme' ),
+				'instructions'  => __( 'Small label above the full description on the product page. Leave empty to hide it.', 'base-theme' ),
+			)
+		);
+
+		acf_add_local_field(
+			array(
+				'key'           => 'field_ms_desc_title',
+				'parent'        => $parent,
+				'name'          => 'desc_title',
+				'label'         => __( '"Full description" title', 'base-theme' ),
+				'type'          => 'text',
+				'default_value' => __( 'Overview', 'base-theme' ),
+				'instructions'  => __( 'Heading above the full description on the product page. Leave empty to hide it.', 'base-theme' ),
 			)
 		);
 
@@ -586,9 +623,10 @@ function myshop_cart_ensemble_product_ids() {
 }
 
 /**
- * "Complete the look" section (product pages): eyebrow, title, button
- * label — editable in Global Settings → Single Product. Empty field =
- * not shown, no fallback text.
+ * "Complete the look" section (product pages): eyebrow, title, button —
+ * editable in Global Settings → Single Product. Empty eyebrow/title field =
+ * not shown, no fallback text. Label and URL travel together in one ACF
+ * "link" field — empty = "Shop all" straight to the shop page.
  */
 function myshop_pairings_eyebrow() {
 	return myshop_opt( 'pairings_eyebrow', '' );
@@ -598,8 +636,24 @@ function myshop_pairings_title() {
 	return myshop_opt( 'pairings_title', '' );
 }
 
-function myshop_pairings_cta() {
-	return myshop_opt( 'pairings_cta', '' );
+function myshop_pairings_enabled() {
+	return (bool) myshop_opt( 'pairings_enabled', true );
+}
+
+function myshop_pairings_link() {
+	return myshop_opt( 'pairings_link', array() );
+}
+
+/**
+ * Full description section (product pages): eyebrow + title, editable in
+ * Global Settings → Single Product. Empty field = not shown, no fallback text.
+ */
+function myshop_desc_eyebrow() {
+	return myshop_opt( 'desc_eyebrow', '' );
+}
+
+function myshop_desc_title() {
+	return myshop_opt( 'desc_title', '' );
 }
 
 /**

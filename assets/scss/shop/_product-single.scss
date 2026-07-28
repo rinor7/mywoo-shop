@@ -243,12 +243,25 @@
     /* ----- Woo add-to-cart form restyle ----- */
     &__form {
         width: 100%;
-
+        font-size: 13px;
         form.cart {
             display: flex;
             flex-wrap: wrap;
             align-items: stretch;
             gap: 12px;
+
+            /* Woo core still adds a float-era clearfix (content:" ";
+               display:table) via `.woocommerce div.product form.cart::before`
+               — as a real flex item it eats one `gap` before the first real
+               child (the qty-stepper, for simple products), pushing it out
+               of line with everything else in the panel. That selector out-
+               specifies a plain nested override, so !important is what
+               actually wins here (same reasoning as the button hover fix
+               below). */
+            &::before,
+            &::after {
+                display: none !important;
+            }
         }
 
         /* variations table (variable products) */
@@ -339,6 +352,8 @@
             gap: 12px;
             width: 100%;
         }
+
+        
 
         /* Simple products: the JS-built stepper sits directly in form.cart —
            span the stepper + button pair across the full row like variables do. */
@@ -450,7 +465,7 @@
             font-size: 13px;
 
             &.in-stock {
-                color: var(--success);
+                color: var(--success)!important;
             }
 
             &.out-of-stock {
@@ -696,8 +711,21 @@
     padding-block: clamp(40px, 5vw, 72px);
     background: #fff;
 
+    /* Eyebrow reads plain ink, not the accent color — title is optional,
+       so the section can show only the eyebrow on its own. */
+    > .shop-container > .eyebrow {
+        color: var(--ink);
+    }
+
+    &__title {
+        margin: 14px 0 clamp(22px, 3vw, 36px);
+        font-size: clamp(24px, 2.4vw, 32px);
+        font-weight: 700;
+        letter-spacing: -.02em;
+    }
+
     &__inner {
-        max-width: 760px;
+        max-width: 900px;
         font-size: 15px;
         line-height: 1.8;
         color: var(--ink-soft);
@@ -712,6 +740,57 @@
             font-weight: 700;
             letter-spacing: -.01em;
         }
+
+        ul,
+        ol {
+            margin-bottom: 14px;
+            padding-left: 22px;
+
+            li {
+                margin: .45em 0;
+                list-style-type: inherit;
+
+                &::marker {
+                    color: var(--accent);
+                }
+            }
+        }
+
+        ul {
+            list-style-type: disc;
+        }
+
+        ol {
+            list-style-type: decimal;
+        }
+
+        a {
+            font-weight: 600;
+            color: var(--ink);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+
+            &:hover {
+                color: var(--accent);
+            }
+        }
+
+        strong {
+            color: var(--ink);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--r-md);
+        }
+
+        blockquote {
+            margin: 1.2em 0;
+            padding: 4px 0 4px 20px;
+            border-left: 3px solid var(--accent);
+            font-style: italic;
+        }
     }
 }
 
@@ -719,6 +798,12 @@
 .pdp-specs {
     padding-block: clamp(48px, 6vw, 96px);
     background: var(--bone);
+
+    /* Eyebrow reads plain ink, not the accent color — title is optional,
+       so the section can show only the eyebrow on its own. */
+    > .shop-container > .eyebrow {
+        color: var(--ink);
+    }
 
     &__title {
         margin: 14px 0 clamp(22px, 3vw, 36px);
@@ -971,4 +1056,10 @@
 .pdp-pairings {
     padding-block: clamp(56px, 7vw, 104px);
     background: #fff;
+
+    /* Eyebrow reads plain ink, not the accent color — title/subtitle are
+       optional, so the section often shows only the eyebrow on its own. */
+    .sec-head .eyebrow {
+        color: var(--ink);
+    }
 }

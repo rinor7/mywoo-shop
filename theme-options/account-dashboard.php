@@ -228,6 +228,13 @@ add_action(
 		);
 
 		acf_add_local_field(
+			$field( 'acct_curated_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', array_merge( $half, array(
+				'default_value'     => __( 'Just for you', 'base-theme' ),
+				'conditional_logic' => array( array( array( 'field' => 'field_ms_acct_curated_enabled', 'operator' => '==', 'value' => '1' ) ) ),
+			) ) )
+		);
+
+		acf_add_local_field(
 			$field( 'acct_curated_title', __( 'Title', 'base-theme' ), 'text', array_merge( $half, array(
 				'default_value'     => __( 'Curated for you', 'base-theme' ),
 				'conditional_logic' => array( array( array( 'field' => 'field_ms_acct_curated_enabled', 'operator' => '==', 'value' => '1' ) ) ),
@@ -235,8 +242,17 @@ add_action(
 		);
 
 		acf_add_local_field(
-			$field( 'acct_curated_btn', __( 'Button label', 'base-theme' ), 'text', array_merge( $half, array(
-				'default_value'     => __( 'View all', 'base-theme' ),
+			$field( 'acct_curated_btn_enabled', __( 'Show button', 'base-theme' ), 'true_false', array_merge( $half, array(
+				'ui'                => 1,
+				'default_value'     => 1,
+				'ui_on_text'        => __( 'Shown', 'base-theme' ),
+				'ui_off_text'       => __( 'Hidden', 'base-theme' ),
+				'conditional_logic' => array( array( array( 'field' => 'field_ms_acct_curated_enabled', 'operator' => '==', 'value' => '1' ) ) ),
+			) ) )
+		);
+
+		acf_add_local_field(
+			$field( 'acct_curated_link', __( 'Button (empty = "View all" → the shop page)', 'base-theme' ), 'link', array_merge( $half, array(
 				'conditional_logic' => array( array( array( 'field' => 'field_ms_acct_curated_enabled', 'operator' => '==', 'value' => '1' ) ) ),
 			) ) )
 		);

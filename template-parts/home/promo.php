@@ -10,6 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 $shop = myshop_shop_url();
+
+// Admin's color/gradient (Frontpage → Promo banners) wins when set; otherwise
+// each card keeps its own default gradient below.
+$promo1_bg = 'color' === myshop_c( 'promo1_bg_type', 'gradient' ) ? myshop_c( 'promo1_bg_color', '' ) : myshop_c( 'promo1_bg_css', '' );
+$promo2_bg = 'color' === myshop_c( 'promo2_bg_type', 'gradient' ) ? myshop_c( 'promo2_bg_color', '' ) : myshop_c( 'promo2_bg_css', '' );
 ?>
 
 <section class="section promo">
@@ -17,7 +22,7 @@ $shop = myshop_shop_url();
 		<div class="promo__grid">
 
 			<a class="promo__card promo__card--lg reveal grain" href="<?php echo esc_url( myshop_c( 'promo1_url', $shop ) ); ?>"
-				style="--a:#2A2F36;--b:#12151A">
+				style="--a:#2A2F36;--b:#12151A<?php echo $promo1_bg ? ';--bg-override:' . esc_attr( $promo1_bg ) : ''; ?>">
 				<span class="promo__art">
 					<img src="<?php echo esc_url( myshop_c( 'promo1_image', myshop_placeholder( 'watch' ) ) ); ?>" alt="" loading="lazy" decoding="async">
 				</span>
@@ -30,7 +35,7 @@ $shop = myshop_shop_url();
 			</a>
 
 			<a class="promo__card promo__card--sm reveal grain" href="<?php echo esc_url( myshop_c( 'promo2_url', $shop ) ); ?>"
-				style="--a:#F0E7DA;--b:#DCC7AB;--reveal-delay:100ms">
+				style="--a:#F0E7DA;--b:#DCC7AB;--reveal-delay:100ms<?php echo $promo2_bg ? ';--bg-override:' . esc_attr( $promo2_bg ) : ''; ?>">
 				<span class="promo__art">
 					<img src="<?php echo esc_url( myshop_c( 'promo2_image', myshop_placeholder( 'candle' ) ) ); ?>" alt="" loading="lazy" decoding="async">
 				</span>

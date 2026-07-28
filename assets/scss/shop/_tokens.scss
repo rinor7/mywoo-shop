@@ -71,9 +71,23 @@
     box-sizing: border-box;
 }
 
+/* Margin, not padding: adjoining margins of sibling sections collapse to a
+   single var(--section-y) gap instead of stacking (previous section's bottom
+   + next section's top). A section with its own visible background (ink,
+   bone…) still needs internal breathing room independent of that gap — those
+   add their own padding-block on top (see .deal, .newsletter, .section--bone). */
 .section {
     position: relative;
-    padding-block: var(--section-y);
+    margin-block: var(--section-y);
+}
+
+/* Whichever section ends up last (sections can be toggled on/off in admin)
+   sits right above the footer, not another section — its own margin-bottom
+   would just show as a gap of plain page background between it and the
+   footer (glaring when both are dark, like Newsletter → Footer). The footer
+   already has its own padding-top for breathing room, so drop this one. */
+.site-frontpage > .section:last-child {
+    margin-bottom: 0;
 }
 
 .section--tight {
@@ -81,11 +95,33 @@
     padding-block: clamp(40px, 4vw, 64px);
 }
 
+/* Flush against its neighbors (zero margin) rather than the standard section
+   gap — bone sits between two dark sections (Deal, Newsletter) with no
+   white in between, so its own padding-block is what gives it breathing
+   room instead. A gap here would show as bare white page background wedged
+   between two colored blocks, which reads as a mistake, not a pause. */
 .section--bone {
+    margin-block: 0;
+    padding-block: clamp(40px, 4vw, 64px);
     background: var(--bone);
 }
 
-/* Grain overlay — keeps large flat gradients from looking like plastic */
+/* Margin-collapse takes the LARGER of two touching margins, so zeroing only
+   bone's own side isn't enough — the section on the other side of the
+   boundary is still contributing var(--section-y). Zero out whichever
+   section actually touches bone, from either direction, so it stays flush
+   no matter which section ends up adjacent (sections can be reordered/
+   toggled in admin). */
+.section--bone + .section {
+    margin-top: 0;
+}
+
+.section:has(+ .section--bone) {
+    margin-bottom: 0;
+}
+
+/* Grain overlay — keeps large flat gradients from looking like plastic (or
+   banding into visible blotches on a dark diagonal gradient). */
 .grain {
     position: relative;
     overflow: hidden;

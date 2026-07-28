@@ -291,6 +291,83 @@
     }
 }
 
+/* ---------- Minimal card (New arrivals) ----------
+   Flatter, editorial variant: image sits inset on its own field rather than
+   filling the frame, the badge and wishlist read as plain marks instead of
+   pills, and the body drops rating/swatches for just title, price and a
+   trailing meta line (category). Requested for New arrivals only for now. */
+.pcard--minimal {
+    .pcard__media {
+        aspect-ratio: 4 / 3.4;
+        background: var(--bone);
+    }
+
+    .pcard__img {
+        object-fit: contain;
+        padding: 28px;
+        box-sizing: border-box;
+    }
+
+    .pcard__badges {
+        top: 18px;
+        left: 18px;
+    }
+
+    .badge-pill {
+        height: auto;
+        padding: 0;
+        background: none;
+        border-radius: 0;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    .pcard__wish {
+        top: 18px;
+        right: 18px;
+        width: auto;
+        height: auto;
+        background: none;
+        backdrop-filter: none;
+        opacity: 1;
+        transform: none;
+        font-size: 17px;
+    }
+
+    .pcard__body {
+        gap: 4px;
+    }
+
+    .pcard__title {
+        order: 1;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .pcard__body .price {
+        order: 2;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    .pcard__cat {
+        order: 3;
+        margin-top: 3px;
+        font-size: 12.5px;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--muted-2);
+    }
+
+    .rating-row,
+    .pcard__swatches {
+        display: none;
+    }
+}
+
 /* ---------- Grid ---------- */
 .product-grid {
     display: grid;
@@ -310,49 +387,18 @@
     }
 }
 
+/* New arrivals / Categories: eyebrow reads plain ink, not the accent color —
+   these sections often show only the eyebrow (title/sub are optional), so it
+   must stand on its own without borrowing the brand accent. */
+.products .sec-head .eyebrow,
+.categories .sec-head .eyebrow,
+.tabs__head .eyebrow {
+    color: var(--ink);
+}
+
 /* ---------- Carousel ---------- */
 .products__carousel {
     position: relative;
-}
-
-.products__arrow {
-    position: absolute;
-    top: 32%;
-    z-index: 5;
-    display: grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-    border-radius: var(--r-pill);
-    background: #fff;
-    color: var(--ink);
-    font-size: 14px;
-    box-shadow: var(--shadow-md);
-    transition: background-color var(--t) var(--ease),
-                color var(--t) var(--ease),
-                opacity var(--t) var(--ease);
-
-    &--prev {
-        left: -16px;
-    }
-
-    &--next {
-        right: -16px;
-    }
-
-    &:hover {
-        background: var(--ink);
-        color: #fff;
-    }
-
-    &.swiper-button-disabled {
-        opacity: .3;
-        pointer-events: none;
-    }
-
-    @include md {
-        display: none;
-    }
 }
 
 .products__progress {

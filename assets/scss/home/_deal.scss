@@ -3,6 +3,7 @@
 ========================================================= */
 
 .deal {
+    padding-block: clamp(40px, 4vw, 64px);
     background: var(--ink);
     color: #fff;
 
@@ -46,12 +47,13 @@
         aspect-ratio: 4 / 5;
         overflow: hidden;
         border-radius: var(--r-lg);
+        background: var(--bg-override, #fff);
         box-shadow: 0 50px 90px -40px rgba(0, 0, 0, .85);
 
         img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
     }
 
@@ -65,12 +67,26 @@
         height: 44px;
         padding: 0 18px;
         border-radius: var(--r-pill);
-        background: var(--sale);
+        background: var(--ink);
         color: #fff;
         font-size: 15px;
         font-weight: 700;
         letter-spacing: .02em;
-        box-shadow: 0 12px 30px -10px rgba(179, 64, 47, .8);
+        box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .5);
+
+        &--sale {
+            background: var(--sale);
+            box-shadow: 0 12px 30px -10px rgba(179, 64, 47, .8);
+        }
+
+        &--best {
+            background: var(--accent);
+            box-shadow: 0 12px 30px -10px rgba(176, 123, 79, .8);
+        }
+
+        &--out {
+            background: var(--muted);
+        }
     }
 
     &__body {

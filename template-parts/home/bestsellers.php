@@ -44,16 +44,31 @@ if ( empty( $tabs ) ) {
 }
 
 $first = array_key_first( $tabs );
+
+// Admin's color/gradient (Frontpage → Product tabs) overrides the sitewide
+// product-box background just for the cards in this section.
+$card_bg_type = myshop_c( 'tabs_card_bg_type', '' );
+$card_bg      = 'color' === $card_bg_type ? myshop_c( 'tabs_card_bg_color', '' ) : ( 'gradient' === $card_bg_type ? myshop_c( 'tabs_card_bg_css', '' ) : '' );
 ?>
 
 <section class="section section--bone tabs">
 	<div class="shop-container">
 
+		<?php
+		$tabs_eyebrow = myshop_c( 'tabs_eyebrow' );
+		$tabs_title   = myshop_c( 'tabs_title' );
+		?>
 		<div class="tabs__head reveal">
-			<div class="sec-head__text">
-				<span class="eyebrow"><?php echo esc_html( myshop_c( 'tabs_eyebrow', __( 'The edit', 'base-theme' ) ) ); ?></span>
-				<h2 class="sec-head__title"><?php echo esc_html( myshop_c( 'tabs_title', __( 'What people are buying', 'base-theme' ) ) ); ?></h2>
-			</div>
+			<?php if ( $tabs_eyebrow || $tabs_title ) : ?>
+				<div class="sec-head__text">
+					<?php if ( $tabs_eyebrow ) : ?>
+						<span class="eyebrow"><?php echo esc_html( $tabs_eyebrow ); ?></span>
+					<?php endif; ?>
+					<?php if ( $tabs_title ) : ?>
+						<h2 class="sec-head__title"><?php echo esc_html( $tabs_title ); ?></h2>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
 
 			<div class="tabs__nav" role="tablist">
 				<?php foreach ( $tabs as $key => $tab ) : ?>
@@ -76,7 +91,7 @@ $first = array_key_first( $tabs );
 
 				<div class="product-grid">
 					<?php foreach ( $tab['products'] as $i => $product ) : ?>
-						<?php myshop_product_card( $product, $i ); ?>
+						<?php myshop_product_card( $product, $i, 'minimal', $card_bg ); ?>
 					<?php endforeach; ?>
 				</div>
 			</div>

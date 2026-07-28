@@ -3,6 +3,7 @@
 ========================================================= */
 
 .newsletter {
+    padding-block: clamp(40px, 4vw, 64px);
     background: var(--ink);
     color: #fff;
 

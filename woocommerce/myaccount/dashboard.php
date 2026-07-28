@@ -221,6 +221,11 @@ if ( myshop_account_card_enabled( 'acct_curated_enabled' ) ) {
 	<section class="account-curated">
 		<div class="sec-head">
 			<div class="sec-head__text">
+				<?php $curated_eyebrow = myshop_account_dashboard_field( 'acct_curated_eyebrow' ); ?>
+				<?php if ( $curated_eyebrow ) : ?>
+					<span class="eyebrow"><?php echo esc_html( $curated_eyebrow ); ?></span>
+				<?php endif; ?>
+
 				<?php $curated_title = myshop_account_dashboard_field( 'acct_curated_title' ); ?>
 				<?php if ( $curated_title ) : ?>
 					<h2 class="sec-head__title account-curated__title"><?php echo esc_html( $curated_title ); ?></h2>
@@ -232,10 +237,16 @@ if ( myshop_account_card_enabled( 'acct_curated_enabled' ) ) {
 				<?php endif; ?>
 			</div>
 
-			<?php $curated_btn = myshop_account_dashboard_field( 'acct_curated_btn' ); ?>
-			<?php if ( $curated_btn ) : ?>
-				<a class="link-arrow" href="<?php echo esc_url( myshop_shop_url() ); ?>">
-					<?php echo esc_html( $curated_btn ); ?>
+			<?php
+			$curated_btn_enabled = (bool) myshop_opt( 'acct_curated_btn_enabled', true );
+			$curated_link        = myshop_opt( 'acct_curated_link', array() );
+			$curated_url         = ! empty( $curated_link['url'] ) ? $curated_link['url'] : myshop_shop_url();
+			$curated_label       = ! empty( $curated_link['title'] ) ? $curated_link['title'] : __( 'View all', 'base-theme' );
+			$curated_target      = ! empty( $curated_link['target'] ) ? $curated_link['target'] : '';
+			?>
+			<?php if ( $curated_btn_enabled ) : ?>
+				<a class="link-arrow" href="<?php echo esc_url( $curated_url ); ?>"<?php echo $curated_target ? ' target="' . esc_attr( $curated_target ) . '"' : ''; ?>>
+					<?php echo esc_html( $curated_label ); ?>
 					<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
 				</a>
 			<?php endif; ?>

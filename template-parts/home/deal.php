@@ -18,6 +18,15 @@ if ( $picked && function_exists( 'wc_get_product' ) ) {
 	$product = wc_get_product( $picked );
 	if ( $product && 'publish' === $product->get_status() ) {
 		$deal = myshop_normalize_product( $product );
+
+		// The shared 'woocommerce_thumbnail' size is a hard crop — fine for
+		// grid cards, but this section shows the photo in full (object-fit:
+		// contain), so it needs the uncropped image, not the pre-cropped one.
+		$image_id = $product->get_image_id();
+		$large    = $image_id ? wp_get_attachment_image_url( $image_id, 'large' ) : '';
+		if ( $large ) {
+			$deal['image'] = $large;
+		}
 	}
 }
 
@@ -51,18 +60,22 @@ $secondary_cta    = myshop_c( 'deal_secondary_cta', array() );
 $secondary_url    = ! empty( $secondary_cta['url'] ) ? $secondary_cta['url'] : $deal['permalink'];
 $secondary_label  = ! empty( $secondary_cta['title'] ) ? $secondary_cta['title'] : __( 'View details', 'base-theme' );
 $secondary_target = ! empty( $secondary_cta['target'] ) ? $secondary_cta['target'] : '';
+
+// Admin's color/gradient (Frontpage → Deal of the week) wins when set;
+// otherwise the art box stays plain white, matching the product photos.
+$deal_bg = 'color' === myshop_c( 'deal_bg_type', 'color' ) ? myshop_c( 'deal_bg_color', '' ) : myshop_c( 'deal_bg_css', '' );
 ?>
 
 <section class="section deal grain">
 	<div class="shop-container deal__inner">
 
 		<div class="deal__media reveal">
-			<div class="deal__art">
+			<div class="deal__art"<?php echo $deal_bg ? ' style="--bg-override:' . esc_attr( $deal_bg ) . '"' : ''; ?>>
 				<img src="<?php echo esc_url( $deal['image'] ); ?>" alt="" width="600" height="750" loading="lazy" decoding="async">
+				<?php if ( ! empty( $deal['badge'] ) ) : ?>
+					<span class="deal__badge<?php echo ! empty( $deal['badge']['type'] ) ? ' deal__badge--' . esc_attr( $deal['badge']['type'] ) : ''; ?>"><?php echo esc_html( $deal['badge']['label'] ); ?></span>
+				<?php endif; ?>
 			</div>
-			<?php if ( ! empty( $deal['badge'] ) ) : ?>
-				<span class="deal__badge"><?php echo esc_html( $deal['badge']['label'] ); ?></span>
-			<?php endif; ?>
 		</div>
 
 		<div class="deal__body reveal" style="--reveal-delay:120ms">

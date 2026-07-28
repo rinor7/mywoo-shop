@@ -118,7 +118,7 @@ h3 {
    double-underlines links and re-styles things that already have their own
    look. Body-class rules elsewhere set width/spacing for those pages. */
 body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-default {
-    padding-block: clamp(36px, 4vw, 64px) var(--section-y);
+    padding-block: clamp(36px, 7vw, 64px) var(--section-y);
 
     > .container {
         max-width: 760px;

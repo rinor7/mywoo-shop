@@ -124,6 +124,13 @@ function myshop_register_frontpage_fields() {
 		myshop_f( 'cat_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $third ),
 		myshop_f( 'cat_title', __( 'Title', 'base-theme' ), 'text', $third ),
 		myshop_f( 'cat_sub', __( 'Subtitle', 'base-theme' ), 'text', $third ),
+		myshop_f( 'cat_btn_enabled', __( 'Show "All categories" button', 'base-theme' ), 'true_false', array(
+			'default_value' => 1,
+			'ui'            => 1,
+			'ui_on_text'    => __( 'Shown', 'base-theme' ),
+			'ui_off_text'   => __( 'Hidden', 'base-theme' ),
+		) + $third ),
+		myshop_f( 'cat_btn_link', __( 'Button (empty = "All categories" → the shop page)', 'base-theme' ), 'link', $half ),
 		myshop_f(
 			'cat_picks',
 			__( 'Pick specific categories, in order (empty = automatic top categories by product count)', 'base-theme' ),
@@ -179,21 +186,91 @@ function myshop_register_frontpage_fields() {
 		myshop_f( 'na_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $third ),
 		myshop_f( 'na_title', __( 'Title', 'base-theme' ), 'text', $third ),
 		myshop_f( 'na_sub', __( 'Subtitle', 'base-theme' ), 'text', $third ),
+		myshop_f( 'na_btn_enabled', __( 'Show "Shop all new in" button', 'base-theme' ), 'true_false', array(
+			'default_value' => 1,
+			'ui'            => 1,
+			'ui_on_text'    => __( 'Shown', 'base-theme' ),
+			'ui_off_text'   => __( 'Hidden', 'base-theme' ),
+		) + $third ),
+		myshop_f( 'na_btn_link', __( 'Button (empty = "Shop all new in" → the shop page)', 'base-theme' ), 'link', $half ),
+		myshop_f(
+			'na_products',
+			__( 'Custom products (empty = automatically show the latest arrivals; add 4+ for a full carousel)', 'base-theme' ),
+			'repeater',
+			array(
+				'layout'       => 'table',
+				'button_label' => __( 'Add product', 'base-theme' ),
+				'sub_fields'   => array(
+					myshop_f( 'na_product', __( 'Product', 'base-theme' ), 'post_object', array(
+						'post_type'     => array( 'product' ),
+						'return_format' => 'id',
+						'allow_null'    => 1,
+					) ),
+				),
+			)
+		),
+		myshop_f( 'na_card_bg_type', __( 'Product box background type (empty = sitewide default)', 'base-theme' ), 'button_group', array(
+			'choices' => array(
+				'color'    => __( 'Solid color', 'base-theme' ),
+				'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+			),
+		) + $third ),
+		myshop_f( 'na_card_bg_color', __( 'Color', 'base-theme' ), 'color_picker', array(
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_na_card_bg_type', 'operator' => '==', 'value' => 'color' ) ) ),
+		) + $third ),
+		myshop_f( 'na_card_bg_css', __( 'Gradient / custom CSS', 'base-theme' ), 'text', array(
+			'placeholder'       => 'linear-gradient(150deg, #f4f2ed, #e7e3db)',
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_na_card_bg_type', 'operator' => '==', 'value' => 'gradient' ) ) ),
+		) + $third ),
 
-		/* ---- Promo ---- */
-		myshop_tab( 'Promo banners' ),
-		myshop_f( 'promo1_eyebrow', __( 'Large card — eyebrow', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo1_title', __( 'Large card — title', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo1_text', __( 'Large card — text', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo1_btn', __( 'Large card — button label', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo1_url', __( 'Large card — URL', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo1_image', __( 'Large card — image', 'base-theme' ), 'image', array( 'return_format' => 'url', 'preview_size' => 'medium' ) + $third ),
-		myshop_f( 'promo2_eyebrow', __( 'Small card — eyebrow', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo2_title', __( 'Small card — title', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo2_text', __( 'Small card — text', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo2_btn', __( 'Small card — link label', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo2_url', __( 'Small card — URL', 'base-theme' ), 'text', $third ),
-		myshop_f( 'promo2_image', __( 'Small card — image', 'base-theme' ), 'image', array( 'return_format' => 'url', 'preview_size' => 'medium' ) + $third ),
+		/* ---- Promo ----
+		   One tab per card — with both cards' fields flattened into a single
+		   list, it was hard to tell where the large card's fields ended and
+		   the small card's began, especially since bg_color/bg_css toggle
+		   in and out of view and shift the row layout as you switch type. */
+		myshop_tab( 'Promo — Large card' ),
+		myshop_f( 'promo1_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $third ),
+		myshop_f( 'promo1_title', __( 'Title', 'base-theme' ), 'text', $third ),
+		myshop_f( 'promo1_text', __( 'Text', 'base-theme' ), 'text', $third ),
+		myshop_f( 'promo1_btn', __( 'Button label', 'base-theme' ), 'text', $half ),
+		myshop_f( 'promo1_url', __( 'URL', 'base-theme' ), 'text', $half ),
+		myshop_f( 'promo1_image', __( 'Image', 'base-theme' ), 'image', array( 'return_format' => 'url', 'preview_size' => 'medium' ) ),
+		myshop_f( 'promo1_bg_type', __( 'Background type', 'base-theme' ), 'button_group', array(
+			'choices'       => array(
+				'color'    => __( 'Solid color', 'base-theme' ),
+				'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+			),
+			'default_value' => 'gradient',
+		) + $third ),
+		myshop_f( 'promo1_bg_color', __( 'Color', 'base-theme' ), 'color_picker', array(
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_promo1_bg_type', 'operator' => '==', 'value' => 'color' ) ) ),
+		) + $third ),
+		myshop_f( 'promo1_bg_css', __( 'Gradient / custom CSS (default: linear-gradient(130deg, #2A2F36, #12151A))', 'base-theme' ), 'text', array(
+			'placeholder'       => 'linear-gradient(130deg, #2A2F36, #12151A)',
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_promo1_bg_type', 'operator' => '==', 'value' => 'gradient' ) ) ),
+		) + $third ),
+
+		myshop_tab( 'Promo — Small card' ),
+		myshop_f( 'promo2_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $third ),
+		myshop_f( 'promo2_title', __( 'Title', 'base-theme' ), 'text', $third ),
+		myshop_f( 'promo2_text', __( 'Text', 'base-theme' ), 'text', $third ),
+		myshop_f( 'promo2_btn', __( 'Link label', 'base-theme' ), 'text', $half ),
+		myshop_f( 'promo2_url', __( 'URL', 'base-theme' ), 'text', $half ),
+		myshop_f( 'promo2_image', __( 'Image', 'base-theme' ), 'image', array( 'return_format' => 'url', 'preview_size' => 'medium' ) ),
+		myshop_f( 'promo2_bg_type', __( 'Background type', 'base-theme' ), 'button_group', array(
+			'choices'       => array(
+				'color'    => __( 'Solid color', 'base-theme' ),
+				'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+			),
+			'default_value' => 'gradient',
+		) + $third ),
+		myshop_f( 'promo2_bg_color', __( 'Color', 'base-theme' ), 'color_picker', array(
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_promo2_bg_type', 'operator' => '==', 'value' => 'color' ) ) ),
+		) + $third ),
+		myshop_f( 'promo2_bg_css', __( 'Gradient / custom CSS (default: linear-gradient(130deg, #F0E7DA, #DCC7AB))', 'base-theme' ), 'text', array(
+			'placeholder'       => 'linear-gradient(130deg, #F0E7DA, #DCC7AB)',
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_promo2_bg_type', 'operator' => '==', 'value' => 'gradient' ) ) ),
+		) + $third ),
 
 		/* ---- Deal ---- */
 		myshop_tab( 'Deal of the week' ),
@@ -218,11 +295,39 @@ function myshop_register_frontpage_fields() {
 		myshop_f( 'deal_secondary_cta', __( 'Second button (empty = "View details" → the product page)', 'base-theme' ), 'link', array(
 			'instructions' => __( 'Both the label and the URL come from this one field. Use it to point somewhere other than the product\'s own page — the shop, a category, anywhere.', 'base-theme' ),
 		) ),
+		myshop_f( 'deal_bg_type', __( 'Photo box — background type', 'base-theme' ), 'button_group', array(
+			'choices'       => array(
+				'color'    => __( 'Solid color', 'base-theme' ),
+				'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+			),
+			'default_value' => 'color',
+			'instructions'  => __( 'The product photo is shown in full (not cropped), so this fills the space around it. Leave empty for plain white.', 'base-theme' ),
+		) + $third ),
+		myshop_f( 'deal_bg_color', __( 'Photo box — color', 'base-theme' ), 'color_picker', array(
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_deal_bg_type', 'operator' => '==', 'value' => 'color' ) ) ),
+		) + $third ),
+		myshop_f( 'deal_bg_css', __( 'Photo box — gradient / custom CSS', 'base-theme' ), 'text', array(
+			'placeholder'       => 'linear-gradient(150deg, #f4f2ed, #e7e3db)',
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_deal_bg_type', 'operator' => '==', 'value' => 'gradient' ) ) ),
+		) + $third ),
 
 		/* ---- Product tabs ---- */
 		myshop_tab( 'Product tabs' ),
 		myshop_f( 'tabs_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $half ),
 		myshop_f( 'tabs_title', __( 'Title', 'base-theme' ), 'text', $half ),
+		myshop_f( 'tabs_card_bg_type', __( 'Product box background type (empty = sitewide default)', 'base-theme' ), 'button_group', array(
+			'choices' => array(
+				'color'    => __( 'Solid color', 'base-theme' ),
+				'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+			),
+		) + $third ),
+		myshop_f( 'tabs_card_bg_color', __( 'Color', 'base-theme' ), 'color_picker', array(
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_tabs_card_bg_type', 'operator' => '==', 'value' => 'color' ) ) ),
+		) + $third ),
+		myshop_f( 'tabs_card_bg_css', __( 'Gradient / custom CSS', 'base-theme' ), 'text', array(
+			'placeholder'       => 'linear-gradient(150deg, #f4f2ed, #e7e3db)',
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_tabs_card_bg_type', 'operator' => '==', 'value' => 'gradient' ) ) ),
+		) + $third ),
 
 		/* ---- Makers ---- */
 		myshop_tab( 'Makers marquee' ),

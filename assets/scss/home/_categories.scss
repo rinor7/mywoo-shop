@@ -30,7 +30,7 @@
     display: block;
     overflow: hidden;
     border-radius: var(--r-md);
-    background: linear-gradient(150deg, #f4f2ed, #e7e3db);
+    background: var(--bg-override, linear-gradient(150deg, #f4f2ed, #e7e3db));
     isolation: isolate;
 
     &--feature {
@@ -88,6 +88,14 @@
         &::after {
             background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, .3));
         }
+    }
+
+    /* Custom background (Frontpage → Categories per-tile): the photo is
+       expected to have a transparent background, so it must be shown in full
+       rather than cropped to fill the frame — otherwise cover-fit would crop
+       away the very transparency meant to reveal the color behind it. */
+    &--custom-bg &__img {
+        object-fit: contain;
     }
 
     &__media {

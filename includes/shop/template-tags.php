@@ -102,19 +102,20 @@ function myshop_mobile_nav_fallback() {
 /**
  * Section header: eyebrow + title + optional subtitle and a trailing link.
  *
- * @param array $args eyebrow, title, sub, link_url, link_text, center, light.
+ * @param array $args eyebrow, title, sub, link_url, link_text, link_target, center, light.
  */
 function myshop_section_head( $args = array() ) {
 	$a = wp_parse_args(
 		$args,
 		array(
-			'eyebrow'   => '',
-			'title'     => '',
-			'sub'       => '',
-			'link_url'  => '',
-			'link_text' => '',
-			'center'    => false,
-			'light'     => false,
+			'eyebrow'     => '',
+			'title'       => '',
+			'sub'         => '',
+			'link_url'    => '',
+			'link_text'   => '',
+			'link_target' => '',
+			'center'      => false,
+			'light'       => false,
 		)
 	);
 
@@ -138,7 +139,7 @@ function myshop_section_head( $args = array() ) {
 		</div>
 
 		<?php if ( $a['link_url'] && $a['link_text'] ) : ?>
-			<a class="link-arrow<?php echo $a['light'] ? ' link-arrow--light' : ''; ?>" href="<?php echo esc_url( $a['link_url'] ); ?>">
+			<a class="link-arrow<?php echo $a['light'] ? ' link-arrow--light' : ''; ?>" href="<?php echo esc_url( $a['link_url'] ); ?>"<?php echo $a['link_target'] ? ' target="' . esc_attr( $a['link_target'] ) . '"' : ''; ?>>
 				<?php echo esc_html( $a['link_text'] ); ?>
 				<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
 			</a>
@@ -153,13 +154,20 @@ function myshop_section_head( $args = array() ) {
  * Renders identically for demo and real products. The full product payload is
  * embedded as JSON so quick-view can open instantly without a round trip.
  *
- * @param array $product Normalised product (see myshop_get_products()).
- * @param int   $index   Position in the grid, used to stagger the reveal.
+ * @param array  $product Normalised product (see myshop_get_products()).
+ * @param int    $index   Position in the grid, used to stagger the reveal.
+ * @param string $variant     Style modifier, e.g. 'minimal' for the flatter, editorial
+ *                            card used by the New arrivals carousel. Empty = default card.
+ * @param string $bg_override Section-level background (Frontpage → that section's
+ *                            "Product box background"). Wins over the product's own
+ *                            background and the sitewide default — both are also just
+ *                            an inline `background`, so only this can out-rank them.
  */
-function myshop_product_card( $product, $index = 0 ) {
+function myshop_product_card( $product, $index = 0, $variant = '', $bg_override = '' ) {
 	$is_demo     = ! empty( $product['is_demo'] );
 	$purchasable = ! empty( $product['purchasable'] );
-	$bg          = isset( $product['bg'] ) ? $product['bg'] : '';
+	$bg          = $bg_override ? $bg_override : ( isset( $product['bg'] ) ? $product['bg'] : '' );
+	$card_class  = 'pcard reveal' . ( $variant ? ' pcard--' . $variant : '' );
 
 	$payload = wp_json_encode(
 		array(
@@ -180,7 +188,7 @@ function myshop_product_card( $product, $index = 0 ) {
 
 	$delay = ( $index % 4 ) * 80;
 	?>
-	<article class="pcard reveal" style="--reveal-delay:<?php echo (int) $delay; ?>ms" data-product="<?php echo esc_attr( $payload ); ?>">
+	<article class="<?php echo esc_attr( $card_class ); ?>" style="--reveal-delay:<?php echo (int) $delay; ?>ms" data-product="<?php echo esc_attr( $payload ); ?>">
 		<div class="pcard__media<?php echo $bg ? ' pcard__media--custom-bg' : ''; ?>"<?php echo $bg ? ' style="background: ' . esc_attr( $bg ) . ';"' : ''; ?>>
 			<a class="pcard__link" href="<?php echo esc_url( $product['permalink'] ); ?>" tabindex="-1" aria-hidden="true">
 				<img class="pcard__img" src="<?php echo esc_url( $product['image'] ); ?>" alt="" width="600" height="750" loading="lazy" decoding="async">

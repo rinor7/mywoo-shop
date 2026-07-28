@@ -433,7 +433,6 @@
             swipers.push(new Swiper('.js-product-slider', {
                 slidesPerView: 1.25,
                 spaceBetween: 14,
-                navigation: { nextEl: '.js-product-next', prevEl: '.js-product-prev' },
                 breakpoints: {
                     480: { slidesPerView: 2, spaceBetween: 16 },
                     768: { slidesPerView: 3, spaceBetween: 20 },
