@@ -488,6 +488,15 @@
             }));
         }
 
+        // Shop-by-category mobile carousel — same peek ratio as the New
+        // arrivals slider above it, just no progress bar (only 4 slides).
+        if (qs('.js-category-slider')) {
+            swipers.push(new Swiper('.js-category-slider', {
+                slidesPerView: 1.25,
+                spaceBetween: 14
+            }));
+        }
+
         // Product gallery: main slider + clickable thumb strip, kept in sync.
         if (qs('.js-pdp-main')) {
             var thumbsEl = qs('.js-pdp-thumbs');

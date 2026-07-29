@@ -23,6 +23,7 @@ function myshop_order_status_badge( $order ) {
 		esc_html( wc_get_order_status_name( $status ) )
 	);
 }
+add_action( 'woocommerce_my_account_my_orders_column_order-status', 'myshop_order_status_badge' );
 
 /**
  * Items + totals card.

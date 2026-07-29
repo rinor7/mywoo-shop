@@ -54,11 +54,11 @@ $total = max( $sold, (int) myshop_c( 'deal_total', 50 ), 1 );
 $stock_text = (string) myshop_c( 'deal_stock_text', '' );
 $stock_text = $stock_text ? str_replace( array( '{sold}', '{total}' ), array( $sold, $total ), $stock_text ) : '';
 
-// Both label and URL travel together in one ACF "link" field — empty =
-// today's default ("View details" straight to the product page).
+// Both label and URL travel together in one ACF "link" field — no
+// fallback: the button only shows once an admin has actually set it.
 $secondary_cta    = myshop_c( 'deal_secondary_cta', array() );
-$secondary_url    = ! empty( $secondary_cta['url'] ) ? $secondary_cta['url'] : $deal['permalink'];
-$secondary_label  = ! empty( $secondary_cta['title'] ) ? $secondary_cta['title'] : __( 'View details', 'base-theme' );
+$secondary_url    = ! empty( $secondary_cta['url'] ) ? $secondary_cta['url'] : '';
+$secondary_label  = ! empty( $secondary_cta['title'] ) ? $secondary_cta['title'] : '';
 $secondary_target = ! empty( $secondary_cta['target'] ) ? $secondary_cta['target'] : '';
 
 // Admin's color/gradient (Frontpage → Deal of the week) wins when set;
@@ -124,9 +124,11 @@ $deal_bg = 'color' === myshop_c( 'deal_bg_type', 'color' ) ? myshop_c( 'deal_bg_
 						<span><?php esc_html_e( 'Add to bag', 'base-theme' ); ?></span>
 					</button>
 				<?php endif; ?>
-				<a class="btn btn--outline-light" href="<?php echo esc_url( $secondary_url ); ?>"<?php echo $secondary_target ? ' target="' . esc_attr( $secondary_target ) . '"' : ''; ?>>
-					<?php echo esc_html( $secondary_label ); ?>
-				</a>
+				<?php if ( $secondary_url && $secondary_label ) : ?>
+					<a class="btn btn--outline-light" href="<?php echo esc_url( $secondary_url ); ?>"<?php echo $secondary_target ? ' target="' . esc_attr( $secondary_target ) . '"' : ''; ?>>
+						<?php echo esc_html( $secondary_label ); ?>
+					</a>
+				<?php endif; ?>
 			</div>
 		</div>
 

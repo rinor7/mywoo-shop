@@ -148,9 +148,11 @@ table.shop_table.wishlist_table {
         font-weight: 700;
         letter-spacing: .08em;
         text-transform: uppercase;
+        white-space: nowrap;
 
         &::before {
             content: "";
+            flex-shrink: 0;
             width: 6px;
             height: 6px;
             border-radius: var(--r-pill);

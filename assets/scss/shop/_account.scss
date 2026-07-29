@@ -389,10 +389,13 @@ body.woocommerce-account {
 
     .woocommerce-orders-table {
         width: 100%;
-        border: 0;
+        border: 1px solid var(--line);
         background: #fff;
         border-radius: var(--r-sm);
+        box-shadow: var(--shadow-sm);
         overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
 
         th,
         td {
@@ -412,11 +415,30 @@ body.woocommerce-account {
             color: var(--muted);
         }
 
+        tbody tr {
+            transition: background-color var(--t) var(--ease);
+
+            &:nth-child(even) {
+                background: var(--bone);
+            }
+
+            &:hover {
+                background: var(--bone-2);
+            }
+
+            &:last-child td,
+            &:last-child th {
+                border-bottom: 0;
+            }
+        }
+
         .woocommerce-button {
+            @include btn-dark-hover;
             display: inline-flex;
             align-items: center;
             height: 34px;
             padding: 0 16px;
+            border: 0;
             border-radius: var(--r-xs);
             background: var(--ink);
             color: #fff;
@@ -425,8 +447,9 @@ body.woocommerce-account {
             letter-spacing: .08em;
             text-transform: uppercase;
 
-            &:hover {
-                background: var(--ink-soft);
+            &:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 3px;
             }
         }
     }

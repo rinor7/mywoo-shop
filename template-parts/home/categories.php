@@ -97,5 +97,44 @@ $tones = array(
 			<?php endforeach; ?>
 		</div>
 
+		<!-- Mobile only: same cards, uniform sizing, peeking carousel like
+			 the New arrivals slider above (.js-product-slider). -->
+		<div class="cat-slider">
+			<div class="swiper js-category-slider">
+				<div class="swiper-wrapper">
+					<?php foreach ( array_slice( $categories, 0, 4 ) as $i => $cat ) : ?>
+						<?php
+						$bg_override = '';
+						if ( ! empty( $cat['bg'] ) ) {
+							$bg_override = 'gradient' === $cat['bg']['type'] ? $cat['bg']['css'] : $cat['bg']['color'];
+						}
+						?>
+						<div class="swiper-slide">
+							<a class="cat-card cat-card--slide<?php echo empty( $cat['image'] ) ? ' cat-card--noimg' : ''; ?><?php echo $bg_override ? ' cat-card--custom-bg' : ''; ?>"
+								href="<?php echo esc_url( $cat['link'] ); ?>"
+								style="--ca:<?php echo esc_attr( $tones[ $i ][0] ); ?>;--cb:<?php echo esc_attr( $tones[ $i ][1] ); ?><?php echo $bg_override ? ';--bg-override:' . esc_attr( $bg_override ) : ''; ?>">
+
+								<span class="cat-card__media">
+									<?php if ( ! empty( $cat['image'] ) ) : ?>
+										<img class="cat-card__img" src="<?php echo esc_url( $cat['image'] ); ?>" alt="" loading="lazy" decoding="async">
+									<?php else : ?>
+										<img class="cat-card__art" src="<?php echo esc_url( $cat['art'] ); ?>" alt="" loading="lazy" decoding="async">
+									<?php endif; ?>
+								</span>
+
+								<span class="cat-card__body">
+									<strong class="cat-card__name"><?php echo esc_html( $cat['name'] ); ?></strong>
+									<span class="cat-card__cta">
+										<?php esc_html_e( 'Shop now', 'base-theme' ); ?>
+										<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+									</span>
+								</span>
+							</a>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </section>

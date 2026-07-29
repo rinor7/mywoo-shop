@@ -190,11 +190,15 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
     @include sm {
         padding-right: 58px;
 
+        /* Full-width, centered on its own row — not offset with a fixed
+           margin-left to "line up" under the icon, which left it stranded
+           off-center depending on how the message text itself wrapped. */
         .button,
         a.button.wc-forward {
-            flex-basis: 100%;
-            margin-left: 60px;
-            max-width: max-content;
+            flex: 1 1 100%;
+            width: 100%;
+            max-width: none;
+            margin-left: 0;
         }
     }
 }

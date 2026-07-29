@@ -23,6 +23,30 @@
             "s1 s2";
         height: auto;
     }
+
+    /* Below that, the mosaic's own aspect ratios get too cramped to read —
+       .cat-slider (a peeking carousel, same idea as the New arrivals
+       slider above this section) takes over instead. */
+    @include sm {
+        display: none;
+    }
+}
+
+/* ---------- Mobile: peeking carousel ----------
+   Hidden until .cat-mosaic itself hides (@include sm above) so only one
+   of the two ever shows. Uniform slide size — the mosaic's feature/wide/
+   small proportions don't linearize into a carousel, so slides reuse just
+   the shared .cat-card look (media/name/cta) at one consistent aspect. */
+.cat-slider {
+    display: none;
+
+    @include sm {
+        display: block;
+    }
+}
+
+.cat-card--slide {
+    aspect-ratio: 3 / 4;
 }
 
 .cat-card {
