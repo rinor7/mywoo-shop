@@ -180,6 +180,10 @@ table.shop_table.wishlist_table {
             display: inline-flex !important;
             align-items: center;
             justify-content: center;
+            /* "Select options" and "Add to cart" differ in length —
+               a shared min-width (sized to the longer label) keeps both
+               buttons the same width instead of each hugging its own text. */
+            min-width: 160px;
             height: 42px;
             margin: 0;
             padding: 0 22px;

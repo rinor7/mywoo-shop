@@ -188,7 +188,13 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.woocommerce-account)
     }
 
     @include sm {
-        padding-right: 58px;
+        /* The button now sits on its own row below the icon/text (see
+           flex-basis:100% below), clear of .notice-dismiss — which stays
+           up with the icon — so the reserved right-hand gutter down the
+           whole card isn't needed here the way it is on desktop, where
+           the button shares the icon's row. Dropping it lets both the
+           message row and the button go edge-to-edge. */
+        padding-right: 18px;
 
         /* Full-width, centered on its own row — not offset with a fixed
            margin-left to "line up" under the icon, which left it stranded

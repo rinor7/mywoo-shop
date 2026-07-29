@@ -488,12 +488,27 @@
             }));
         }
 
-        // Shop-by-category mobile carousel — same peek ratio as the New
-        // arrivals slider above it, just no progress bar (only 4 slides).
+        // Shop-by-category mobile carousel. slidesPerView:'auto' (not a
+        // fixed ratio like the New arrivals slider above it) because each
+        // slide keeps the mosaic's own feature/wide/small width, set in
+        // CSS via a shared height + per-variant aspect-ratio.
         if (qs('.js-category-slider')) {
+            // freeMode (sticky) instead of strict per-slide snapping: with
+            // slides this different in width, a plain snap grid stops at
+            // each slide's start — the wide slide alone can be wider than
+            // the viewport (needing a second swipe just to clear it), and
+            // the last slide's tail can sit past the final snap point
+            // entirely (needing an extra swipe to drag it fully into view).
+            // freeMode lets one drag/flick travel any distance, all the way
+            // to the true scroll end, then settles on the nearest slide.
             swipers.push(new Swiper('.js-category-slider', {
-                slidesPerView: 1.25,
-                spaceBetween: 14
+                slidesPerView: 'auto',
+                spaceBetween: 14,
+                freeMode: {
+                    enabled: true,
+                    sticky: true,
+                    momentumBounce: false
+                }
             }));
         }
 

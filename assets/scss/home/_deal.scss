@@ -55,6 +55,12 @@
             height: 100%;
             object-fit: contain;
         }
+
+        /* Less tall on mobile — 4:5 stayed portrait even at full container
+           width, which ate a lot of vertical space above the fold. */
+        @include sm {
+            aspect-ratio: 4 / 3.6;
+        }
     }
 
     &__badge {

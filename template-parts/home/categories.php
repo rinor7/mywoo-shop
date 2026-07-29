@@ -97,12 +97,14 @@ $tones = array(
 			<?php endforeach; ?>
 		</div>
 
-		<!-- Mobile only: same cards, uniform sizing, peeking carousel like
-			 the New arrivals slider above (.js-product-slider). -->
+		<!-- Mobile only: same cards and same feature/wide/small proportions
+			 as the mosaic above (just laid out as slides instead of a grid) in
+			 a peeking carousel like the New arrivals slider (.js-product-slider). -->
 		<div class="cat-slider">
 			<div class="swiper js-category-slider">
 				<div class="swiper-wrapper">
 					<?php foreach ( array_slice( $categories, 0, 4 ) as $i => $cat ) : ?>
+						<?php $variant = $variants[ $i ]; ?>
 						<?php
 						$bg_override = '';
 						if ( ! empty( $cat['bg'] ) ) {
@@ -110,7 +112,7 @@ $tones = array(
 						}
 						?>
 						<div class="swiper-slide">
-							<a class="cat-card cat-card--slide<?php echo empty( $cat['image'] ) ? ' cat-card--noimg' : ''; ?><?php echo $bg_override ? ' cat-card--custom-bg' : ''; ?>"
+							<a class="cat-card cat-card--<?php echo esc_attr( $variant ); ?><?php echo empty( $cat['image'] ) ? ' cat-card--noimg' : ''; ?><?php echo $bg_override ? ' cat-card--custom-bg' : ''; ?>"
 								href="<?php echo esc_url( $cat['link'] ); ?>"
 								style="--ca:<?php echo esc_attr( $tones[ $i ][0] ); ?>;--cb:<?php echo esc_attr( $tones[ $i ][1] ); ?><?php echo $bg_override ? ';--bg-override:' . esc_attr( $bg_override ) : ''; ?>">
 

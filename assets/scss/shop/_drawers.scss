@@ -849,6 +849,15 @@ body.is-locked-basic {
     }
 }
 
+/* Contact modal (all sizes): same glass recipe as the header's scrolled
+   state (.site-header.is-stuck) instead of its own heavier frost — more
+   of the page shows through behind it, same reasoning as the header. */
+.contact-modal .modal__panel {
+    background: rgba(255, 255, 255, .5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
 .contact-modal__body {
     .widget-title {
         display: block;

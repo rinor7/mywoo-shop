@@ -32,23 +32,6 @@
     }
 }
 
-/* ---------- Mobile: peeking carousel ----------
-   Hidden until .cat-mosaic itself hides (@include sm above) so only one
-   of the two ever shows. Uniform slide size — the mosaic's feature/wide/
-   small proportions don't linearize into a carousel, so slides reuse just
-   the shared .cat-card look (media/name/cta) at one consistent aspect. */
-.cat-slider {
-    display: none;
-
-    @include sm {
-        display: block;
-    }
-}
-
-.cat-card--slide {
-    aspect-ratio: 3 / 4;
-}
-
 .cat-card {
     position: relative;
     display: block;
@@ -230,5 +213,63 @@
     .cat-card__cta {
         opacity: 1;
         transform: none;
+    }
+}
+
+/* ---------- Mobile: peeking carousel ----------
+   Hidden until .cat-mosaic itself hides (@include sm above it) so only one
+   of the two ever shows. Slides keep the mosaic's own feature/wide/small
+   proportions instead of one uniform size — a fixed slide HEIGHT plus each
+   variant's own aspect-ratio (same numbers as the mosaic's @include md
+   rules above) lets Swiper's slidesPerView:'auto' derive a different WIDTH
+   per slide, so the row reads as the same varied editorial rhythm as the
+   mosaic, just linearized into a scrollable strip.
+   Declared after .cat-card on purpose — its .cat-card__name overrides
+   below need to win over .cat-card--feature/--wide's own (equal
+   specificity, so source order is what decides). */
+.cat-slider {
+    display: none;
+
+    @include sm {
+        display: block;
+    }
+
+    .swiper-slide {
+        height: clamp(200px, 52vw, 280px);
+        width: auto;
+
+        &:has(.cat-card--feature) {
+            aspect-ratio: 4 / 4.6;
+        }
+
+        /* Capped — at the shared height, a true 2.2:1 box comes out wider
+           than the viewport itself on most phones, which is what made this
+           slide need two swipes to clear. Capping the width keeps it
+           noticeably wider than feature/small (still reads as "wide")
+           without ever exceeding one screen. */
+        &:has(.cat-card--wide) {
+            aspect-ratio: 2.2 / 1;
+            max-width: 78vw;
+        }
+
+        &:has(.cat-card--small) {
+            aspect-ratio: 1 / 1;
+        }
+    }
+
+    .cat-card {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* The mosaic's feature/wide name sizes (up to 46px) are tuned for
+       full-bleed tiles, not a ~250px-tall slide — one consistent, more
+       modest size across all three variants here instead. */
+    .cat-card__name {
+        font-size: 18px;
+    }
+
+    .cat-card__body {
+        padding: 16px;
     }
 }
