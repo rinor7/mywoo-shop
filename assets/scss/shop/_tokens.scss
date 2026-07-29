@@ -113,7 +113,7 @@
    no matter which section ends up adjacent (sections can be reordered/
    toggled in admin). */
 .section--bone + .section {
-    margin-top: 0;
+    margin-top: 60px;
 }
 
 .section:has(+ .section--bone) {

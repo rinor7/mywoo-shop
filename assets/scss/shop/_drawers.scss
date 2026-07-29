@@ -23,6 +23,14 @@ body.is-locked {
     overflow: hidden;
 }
 
+/* Mouse/trackpad devices — see usesFixedLock in main.js. No position:fixed,
+   no top offset, no scrollY restore: overflow:hidden alone is a reliable,
+   pixel-math-free scroll lock outside of iOS Safari's touch-chaining bug. */
+html.is-locked-basic,
+body.is-locked-basic {
+    overflow: hidden;
+}
+
 .backdrop {
     position: fixed;
     inset: 0;

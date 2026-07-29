@@ -29,9 +29,7 @@ function myshop_home_sections() {
 		'deal'         => array( __( 'Deal of the week', 'base-theme' ), 'deal' ),
 		'bestsellers'  => array( __( 'Product tabs', 'base-theme' ), 'bestsellers' ),
 		'brands'       => array( __( 'Makers marquee', 'base-theme' ), 'brands' ),
-		'testimonials' => array( __( 'Reviews', 'base-theme' ), 'testimonials' ),
 		'lookbook'     => array( __( 'Shop the look', 'base-theme' ), 'lookbook' ),
-		'journal'      => array( __( 'Journal', 'base-theme' ), 'journal' ),
 		'newsletter'   => array( __( 'Newsletter', 'base-theme' ), 'newsletter' ),
 	);
 }

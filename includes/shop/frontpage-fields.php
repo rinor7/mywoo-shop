@@ -334,51 +334,39 @@ function myshop_register_frontpage_fields() {
 		myshop_f( 'brands_label', __( 'Label above the marquee', 'base-theme' ), 'text', $half ),
 		myshop_f( 'brands_names', __( 'Names — one per line (empty = defaults)', 'base-theme' ), 'textarea', array( 'rows' => 4 ) + $half ),
 
-		/* ---- Reviews ---- */
-		myshop_tab( 'Reviews' ),
-		myshop_f( 'rev_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $third ),
-		myshop_f( 'rev_title', __( 'Title', 'base-theme' ), 'text', $third ),
-		myshop_f( 'rev_sub', __( 'Subtitle', 'base-theme' ), 'text', $third ),
-		myshop_f(
-			'reviews',
-			__( 'Reviews (empty = demo reviews)', 'base-theme' ),
-			'repeater',
-			array(
-				'layout'       => 'block',
-				'button_label' => __( 'Add review', 'base-theme' ),
-				'sub_fields'   => array(
-					myshop_f( 'rv_quote', __( 'Quote', 'base-theme' ), 'textarea', array( 'rows' => 2 ) ),
-					myshop_f( 'rv_name', __( 'Name', 'base-theme' ), 'text', $third ),
-					myshop_f( 'rv_product', __( 'Product', 'base-theme' ), 'text', $third ),
-					myshop_f( 'rv_rating', __( 'Rating (0–5)', 'base-theme' ), 'number', array( 'default_value' => 5, 'min' => 0, 'max' => 5, 'step' => '0.5' ) + $third ),
-				),
-			)
-		),
-
 		/* ---- Lookbook ---- */
 		myshop_tab( 'Shop the look' ),
 		myshop_f( 'look_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $third ),
 		myshop_f( 'look_title', __( 'Title', 'base-theme' ), 'text', $third ),
 		myshop_f( 'look_sub', __( 'Subtitle', 'base-theme' ), 'text', $third ),
+		myshop_f( 'look_btn_enabled', __( 'Show "Follow along" button', 'base-theme' ), 'true_false', array(
+			'default_value' => 1,
+			'ui'            => 1,
+			'ui_on_text'    => __( 'Shown', 'base-theme' ),
+			'ui_off_text'   => __( 'Hidden', 'base-theme' ),
+		) + $third ),
+		myshop_f( 'look_btn_link', __( 'Button (empty = "Follow along" → the shop page)', 'base-theme' ), 'link', $third ),
+		myshop_f( 'look_max_price', __( 'Only let the Product picker below show items under this price (optional)', 'base-theme' ), 'number', array(
+			'min'  => 0,
+			'step' => 0.01,
+		) + $third ),
 		myshop_f(
 			'look_tiles',
-			__( 'Tiles (empty = demo tiles)', 'base-theme' ),
+			__( 'Tiles — photo + linked product (empty = demo tiles)', 'base-theme' ),
 			'repeater',
 			array(
 				'layout'       => 'table',
 				'button_label' => __( 'Add tile', 'base-theme' ),
 				'sub_fields'   => array(
-					myshop_f( 'lt_image', __( 'Image', 'base-theme' ), 'image', array( 'return_format' => 'url', 'preview_size' => 'thumbnail' ) ),
-					myshop_f( 'lt_label', __( 'Label', 'base-theme' ), 'text' ),
-					myshop_f( 'lt_url', __( 'URL', 'base-theme' ), 'text' ),
+					myshop_f( 'lt_image', __( 'Photo', 'base-theme' ), 'image', array( 'return_format' => 'url', 'preview_size' => 'thumbnail' ) ),
+					myshop_f( 'lt_product', __( 'Product', 'base-theme' ), 'post_object', array(
+						'post_type'     => array( 'product' ),
+						'return_format' => 'id',
+						'allow_null'    => 1,
+					) ),
 				),
 			)
 		),
-
-		/* ---- Journal ---- */
-		myshop_tab( 'Journal' ),
-		myshop_f( 'j_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $half ),
-		myshop_f( 'j_title', __( 'Title', 'base-theme' ), 'text', $half ),
 
 		/* ---- Newsletter ---- */
 		myshop_tab( 'Newsletter' ),
@@ -416,3 +404,37 @@ function myshop_register_frontpage_fields() {
 	);
 }
 add_action( 'acf/init', 'myshop_register_frontpage_fields' );
+
+/**
+ * Lookbook's Product picker (Frontpage → Shop the look → Tiles → Product) —
+ * when "Only let the Product picker below show items under this price" is
+ * set, restrict the dropdown to products priced under it.
+ *
+ * This only narrows what's offered when picking a NEW product; it deliberately
+ * doesn't touch the frontend query, so a tile someone already picked keeps
+ * showing even if that product's price later climbs past the limit.
+ *
+ * @param array $args    WP_Query args ACF is about to run for the dropdown.
+ * @param array $field   The ACF field array (post_object).
+ * @param int   $post_id The page being edited (the front page, here).
+ * @return array
+ */
+function myshop_lookbook_product_picker_query( $args, $field, $post_id ) {
+	$max_price = get_field( 'look_max_price', $post_id );
+
+	if ( '' === $max_price || null === $max_price || false === $max_price ) {
+		return $args;
+	}
+
+	$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		array(
+			'key'     => '_price',
+			'value'   => (float) $max_price,
+			'compare' => '<=',
+			'type'    => 'NUMERIC',
+		),
+	);
+
+	return $args;
+}
+add_filter( 'acf/fields/post_object/query/key=field_ms_lt_product', 'myshop_lookbook_product_picker_query', 10, 3 );

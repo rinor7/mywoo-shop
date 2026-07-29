@@ -57,14 +57,33 @@
     var lastFocus = null;
     var lockedScrollY = 0;
 
-    // overflow:hidden on <body> alone doesn't stop touch-scroll/rubber-band
-    // on iOS Safari — a scrollable element inside the overlay (e.g. search
-    // results) chains its scroll straight through to the page behind it.
-    // Pinning the body with position:fixed is the only reliable cross-browser
-    // fix; scroll position is saved/restored around it so the page doesn't
-    // jump to the top while the overlay is open.
+    // The position:fixed + top-offset dance below exists purely for iOS
+    // Safari: overflow:hidden alone doesn't stop touch-scroll/rubber-band
+    // there — a scrollable element inside the overlay (e.g. search results)
+    // chains its scroll straight through to the page behind it. Mouse/
+    // trackpad devices have no such issue, so they get the plain, boring
+    // overflow:hidden lock instead — it has no scroll position to save or
+    // restore, so there's no pixel math left to get wrong (no reflow-driven
+    // jump on open, nothing to snap-then-scroll-back on close).
+    var usesFixedLock = matchMedia('(pointer: coarse)').matches;
+
     function lockBodyScroll() {
         lockedScrollY = window.scrollY;
+
+        if (!usesFixedLock) {
+            document.documentElement.classList.add('is-locked-basic');
+            document.body.classList.add('is-locked-basic');
+            return;
+        }
+
+        // Locking hides the scrollbar (overflow:hidden below), handing its
+        // width back to the page. Uncompensated, that extra width reflows
+        // text the instant the modal opens — and reflows back on close —
+        // which reads as an unrelated "jump" and (on tall pages) briefly
+        // pushes content past the locked viewport's clipped bottom edge.
+        var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.paddingRight = scrollbarWidth > 0 ? scrollbarWidth + 'px' : '';
+
         document.body.style.top = ( -lockedScrollY ) + 'px';
         // <html> needs locking too, not just <body> — iOS Safari has been
         // reported to still let a scroll/drag gesture reach the page
@@ -74,10 +93,33 @@
     }
 
     function unlockBodyScroll() {
+        if (!usesFixedLock) {
+            document.documentElement.classList.remove('is-locked-basic');
+            document.body.classList.remove('is-locked-basic');
+            return;
+        }
+
+        // body { scroll-behavior: smooth } (_general.scss) propagates to the
+        // window's own scroller, so a plain window.scrollTo() below would
+        // animate — visible as a snap to scrollY:0 (the instant is-locked
+        // drops and the real, unrestored scroll position shows through)
+        // followed by a slow scroll back up to lockedScrollY. Forcing
+        // "auto" for this one instant jump is what actually restores the
+        // position invisibly; removing the override next frame leaves
+        // smooth scrolling intact for real anchor-link navigation.
+        var html = document.documentElement;
+        var previousScrollBehavior = html.style.scrollBehavior;
+        html.style.scrollBehavior = 'auto';
+
         document.documentElement.classList.remove('is-locked');
         document.body.classList.remove('is-locked');
         document.body.style.top = '';
+        document.body.style.paddingRight = '';
         window.scrollTo(0, lockedScrollY);
+
+        requestAnimationFrame(function () {
+            html.style.scrollBehavior = previousScrollBehavior;
+        });
     }
 
     function openOverlay(el) {
@@ -442,18 +484,6 @@
                     init: updateProgress,
                     resize: updateProgress,
                     progress: updateProgress
-                }
-            }));
-        }
-
-        if (qs('.js-reviews')) {
-            swipers.push(new Swiper('.js-reviews', {
-                slidesPerView: 1,
-                spaceBetween: 16,
-                pagination: { el: '.js-reviews-pagination', clickable: true },
-                breakpoints: {
-                    768: { slidesPerView: 2, spaceBetween: 20 },
-                    1200: { slidesPerView: 3, spaceBetween: 24 }
                 }
             }));
         }

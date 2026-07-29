@@ -387,12 +387,13 @@
     }
 }
 
-/* New arrivals / Categories / Product tabs: eyebrow reads plain ink ONLY
-   when the title below it is empty (eyebrow standing alone) — with a title
-   present, it keeps the normal accent color like everywhere else. */
+/* New arrivals / Categories / Product tabs / Lookbook: eyebrow reads plain
+   ink ONLY when the title below it is empty (eyebrow standing alone) — with
+   a title present, it keeps the normal accent color like everywhere else. */
 .products .sec-head__text:not(:has(.sec-head__title)) .eyebrow,
 .categories .sec-head__text:not(:has(.sec-head__title)) .eyebrow,
-.tabs__head .sec-head__text:not(:has(.sec-head__title)) .eyebrow {
+.tabs__head .sec-head__text:not(:has(.sec-head__title)) .eyebrow,
+.lookbook .sec-head__text:not(:has(.sec-head__title)) .eyebrow {
     color: var(--ink);
 }
 
