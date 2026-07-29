@@ -136,6 +136,10 @@ $tones = array(
 					<?php endforeach; ?>
 				</div>
 			</div>
+
+			<div class="products__progress">
+				<span class="products__progress-bar js-category-progress"></span>
+			</div>
 		</div>
 
 	</div>

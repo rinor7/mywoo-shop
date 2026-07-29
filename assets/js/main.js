@@ -493,6 +493,24 @@
         // slide keeps the mosaic's own feature/wide/small width, set in
         // CSS via a shared height + per-variant aspect-ratio.
         if (qs('.js-category-slider')) {
+            var categoryProgressBar = qs('.js-category-progress');
+
+            // Same line-progress indicator as the product slider, but its
+            // width formula (visible slidesPerView / total slides) assumes
+            // every slide is the same width — not true here (slidesPerView
+            // is 'auto'). Using the swiper's own measured size vs. its
+            // total scrollable width gives the correct visible ratio
+            // regardless of how much each slide varies.
+            var updateCategoryProgress = function (sw) {
+                if (!categoryProgressBar) { return; }
+
+                var ratio = Math.min(1, sw.size / sw.virtualSize);
+
+                categoryProgressBar.style.width = (ratio * 100) + '%';
+                categoryProgressBar.style.transform =
+                    'translateX(' + (((1 - ratio) / ratio) * 100 * sw.progress) + '%)';
+            };
+
             // freeMode (sticky) instead of strict per-slide snapping: with
             // slides this different in width, a plain snap grid stops at
             // each slide's start — the wide slide alone can be wider than
@@ -508,6 +526,11 @@
                     enabled: true,
                     sticky: true,
                     momentumBounce: false
+                },
+                on: {
+                    init: updateCategoryProgress,
+                    resize: updateCategoryProgress,
+                    progress: updateCategoryProgress
                 }
             }));
         }
