@@ -33,7 +33,7 @@ function my_theme_color_settings($wp_customize) {
             'primary_hover_color',
             [
                 'label' => 'Primary Color (Hover)',
-                'description' => 'Used on hover/active for primary buttons (Add to bag, etc). Pick a darker shade of the Primary Color for good contrast.',
+                'description' => 'Used on hover/active for primary buttons (Add to cart, etc). Pick a darker shade of the Primary Color for good contrast.',
                 'section' => 'theme_colors_section',
             ]
         )

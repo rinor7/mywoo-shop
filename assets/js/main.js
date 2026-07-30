@@ -409,7 +409,7 @@
     /* ==========================================================
        Mobile bottom nav clearance — measured, not guessed, so any
        fixed bar meant to sit above it (e.g. the PDP sticky add-to-
-       bag bar) lines up exactly, including as iOS's
+       cart bar) lines up exactly, including as iOS's
        env(safe-area-inset-bottom) shifts when the browser chrome
        collapses/expands on scroll.
     ========================================================== */
@@ -1015,7 +1015,7 @@
 
             if (data.demo) {
                 addBtn.dataset.demo = '1';
-                if (addLabel) { addLabel.textContent = i18n.addToBag; }
+                if (addLabel) { addLabel.textContent = i18n.addToCart; }
                 if (qtyBox) { qtyBox.hidden = false; }
             } else if (!data.buy) {
                 // Needs options — the button already goes to the product page,
@@ -1025,7 +1025,7 @@
                 if (qtyBox) { qtyBox.hidden = true; }
                 if (qvLink) { qvLink.hidden = true; }
             } else {
-                if (addLabel) { addLabel.textContent = i18n.addToBag; }
+                if (addLabel) { addLabel.textContent = i18n.addToCart; }
                 if (qtyBox) { qtyBox.hidden = false; }
             }
 
@@ -1051,7 +1051,7 @@
     }());
 
     /* ==========================================================
-       Product page: qty stepper + sticky add-to-bag bar
+       Product page: qty stepper + sticky add-to-cart bar
        The bar proxies the real add-to-cart form, so quantity and
        validation stay single-source.
     ========================================================== */
@@ -1167,7 +1167,7 @@
 
        Debounced so rapid +/- clicks or typing don't fire an AJAX call per
        change; reuses WooCommerce's own `wc_update_cart` event — the same
-       one its "Update bag" button relies on — instead of reimplementing
+       one its "Update cart" button relies on — instead of reimplementing
        the AJAX call, so the blocking overlay / error handling stay
        exactly what WooCommerce already ships.
 
@@ -1183,7 +1183,7 @@
        Emptying the cart entirely (last item's qty → 0) is a special case:
        WooCommerce's AJAX div-patching needs a `.woocommerce-cart-form__contents`
        element inside a `.woocommerce` wrapper to swap in the empty-cart
-       notice, and this theme's markup has neither — the manual "Update bag"
+       notice, and this theme's markup has neither — the manual "Update cart"
        button only ever looked like it handled this correctly because that
        same missing class makes WooCommerce's click-handler bail out and let
        the browser submit the form for real instead of intercepting it. So

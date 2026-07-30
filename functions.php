@@ -59,13 +59,13 @@ function standard_scripts_and_style() {
 				)
 				: '',
 			'i18n'        => array(
-				'added'         => __( 'Added to your bag', 'base-theme' ),
+				'added'         => __( 'Added to your cart', 'base-theme' ),
 				'removed'       => __( 'Item removed', 'base-theme' ),
 				'error'         => __( 'Something went wrong. Please try again.', 'base-theme' ),
 				'demo'          => __( 'Demo product — publish products in WooCommerce to enable checkout.', 'base-theme' ),
 				'saved'         => __( 'Saved to wishlist', 'base-theme' ),
 				'unsaved'       => __( 'Removed from wishlist', 'base-theme' ),
-				'addToBag'      => __( 'Add to bag', 'base-theme' ),
+				'addToCart'     => __( 'Add to cart', 'base-theme' ),
 				'chooseOptions' => __( 'Choose options', 'base-theme' ),
 				'noResults'     => __( 'No products found', 'base-theme' ),
 				'viewAllResults' => __( 'View all {count} results', 'base-theme' ),

@@ -269,7 +269,7 @@ $is_woo  = function_exists( 'WC' );
 
 				<button type="button" class="btn btn--primary js-add-to-cart js-qv-add">
 					<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-					<span><?php esc_html_e( 'Add to bag', 'base-theme' ); ?></span>
+					<span><?php esc_html_e( 'Add to cart', 'base-theme' ); ?></span>
 				</button>
 			</div>
 
@@ -343,7 +343,7 @@ $mb_bag     = $is_woo && ( is_cart() || is_checkout() );
 			<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
 			<?php myshop_cart_count_html(); ?>
 		</span>
-		<span><?php esc_html_e( 'Bag', 'base-theme' ); ?></span>
+		<span><?php esc_html_e( 'Cart', 'base-theme' ); ?></span>
 	</button>
 </nav>
 

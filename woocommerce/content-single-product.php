@@ -142,7 +142,7 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 				</div>
 
 				<button type="button" class="pdp-bar__add js-pdp-bar-add">
-					<?php esc_html_e( 'Add to bag', 'base-theme' ); ?>
+					<?php esc_html_e( 'Add to cart', 'base-theme' ); ?>
 					<span class="pdp-bar__price">&mdash; <?php echo wp_kses_post( wc_price( wc_get_price_to_display( $product ) ) ); ?></span>
 				</button>
 			</div>

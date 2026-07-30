@@ -1256,9 +1256,11 @@ body.is-locked-basic {
        horizontal drag as a native scroll/gesture first, which eats some of
        the pointermove events and makes the glide feel laggy or skip tabs. */
     touch-action: none;
-
+    max-width: 450px;
+    margin: auto;
     @include sm {
         display: grid;
+        border: unset;
     }
 
     &__item {
@@ -1327,6 +1329,11 @@ body.is-locked-basic {
         .icon-btn__count {
             top: -7px;
             right: -11px;
+            /* .mobile-bar__item i gets z-index:1 (to sit above the glass
+               chip) — without its own z-index this badge, a sibling with
+               z-index:auto, painted BEHIND that icon instead of over it,
+               clipping the badge wherever the two overlap. */
+            z-index: 2;
         }
     }
 }

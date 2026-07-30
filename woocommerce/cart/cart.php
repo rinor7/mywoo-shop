@@ -67,7 +67,7 @@ $cart_subtitle = function_exists( 'myshop_cart_subtitle' ) ? myshop_cart_subtitl
 									sprintf(
 										'<a href="%s" class="cart-row__remove" aria-label="%s" data-product_id="%s" data-product_sku="%s"><i class="fa-solid fa-xmark" aria-hidden="true"></i></a>',
 										esc_url( wc_get_cart_remove_url( $cart_item_key ) ),
-										esc_attr( sprintf( __( 'Remove %s from your bag', 'base-theme' ), wp_strip_all_tags( $_product->get_name() ) ) ),
+										esc_attr( sprintf( __( 'Remove %s from your cart', 'base-theme' ), wp_strip_all_tags( $_product->get_name() ) ) ),
 										esc_attr( $product_id ),
 										esc_attr( $_product->get_sku() )
 									),

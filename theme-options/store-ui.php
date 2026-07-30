@@ -253,7 +253,7 @@ add_action(
 				'name'          => 'cart_title',
 				'label'         => __( 'Cart page title', 'base-theme' ),
 				'type'          => 'text',
-				'default_value' => __( 'Your Bag', 'base-theme' ),
+				'default_value' => __( 'Your Cart', 'base-theme' ),
 				'instructions'  => __( 'Heading at the top of the cart page. Leave empty to hide it.', 'base-theme' ),
 			)
 		);

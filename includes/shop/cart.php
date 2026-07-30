@@ -83,7 +83,7 @@ function myshop_cart_drawer_content() {
 
 			<div class="cart-empty">
 				<span class="cart-empty__icon"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
-				<h3 class="cart-empty__title"><?php esc_html_e( 'Your bag is empty', 'base-theme' ); ?></h3>
+				<h3 class="cart-empty__title"><?php esc_html_e( 'Your cart is empty', 'base-theme' ); ?></h3>
 				<p class="cart-empty__text"><?php esc_html_e( 'Once you add something, it will show up here.', 'base-theme' ); ?></p>
 				<a class="btn btn--primary btn--block js-drawer-close" href="<?php echo esc_url( myshop_shop_url() ); ?>">
 					<?php esc_html_e( 'Start shopping', 'base-theme' ); ?>
@@ -158,7 +158,7 @@ function myshop_cart_drawer_content() {
 					<?php esc_html_e( 'Checkout', 'base-theme' ); ?>
 				</a>
 				<a class="btn btn--ghost btn--block" href="<?php echo esc_url( wc_get_cart_url() ); ?>">
-					<?php esc_html_e( 'View bag', 'base-theme' ); ?>
+					<?php esc_html_e( 'View cart', 'base-theme' ); ?>
 				</a>
 			</div>
 
@@ -213,38 +213,3 @@ function myshop_cart_fragments( $fragments ) {
 }
 add_filter( 'woocommerce_add_to_cart_fragments', 'myshop_cart_fragments' );
 
-/**
- * Brand voice — the shop says "bag", WooCommerce core says "cart".
- * Rewrites Woo's front-end strings (Add to cart → Add to bag, View cart →
- * View bag, "…added to your cart." → "…your bag." and so on). Admin screens
- * keep Woo's own wording so store management stays unambiguous.
- */
-function myshop_bag_voice( $translation ) {
-	if ( is_admin() && ! wp_doing_ajax() ) {
-		return $translation;
-	}
-
-	return str_replace(
-		array( 'cart', 'Cart', 'CART' ),
-		array( 'bag', 'Bag', 'BAG' ),
-		$translation
-	);
-}
-
-add_filter(
-	'gettext_woocommerce',
-	function ( $translation, $text, $domain ) {
-		return myshop_bag_voice( $translation );
-	},
-	10,
-	3
-);
-
-add_filter(
-	'ngettext_woocommerce',
-	function ( $translation, $single, $plural, $number, $domain ) {
-		return myshop_bag_voice( $translation );
-	},
-	10,
-	5
-);

@@ -132,6 +132,15 @@ body.tax-product_tag {
         display: none;
     }
 
+    /* Break out of .shop-container's right gutter only (left stays put) so
+       the scrollable row runs to the true screen edge instead of stopping
+       at the container's own inset — .shop-container is a shared utility
+       used all over the site, so this is scoped to just this element
+       rather than touching that padding globally. */
+    @include md {
+        margin-right: calc(-1 * var(--gutter));
+    }
+
     &__pill {
         display: inline-flex;
         align-items: center;

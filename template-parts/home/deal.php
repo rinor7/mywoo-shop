@@ -110,7 +110,7 @@ $deal_bg = 'color' === myshop_c( 'deal_bg_type', 'color' ) ? myshop_c( 'deal_bg_
 					<button type="button" class="btn btn--accent js-add-to-cart"
 						data-product-id="<?php echo esc_attr( $deal['id'] ); ?>">
 						<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-						<span><?php esc_html_e( 'Add to bag', 'base-theme' ); ?></span>
+						<span><?php esc_html_e( 'Add to cart', 'base-theme' ); ?></span>
 					</button>
 				<?php elseif ( empty( $deal['is_demo'] ) ) : ?>
 					<a class="btn btn--accent" href="<?php echo esc_url( $deal['permalink'] ); ?>">
@@ -121,7 +121,7 @@ $deal_bg = 'color' === myshop_c( 'deal_bg_type', 'color' ) ? myshop_c( 'deal_bg_
 					<button type="button" class="btn btn--accent js-add-to-cart" data-demo="1"
 						data-product-id="<?php echo esc_attr( $deal['id'] ); ?>">
 						<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-						<span><?php esc_html_e( 'Add to bag', 'base-theme' ); ?></span>
+						<span><?php esc_html_e( 'Add to cart', 'base-theme' ); ?></span>
 					</button>
 				<?php endif; ?>
 				<?php if ( $secondary_url && $secondary_label ) : ?>
