@@ -93,9 +93,13 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    /* Same glass recipe as .mobile-bar (background/blur/saturate) — was
-       running its own, more opaque numbers with no saturate boost before. */
-    background: rgba(255, 255, 255, .55);
+    /* Higher opacity than .mobile-bar's own .55 — this sits at the very
+       top of the page over whatever's directly behind it (hero banners,
+       colorful category art), and at that opacity the blur was picking up
+       and smearing that color across the whole header instead of reading
+       as a clean, stable landmark. Keeps the same blur/saturate so it
+       still reads as glass, just less see-through. */
+    background: rgba(255, 255, 255, .8);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     /* Soft translucent rim, same as .mobile-bar's border — var(--line)

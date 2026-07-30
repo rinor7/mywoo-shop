@@ -1323,6 +1323,14 @@ body.is-locked-basic {
             i {
                 color: var(--accent);
             }
+
+            /* Account tab (logged in) uses an initial-letter avatar
+               instead of an <i> icon — the rule above never reaches it,
+               so it kept its plain grey chip regardless of active state. */
+            .icon-btn__avatar {
+                background: var(--accent);
+                color: #fff;
+            }
         }
     }
 
