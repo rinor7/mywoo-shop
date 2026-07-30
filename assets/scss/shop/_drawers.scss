@@ -1240,6 +1240,10 @@ body.is-locked-basic {
     z-index: 90;
     display: none;
     grid-template-columns: repeat(5, 1fr);
+    /* Breathing room for the wider active pill below — without it, the
+       first/last tabs sit flush against the bar's own rounded ends, and a
+       wider chip there would crowd/clip against that curve. */
+    padding-inline: 6px;
     border: 1px solid rgba(255, 255, 255, .4);
     border-radius: var(--r-pill);
     background: rgba(255, 255, 255, .55);
@@ -1302,7 +1306,7 @@ body.is-locked-basic {
         top: 7px;
         left: 0;
         z-index: 0;
-        width: 56px;
+        width: 66px;
         height: 48px;
         /* concentric with the bar's pill ends: inner r = outer r − inset */
         border-radius: var(--r-pill);

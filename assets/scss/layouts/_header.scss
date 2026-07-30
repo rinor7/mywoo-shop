@@ -98,7 +98,10 @@
     background: rgba(255, 255, 255, .55);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid transparent;
+    /* Soft translucent rim, same as .mobile-bar's border — var(--line)
+       (#e6e3dd, near-white) read as a stark solid line once the background
+       lightened to match the glass, instead of a glass edge. */
+    border-bottom: 1px solid rgba(255, 255, 255, .4);
     box-shadow: 0 16px 32px -12px rgba(16, 17, 20, .12);
     transition: background-color var(--t) var(--ease),
                 border-color var(--t) var(--ease),
@@ -106,10 +109,9 @@
                 transform var(--t) var(--ease);
 
     &.is-stuck {
-        /* Glass itself stays identical to the base state (and to
-           .mobile-bar) — only the divider line + shadow strengthen once
-           stuck, to mark the header's edge against scrolled content. */
-        border-bottom-color: var(--line);
+        /* Glass + border stay identical to the base state (and to
+           .mobile-bar) — only the shadow strengthens once stuck, to mark
+           the header's edge against scrolled content. */
         box-shadow: 0 20px 40px -14px rgba(16, 17, 20, .18);
     }
 
