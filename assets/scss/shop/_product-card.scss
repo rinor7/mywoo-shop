@@ -139,10 +139,6 @@
             pointer-events: none;
             opacity: .75;
         }
-
-        &.is-done {
-            background: var(--success);
-        }
     }
 
     &__quick {
@@ -442,9 +438,17 @@
     border-radius: var(--r-pill);
     background: #fff;
 
-    @include xs {
-        width: 100%;
+    /* Same breakout as .shop-pills, both sides here (that one only needed
+       the right edge) — @include md, not xs, to match .shop-pills' own
+       breakpoint instead of only kicking in on very small phones. width:
+       100% dropped in favor of the margin/padding pair: with it still set,
+       100% would resolve against the unshifted parent and the negative
+       margin would just slide the whole box left without extending it,
+       leaving the right edge short instead of flush. */
+    @include md {
         overflow-x: auto;
+        margin-inline: calc(-1 * var(--gutter));
+        padding-inline: var(--gutter);
     }
 }
 

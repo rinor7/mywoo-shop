@@ -887,6 +887,29 @@
     });
 
     /* ==========================================================
+       Cart page coupon — plain <form> POST (no AJAX here like the
+       checkout summary box below), so an empty coupon field otherwise
+       just submits the form and reloads the page for nothing. Disabling
+       the button until something's typed rules that out entirely (a
+       disabled button can't submit a form, no event-listener timing/
+       support to rely on), rather than intercepting submit.
+    ========================================================== */
+    (function () {
+        var applyBtn = qs('.js-cart-coupon-apply');
+        if (!applyBtn) { return; }
+
+        var input = qs('#coupon_code', applyBtn.closest('form') || document);
+        if (!input) { return; }
+
+        function sync() {
+            applyBtn.disabled = !input.value.trim();
+        }
+
+        sync();
+        input.addEventListener('input', sync);
+    }());
+
+    /* ==========================================================
        Checkout coupon (summary card)
        Not a nested <form> — we call Woo's apply_coupon endpoint and
        let the core checkout JS refresh the totals.

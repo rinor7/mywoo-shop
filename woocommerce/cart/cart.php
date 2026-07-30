@@ -168,12 +168,12 @@ $cart_subtitle = function_exists( 'myshop_cart_subtitle' ) ? myshop_cart_subtitl
 					<div class="cart-actions__coupon">
 						<label class="screen-reader-text" for="coupon_code"><?php esc_html_e( 'Coupon code', 'base-theme' ); ?></label>
 						<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php echo esc_attr( function_exists( 'myshop_coupon_placeholder' ) ? myshop_coupon_placeholder() : '' ); ?>">
-						<button type="submit" class="cart-actions__apply" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'base-theme' ); ?>"><?php esc_html_e( 'Apply', 'base-theme' ); ?></button>
+						<button type="submit" class="cart-actions__apply js-cart-coupon-apply" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'base-theme' ); ?>" disabled><?php esc_html_e( 'Apply', 'base-theme' ); ?></button>
 						<?php do_action( 'woocommerce_cart_coupon' ); ?>
 					</div>
 				<?php endif; ?>
 
-				<button type="submit" class="cart-actions__update" name="update_cart" value="<?php esc_attr_e( 'Update bag', 'base-theme' ); ?>"><?php esc_html_e( 'Update bag', 'base-theme' ); ?></button>
+				<button type="submit" class="cart-actions__update" name="update_cart" value="<?php esc_attr_e( 'Update cart', 'base-theme' ); ?>"><?php esc_html_e( 'Update cart', 'base-theme' ); ?></button>
 
 				<?php
 				// A submit button's value only serializes when it was actually clicked — the

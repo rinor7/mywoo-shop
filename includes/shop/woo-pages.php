@@ -405,9 +405,16 @@ function myshop_cart_ensemble() {
 	$title = function_exists( 'myshop_cart_ensemble_title' ) ? myshop_cart_ensemble_title() : '';
 	?>
 	<section class="cart-ensemble">
-		<?php if ( $title ) : ?>
-			<h2 class="cart-ensemble__title"><?php echo esc_html( $title ); ?></h2>
-		<?php endif; ?>
+		<?php
+		if ( $title ) {
+			myshop_section_head(
+				array(
+					'title'  => $title,
+					'center' => true,
+				)
+			);
+		}
+		?>
 		<div class="product-grid">
 			<?php foreach ( $products as $i => $product ) : ?>
 				<?php myshop_product_card( $product, $i ); ?>

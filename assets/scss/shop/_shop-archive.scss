@@ -139,6 +139,9 @@ body.tax-product_tag {
        rather than touching that padding globally. */
     @include md {
         margin-right: calc(-1 * var(--gutter));
+        margin-left: calc(-1 * var(--gutter));
+        padding-left: var(--gutter);
+        padding-right: var(--gutter);
     }
 
     &__pill {
@@ -210,6 +213,12 @@ body.tax-product_tag {
         font-size: 16px;
         font-weight: 600;
         color: var(--ink);
+        /* Still inherits overflow:hidden from the shared card rule (there
+           to contain that card's clearfix/leaving-transition, neither of
+           which apply here) — with padding zeroed out above, the icon
+           sits flush against this box's own top edge, so its box-shadow
+           halo ring pokes past it and gets clipped right there. */
+        overflow: visible;
 
         /* icon bubble becomes a centred, neutral badge */
         &::before {
