@@ -1426,17 +1426,21 @@
         bar.appendChild(glass);
 
         function moveTo(item, instant) {
-            var b = bar.getBoundingClientRect();
-            var e = item.getBoundingClientRect();
-            // Fill the tab's own column with a fixed 7px margin each side
-            // (matching the pill's own 7px top/bottom gap exactly, now that
-            // .mobile-bar itself has no padding-inline of its own to stack
-            // on top of this), instead of a fixed CSS width — .mobile-bar
-            // caps at max-width:450px, so on anything close to that width
-            // each of the 5 equal columns is a lot wider than a fixed pill,
-            // leaving a big gap around it unrelated to the bar's padding.
-            var w = Math.max(50, e.width - 14);
-            var x = e.left - b.left + (e.width - w) / 2;
+            // offsetLeft/offsetWidth, not getBoundingClientRect() — the
+            // latter reports the VISUALLY RENDERED box, which reflects
+            // .mobile-bar's own transform:scale(.8) once .is-compact (see
+            // the scroll-shrink block above) is active. glass's own width/
+            // translateX are applied in its LOCAL space and then get
+            // scaled AGAIN by that same ancestor transform when painted,
+            // so measuring from the already-scaled rect double-applies the
+            // scale and strands the pill somewhere off its actual tab —
+            // only surfaced on real phones because mobile browsers fire a
+            // resize event when their toolbar collapses/expands mid-scroll
+            // (re-running this while compact), which desktop doesn't do.
+            // offsetLeft/offsetWidth read the untransformed layout box, so
+            // they're immune to the ancestor's scale either way.
+            var w = Math.max(50, item.offsetWidth - 14);
+            var x = item.offsetLeft + (item.offsetWidth - w) / 2;
 
             if (instant || reduceMotion) { glass.style.transition = 'none'; }
             glass.style.width = w + 'px';
