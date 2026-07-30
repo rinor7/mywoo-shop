@@ -548,6 +548,13 @@ body.is-locked-basic {
         gap: 22px;
         width: 100%;
         padding-bottom: 22px;
+
+        /* The bottom nav now floats above this overlay (see .mobile-bar
+           z-index rule) instead of being hidden by it — without this, its
+           own last results/content would sit hidden behind that bar. */
+        @include sm {
+            padding-bottom: var(--mobile-bar-clear, 76px);
+        }
     }
 
     &__form {
@@ -1240,16 +1247,22 @@ body.is-locked-basic {
     z-index: 90;
     display: none;
     grid-template-columns: repeat(5, 1fr);
-    /* Breathing room for the wider active pill below — without it, the
-       first/last tabs sit flush against the bar's own rounded ends, and a
-       wider chip there would crowd/clip against that curve. */
-    padding-inline: 6px;
-    border: 1px solid rgba(255, 255, 255, .4);
+    /* No padding here on purpose — the pill's own JS-computed margin
+       (main.js moveTo(), 7px) is the only source of horizontal spacing,
+       for the first/last tabs too. Stacking this padding on top of that
+       margin was exactly what made the end gaps read bigger/uneven vs.
+       the pill's 7px top/bottom gap. */
+    padding-inline: 0;
+    /* Dark glass test — same recipe as the light version, just tinted with
+       --ink instead of white, so it reads as a dark floating pill. Every
+       child color below is flipped to match (light text/icons on dark,
+       instead of dark-on-light). */
+    border: 1px solid rgba(255, 255, 255, .14);
     border-radius: var(--r-pill);
-    background: rgba(255, 255, 255, .55);
+    background: rgba(16, 17, 20, .72);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 18px 40px -12px rgba(16, 17, 20, .28), inset 0 1px 0 rgba(255, 255, 255, .5);
+    box-shadow: 0 18px 40px -12px rgba(16, 17, 20, .4), inset 0 1px 0 rgba(255, 255, 255, .1);
     overflow: hidden;
     /* The glass chip tracks a finger dragged across tabs (main.js Pointer
        Events) — without this, iOS/Android try to interpret that same
@@ -1258,6 +1271,18 @@ body.is-locked-basic {
     touch-action: none;
     max-width: 450px;
     margin: auto;
+    /* Shrinks slightly once scrolled (main.js toggles .is-compact past a
+       small threshold, same as the header's own is-stuck check). Anchored
+       to the bottom edge, not the center, so it settles down toward the
+       screen edge instead of shrinking in place and looking like it's
+       floating upward. */
+    transform-origin: bottom center;
+    transition: transform .3s var(--ease);
+
+    &.is-compact {
+        transform: scale(.8);
+    }
+
     @include sm {
         display: grid;
         border: unset;
@@ -1272,7 +1297,7 @@ body.is-locked-basic {
         gap: 4px;
         height: 62px;
         background: none;
-        color: var(--ink-soft);
+        color: rgba(255, 255, 255, .6);
         font-size: 10px;
         letter-spacing: .03em;
 
@@ -1292,11 +1317,11 @@ body.is-locked-basic {
         }
 
         &.is-active {
-            color: var(--ink);
+            color: #fff;
             font-weight: 700;
 
             i {
-                color: var(--accent-dark);
+                color: var(--accent);
             }
         }
     }
@@ -1312,7 +1337,7 @@ body.is-locked-basic {
         height: 48px;
         /* concentric with the bar's pill ends: inner r = outer r − inset */
         border-radius: var(--r-pill);
-        background: rgba(176, 123, 79, .15);
+        background: rgba(255, 255, 255, .12);
         opacity: 0;
         pointer-events: none;
         transition: transform .38s var(--ease-out), opacity var(--t) var(--ease);
@@ -1336,6 +1361,25 @@ body.is-locked-basic {
             z-index: 2;
         }
     }
+
+    /* Account avatar bubble is --ink-on-white everywhere else (header, etc)
+       — against this bar's own --ink background that's inverted to a light
+       chip so it doesn't vanish, but toned down to the same muted-grey
+       family as the other (unfilled) icons instead of solid white, which
+       stood out far more than everything else in the row. */
+    .icon-btn__avatar {
+        background: rgba(255, 255, 255, .18);
+        color: rgba(255, 255, 255, .85);
+    }
+}
+
+/* Search stays a full-screen takeover, but the bottom nav now floats on
+   top of it instead of being hidden underneath (search-overlay is z-index
+   130, well above the bar's normal 90) — scoped to search specifically via
+   the sibling selector so cart/menu drawers and other modals still cover
+   the bar as before; this is the only one meant to leave it visible. */
+.search-overlay.is-open ~ .mobile-bar {
+    z-index: 135;
 }
 
 /* ---------- Back to top ---------- */

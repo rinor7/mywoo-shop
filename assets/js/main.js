@@ -1365,6 +1365,56 @@
     }());
 
     /* ==========================================================
+       Mobile bar — shrinks after scrolling down a real distance,
+       grows back as soon as you reverse and scroll up that same
+       distance (not only once you're back at the very top).
+    ========================================================== */
+    (function () {
+        var bar = qs('.mobile-bar');
+        if (!bar) { return; }
+
+        var SCROLL_THRESHOLD = 60; // px of continuous scroll before it reacts
+
+        var lastY = window.scrollY;
+        var runStartY = lastY; // where the current scroll direction began
+        var dir = 0;
+        var ticking = false;
+
+        function onScroll() {
+            var y = window.scrollY;
+            var delta = y - lastY;
+
+            if (delta !== 0) {
+                var newDir = delta > 0 ? 1 : -1;
+                if (newDir !== dir) {
+                    // direction just flipped — measure the next threshold
+                    // from here, not from wherever the page started.
+                    dir = newDir;
+                    runStartY = lastY;
+                }
+            }
+
+            if (y <= 10) {
+                bar.classList.remove('is-compact');
+            } else if (dir === 1 && y - runStartY > SCROLL_THRESHOLD) {
+                bar.classList.add('is-compact');
+            } else if (dir === -1 && runStartY - y > SCROLL_THRESHOLD) {
+                bar.classList.remove('is-compact');
+            }
+
+            lastY = y;
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function () {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(onScroll);
+            }
+        }, { passive: true });
+    }());
+
+    /* ==========================================================
        Mobile bar — glass chip glides between tabs (WhatsApp-style)
     ========================================================== */
     (function () {
@@ -1378,9 +1428,18 @@
         function moveTo(item, instant) {
             var b = bar.getBoundingClientRect();
             var e = item.getBoundingClientRect();
-            var x = e.left - b.left + (e.width - glass.offsetWidth) / 2;
+            // Fill the tab's own column with a fixed 7px margin each side
+            // (matching the pill's own 7px top/bottom gap exactly, now that
+            // .mobile-bar itself has no padding-inline of its own to stack
+            // on top of this), instead of a fixed CSS width — .mobile-bar
+            // caps at max-width:450px, so on anything close to that width
+            // each of the 5 equal columns is a lot wider than a fixed pill,
+            // leaving a big gap around it unrelated to the bar's padding.
+            var w = Math.max(50, e.width - 14);
+            var x = e.left - b.left + (e.width - w) / 2;
 
             if (instant || reduceMotion) { glass.style.transition = 'none'; }
+            glass.style.width = w + 'px';
             glass.style.transform = 'translateX(' + x + 'px)';
             glass.classList.add('is-on');
 
