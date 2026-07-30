@@ -1462,7 +1462,21 @@
             if (item) { moveTo(item); }
         });
 
+        // Width only — a resize this listener actually needs to react to
+        // (columns only ever change on real orientation/window-width
+        // changes). Mobile browsers also fire plain resize events for
+        // HEIGHT-only changes with no width change at all: their toolbar
+        // collapsing/expanding mid-scroll, or opening the search overlay
+        // (scroll-lock, on-screen keyboard). Those used to re-run moveTo()
+        // targeting whatever page tab is server-marked .is-active, which
+        // could interrupt/redirect an in-flight glide from a just-tapped
+        // button (e.g. Search, which never becomes .is-active itself) —
+        // landing the chip stranded between the two.
+        var lastBarWidth = window.innerWidth;
         window.addEventListener('resize', function () {
+            if (window.innerWidth === lastBarWidth) { return; }
+            lastBarWidth = window.innerWidth;
+
             var current = bar.querySelector('.is-active');
             if (current) { moveTo(current, true); }
         });
