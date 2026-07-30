@@ -93,9 +93,11 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, .82);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* Same glass recipe as .mobile-bar (background/blur/saturate) — was
+       running its own, more opaque numbers with no saturate boost before. */
+    background: rgba(255, 255, 255, .55);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid transparent;
     box-shadow: 0 16px 32px -12px rgba(16, 17, 20, .12);
     transition: background-color var(--t) var(--ease),
@@ -104,9 +106,9 @@
                 transform var(--t) var(--ease);
 
     &.is-stuck {
-        background: rgba(255, 255, 255, .5);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        /* Glass itself stays identical to the base state (and to
+           .mobile-bar) — only the divider line + shadow strengthen once
+           stuck, to mark the header's edge against scrolled content. */
         border-bottom-color: var(--line);
         box-shadow: 0 20px 40px -14px rgba(16, 17, 20, .18);
     }

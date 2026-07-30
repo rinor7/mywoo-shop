@@ -1247,6 +1247,11 @@ body.is-locked-basic {
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 0 18px 40px -12px rgba(16, 17, 20, .28), inset 0 1px 0 rgba(255, 255, 255, .5);
     overflow: hidden;
+    /* The glass chip tracks a finger dragged across tabs (main.js Pointer
+       Events) — without this, iOS/Android try to interpret that same
+       horizontal drag as a native scroll/gesture first, which eats some of
+       the pointermove events and makes the glide feel laggy or skip tabs. */
+    touch-action: none;
 
     @include sm {
         display: grid;

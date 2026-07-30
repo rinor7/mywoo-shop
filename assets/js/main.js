@@ -1403,6 +1403,52 @@
             var current = bar.querySelector('.is-active');
             if (current) { moveTo(current, true); }
         });
+
+        // Drag-across-tabs, Instagram-style: sliding a finger from one icon
+        // to another glides the chip live as it crosses each tab, instead of
+        // only jumping on a plain tap. Pointer Events cover touch + mouse.
+        if (window.PointerEvent) {
+            var dragItem = null;
+            var startItem = null;
+
+            function itemAt(x, y) {
+                var el = document.elementFromPoint(x, y);
+                return el ? el.closest('.mobile-bar__item') : null;
+            }
+
+            bar.addEventListener('pointerdown', function (e) {
+                var item = e.target.closest('.mobile-bar__item');
+                if (item) { dragItem = item; startItem = item; }
+            });
+
+            bar.addEventListener('pointermove', function (e) {
+                if (!dragItem) { return; }
+                var item = itemAt(e.clientX, e.clientY);
+                if (item && item !== dragItem) {
+                    dragItem = item;
+                    moveTo(item);
+                }
+            });
+
+            bar.addEventListener('pointerup', function () {
+                if (!dragItem) { return; }
+                // A plain tap (no movement) already gets a native click of
+                // its own — only commit here when the finger actually
+                // crossed onto a different tab mid-drag.
+                var finalItem = dragItem;
+                var moved = finalItem !== startItem;
+                dragItem = null;
+                startItem = null;
+                if (moved) { finalItem.click(); }
+            });
+
+            bar.addEventListener('pointercancel', function () {
+                dragItem = null;
+                startItem = null;
+                var current = bar.querySelector('.is-active');
+                if (current) { moveTo(current, true); }
+            });
+        }
     }());
 
     /* ==========================================================

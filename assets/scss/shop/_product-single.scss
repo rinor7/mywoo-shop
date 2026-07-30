@@ -500,7 +500,10 @@
     right: 0;
     bottom: 0;
     z-index: 95;
-    background: #fff;
+    /* Same glass recipe as the header/.mobile-bar — was flat opaque white. */
+    background: rgba(255, 255, 255, .55);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-top: 1px solid var(--line);
     box-shadow: 0 -12px 32px rgba(16, 17, 20, .08);
     transform: translateY(100%);
@@ -612,9 +615,11 @@
 
         border: 1px solid var(--line);
         border-radius: var(--r-lg);
-        background: rgba(255, 255, 255, .92);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
+        /* Same glass recipe as .mobile-bar/header — was its own, more
+           opaque numbers with no saturate boost. */
+        background: rgba(255, 255, 255, .55);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
         box-shadow: var(--shadow-lg);
         overflow: hidden;
     }
