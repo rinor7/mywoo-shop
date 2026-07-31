@@ -9,8 +9,9 @@
  *
  * Tabs, top to bottom: Global Settings + Header Settings (native ACF
  * field group, see acf-json/group_683a451131cc8.json — header nav
- * content lives there too, alongside Header Sticky) then, appended
- * here: Announcement Bar, Shop, Single Product.
+ * content, Header Sticky, search suggestions, and the announcement
+ * bar fields all live there too) then, appended here: Shop, Single
+ * Product.
  *
  * To add a new setting: put it under the existing tab that matches its
  * topic, or add a new `'type' => 'tab'` field following the pattern
@@ -31,41 +32,6 @@ add_action(
 		}
 
 		$parent = 'group_683a451131cc8';
-
-		/* ============ Tab: Announcement Bar ============ */
-		acf_add_local_field(
-			array(
-				'key'       => 'field_ms_tab_announce',
-				'parent'    => $parent,
-				'label'     => __( 'Announcement Bar', 'base-theme' ),
-				'type'      => 'tab',
-				'placement' => 'top',
-			)
-		);
-
-		acf_add_local_field(
-			array(
-				'key'           => 'field_ms_announce_enabled',
-				'parent'        => $parent,
-				'name'          => 'announce_enabled',
-				'label'         => __( 'Show announcement bar', 'base-theme' ),
-				'type'          => 'true_false',
-				'ui'            => 1,
-				'default_value' => 1,
-			)
-		);
-
-		acf_add_local_field(
-			array(
-				'key'          => 'field_ms_announce_messages',
-				'parent'       => $parent,
-				'name'         => 'announce_messages',
-				'label'        => __( 'Messages', 'base-theme' ),
-				'type'         => 'textarea',
-				'rows'         => 4,
-				'instructions' => __( 'One message per line — they rotate automatically. Leave empty to hide the bar.', 'base-theme' ),
-			)
-		);
 
 		/* ============ Tab: Shop ============ */
 		acf_add_local_field(

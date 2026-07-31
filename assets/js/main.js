@@ -1264,28 +1264,6 @@
     }());
 
     /* ==========================================================
-       Newsletter (front-end only for now)
-    ========================================================== */
-    (function () {
-        var form = qs('.js-newsletter');
-        if (!form) { return; }
-
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            var input = form.querySelector('input[type="email"]');
-            if (!input || !input.value || input.value.indexOf('@') === -1) {
-                toast(i18n.error, 'fa-triangle-exclamation');
-                if (input) { input.focus(); }
-                return;
-            }
-
-            toast('Thanks — check your inbox to confirm.', 'fa-envelope-circle-check');
-            form.reset();
-        });
-    }());
-
-    /* ==========================================================
        Reveal on scroll
     ========================================================== */
     (function () {

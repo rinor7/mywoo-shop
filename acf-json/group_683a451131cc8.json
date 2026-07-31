@@ -91,6 +91,27 @@
             "append": ""
         },
         {
+            "key": "field_ms_enable_multilingual",
+            "label": "Enable multilingual",
+            "name": "enable_multilingual",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Shows the language switcher when Polylang is active and more than one language is configured. Turning this off hides all language UI — nothing breaks either way.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "allow_in_bindings": 0
+        },
+        {
             "key": "field_6840e5f5fe18c",
             "label": "Header Settings",
             "name": "",
@@ -157,6 +178,90 @@
             "allow_null": 0,
             "layout": "horizontal",
             "allow_in_bindings": 0
+        },
+        {
+            "key": "field_ms_search_suggest_label",
+            "label": "Heading",
+            "name": "search_suggest_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Shown above the quick-search chips in the search overlay.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "Popular right now",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_ms_search_suggest_terms",
+            "label": "Search terms",
+            "name": "search_suggest_terms",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "One per line. Each becomes a chip that searches your products for that phrase. Leave empty to hide the block.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "rows": 6,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_ms_announce_enabled",
+            "label": "Show announcement bar",
+            "name": "announce_enabled",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_ms_announce_messages",
+            "label": "Messages",
+            "name": "announce_messages",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "One message per line — they rotate automatically. Leave empty to hide the bar.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "rows": 4,
+            "placeholder": "",
+            "new_lines": ""
         }
     ],
     "location": [
@@ -180,5 +285,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1785282715
+    "modified": 1785283400
 }

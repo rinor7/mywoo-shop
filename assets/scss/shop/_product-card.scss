@@ -383,6 +383,24 @@
     }
 }
 
+/* "Complete the look" (product page) and "Complete the ensemble" (cart) show
+   5 rather than the default 4 — full breakpoint set redeclared rather than
+   just overriding the base rule, since this selector's extra ancestor class
+   makes it more specific than .product-grid's own @include lg/md rules and
+   would otherwise win at every width, not just desktop. */
+.pdp-pairings .product-grid,
+.cart-ensemble .product-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+
+    @include lg {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include md {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 /* New arrivals / Categories / Product tabs / Lookbook: eyebrow reads plain
    ink ONLY when the title below it is empty (eyebrow standing alone) — with
    a title present, it keeps the normal accent color like everywhere else. */

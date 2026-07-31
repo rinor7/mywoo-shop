@@ -349,6 +349,8 @@ add_filter( 'wp_insert_post_data', 'myshop_force_product_comments_open', 10, 2 )
  * Never items already in the cart. Rendered by the cart template.
  */
 function myshop_cart_ensemble() {
+	$limit = 5;
+
 	$in_cart = array();
 	foreach ( WC()->cart->get_cart() as $item ) {
 		$in_cart[] = $item['product_id'];
@@ -363,7 +365,7 @@ function myshop_cart_ensemble() {
 		if ( $product && 'publish' === $product->get_status() && ! in_array( $id, $in_cart, true ) ) {
 			$products[] = myshop_normalize_product( $product );
 		}
-		if ( count( $products ) >= 4 ) {
+		if ( count( $products ) >= $limit ) {
 			break;
 		}
 	}
@@ -372,7 +374,7 @@ function myshop_cart_ensemble() {
 	if ( empty( $products ) ) {
 		$cross_ids = WC()->cart->get_cross_sells();
 		if ( ! empty( $cross_ids ) ) {
-			foreach ( array_slice( $cross_ids, 0, 4 ) as $id ) {
+			foreach ( array_slice( $cross_ids, 0, $limit ) as $id ) {
 				$product = wc_get_product( $id );
 				if ( $product && 'publish' === $product->get_status() ) {
 					$products[] = myshop_normalize_product( $product );
@@ -392,7 +394,7 @@ function myshop_cart_ensemble() {
 			if ( ! in_array( $candidate['id'], $in_cart, true ) ) {
 				$products[] = $candidate;
 			}
-			if ( count( $products ) >= 4 ) {
+			if ( count( $products ) >= $limit ) {
 				break;
 			}
 		}
@@ -410,14 +412,13 @@ function myshop_cart_ensemble() {
 			myshop_section_head(
 				array(
 					'eyebrow' => $title,
-					'center'  => true,
 				)
 			);
 		}
 		?>
 		<div class="product-grid">
 			<?php foreach ( $products as $i => $product ) : ?>
-				<?php myshop_product_card( $product, $i ); ?>
+				<?php myshop_product_card( $product, $i, 'minimal' ); ?>
 			<?php endforeach; ?>
 		</div>
 	</section>

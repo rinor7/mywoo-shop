@@ -21,7 +21,7 @@ if ( ! $product || post_password_required() ) {
 
 $gallery_ids = myshop_product_gallery_ids( $product );
 $specs       = myshop_product_specs( $product );
-$pairings    = myshop_product_pairings( $product, 4 );
+$pairings    = myshop_product_pairings( $product, 5 );
 $gallery_bg  = myshop_product_gallery_background( $product );
 
 $terms   = get_the_terms( $product->get_id(), 'product_cat' );
@@ -322,7 +322,7 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 
 				<div class="product-grid">
 					<?php foreach ( $pairings as $i => $pairing ) : ?>
-						<?php myshop_product_card( $pairing, $i ); ?>
+						<?php myshop_product_card( $pairing, $i, 'minimal' ); ?>
 					<?php endforeach; ?>
 				</div>
 			</div>

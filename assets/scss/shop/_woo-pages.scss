@@ -770,6 +770,15 @@ body.woocommerce-cart .woocommerce-notices-wrapper {
 /* ---------- Ensemble ---------- */
 .cart-ensemble {
     margin-top: clamp(56px, 7vw, 96px);
+
+    /* Same rule as every other sec-head: the eyebrow reads as accent-colored
+       only when a title sits below it. This section never sets a title, so
+       its eyebrow doubles as the heading and needs the ink color instead —
+       see _account.scss / _product-single.scss / _product-card.scss for the
+       other cases. */
+    .sec-head__text:not(:has(.sec-head__title)) .eyebrow {
+        color: var(--ink);
+    }
 }
 
 /* ---------- Cart table → cards on mobile ---------- */

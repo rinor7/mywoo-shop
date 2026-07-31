@@ -75,7 +75,7 @@
    single var(--section-y) gap instead of stacking (previous section's bottom
    + next section's top). A section with its own visible background (ink,
    bone…) still needs internal breathing room independent of that gap — those
-   add their own padding-block on top (see .deal, .newsletter, .section--bone). */
+   add their own padding-block on top (see .deal, .section--bone). */
 .section {
     position: relative;
     margin-block: var(--section-y);
@@ -87,7 +87,7 @@
    footer (glaring when both are dark, like Newsletter → Footer). The footer
    already has its own padding-top for breathing room, so drop this one. */
 .site-frontpage > .section:last-child {
-    margin-bottom: 0;
+    // margin-bottom: 0;
 }
 
 .section--tight {

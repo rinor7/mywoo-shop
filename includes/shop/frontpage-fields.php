@@ -367,13 +367,6 @@ function myshop_register_frontpage_fields() {
 				),
 			)
 		),
-
-		/* ---- Newsletter ---- */
-		myshop_tab( 'Newsletter' ),
-		myshop_f( 'nl_eyebrow', __( 'Eyebrow', 'base-theme' ), 'text', $half ),
-		myshop_f( 'nl_title', __( 'Title', 'base-theme' ), 'text', $half ),
-		myshop_f( 'nl_text', __( 'Text', 'base-theme' ), 'textarea', array( 'rows' => 2 ) + $half ),
-		myshop_f( 'nl_note', __( 'Small note under the form', 'base-theme' ), 'text', $half ),
 	);
 
 	acf_add_local_field_group(

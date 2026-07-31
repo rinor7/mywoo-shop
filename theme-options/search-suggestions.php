@@ -1,62 +1,16 @@
 <?php
 /**
- * Global Settings → Search Suggestions
- *
- * Own field group on the Global Settings options page for the
- * "Popular right now" chips inside the search overlay.
+ * Global Settings → Header Settings → the "Popular right now" chips inside
+ * the search overlay. Fields live in the Header Settings tab, right after
+ * Header Navigation Content (acf-json/group_683a451131cc8.json,
+ * field_ms_search_suggest_label / field_ms_search_suggest_terms) — not
+ * registered here, so there's no tab of their own.
  * One term per line; leave the box empty to hide the whole block.
  *
  * @package Base Theme
  */
 
 defined( 'ABSPATH' ) || exit;
-
-add_action(
-	'acf/init',
-	function () {
-		if ( ! function_exists( 'acf_add_local_field' ) ) {
-			return;
-		}
-
-		// Appended to the existing "Global Settings" group (acf-json) so they
-		// show as a third tab there, next to Header Settings.
-		$parent = 'group_683a451131cc8';
-
-		acf_add_local_field(
-			array(
-				'key'       => 'field_ms_tab_search_suggest',
-				'parent'    => $parent,
-				'label'     => __( 'Search Suggestions', 'base-theme' ),
-				'type'      => 'tab',
-				'placement' => 'top',
-			)
-		);
-
-		acf_add_local_field(
-			array(
-				'key'          => 'field_ms_search_suggest_label',
-				'parent'       => $parent,
-				'name'         => 'search_suggest_label',
-				'label'        => __( 'Heading', 'base-theme' ),
-				'type'         => 'text',
-				'placeholder'  => __( 'Popular right now', 'base-theme' ),
-				'instructions' => __( 'Shown above the quick-search chips in the search overlay.', 'base-theme' ),
-			)
-		);
-
-		acf_add_local_field(
-			array(
-				'key'          => 'field_ms_search_suggest_terms',
-				'parent'       => $parent,
-				'name'         => 'search_suggest_terms',
-				'label'        => __( 'Search terms', 'base-theme' ),
-				'type'         => 'textarea',
-				'rows'         => 6,
-				'instructions' => __( 'One per line. Each becomes a chip that searches your products for that phrase. Leave empty to hide the block.', 'base-theme' ),
-			)
-		);
-	}
-);
 
 /**
  * The configured suggestion terms as a clean array (may be empty).

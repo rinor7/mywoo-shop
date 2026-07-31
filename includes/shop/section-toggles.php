@@ -30,7 +30,6 @@ function myshop_home_sections() {
 		'bestsellers'  => array( __( 'Product tabs', 'base-theme' ), 'bestsellers' ),
 		'brands'       => array( __( 'Makers marquee', 'base-theme' ), 'brands' ),
 		'lookbook'     => array( __( 'Shop the look', 'base-theme' ), 'lookbook' ),
-		'newsletter'   => array( __( 'Newsletter', 'base-theme' ), 'newsletter' ),
 	);
 }
 

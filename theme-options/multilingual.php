@@ -6,45 +6,15 @@
  * configured, or the Global Settings toggle switched off — the switcher
  * simply doesn't render and no Polylang function is ever called unguarded.
  *
+ * The "Enable multilingual" toggle itself lives in the Global Settings tab
+ * (acf-json/group_683a451131cc8.json, field_ms_enable_multilingual) — not
+ * registered here, so it sits under Global Settings rather than a tab of
+ * its own.
+ *
  * @package Base Theme
  */
 
 defined( 'ABSPATH' ) || exit;
-
-/* ---------- Global Settings → Multilingual tab ---------- */
-add_action(
-	'acf/init',
-	function () {
-		if ( ! function_exists( 'acf_add_local_field' ) ) {
-			return;
-		}
-
-		$parent = 'group_683a451131cc8'; // existing "Global Settings" group (acf-json)
-
-		acf_add_local_field(
-			array(
-				'key'       => 'field_ms_tab_multilingual',
-				'parent'    => $parent,
-				'label'     => __( 'Multilingual', 'base-theme' ),
-				'type'      => 'tab',
-				'placement' => 'top',
-			)
-		);
-
-		acf_add_local_field(
-			array(
-				'key'           => 'field_ms_enable_multilingual',
-				'parent'        => $parent,
-				'name'          => 'enable_multilingual',
-				'label'         => __( 'Enable multilingual', 'base-theme' ),
-				'type'          => 'true_false',
-				'ui'            => 1,
-				'default_value' => 1,
-				'instructions'  => __( 'Shows the language switcher when Polylang is active and more than one language is configured. Turning this off hides all language UI — nothing breaks either way.', 'base-theme' ),
-			)
-		);
-	}
-);
 
 /**
  * Master switch: ACF toggle on (or never saved) AND Polylang active.
