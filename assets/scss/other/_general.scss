@@ -136,10 +136,11 @@ body:not(.woocommerce-account, .woocommerce-cart, .woocommerce-checkout) .site-d
 
         /* The 760px prose width is for hand-typed page content — a product
            table (e.g. the wishlist page, a plain page rather than a
-           My Account endpoint) needs more room, just not the full shop-wide
-           stage cart/checkout get. */
+           My Account endpoint) needs the same full shop-wide stage
+           cart/checkout get, not the narrow prose column. */
         &:has(.wishlist_table) {
-            max-width: 1040px;
+            max-width: calc(var(--container) + var(--gutter) * 2);
+            padding-inline: var(--gutter);
         }
     }
 }

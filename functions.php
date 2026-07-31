@@ -92,6 +92,7 @@ require get_template_directory() . '/includes/shop/orders.php';
 require get_template_directory() . '/includes/blog-single.php';
 
 // Include files from the 'theme-options' directory
+require get_template_directory() . '/theme-options/required-plugins.php';
 require get_template_directory() . '/theme-options/global-colors.php';
 require get_template_directory() . '/theme-options/post-types.php';
 require get_template_directory() . '/theme-options/menus.php';

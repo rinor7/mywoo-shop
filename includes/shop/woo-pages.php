@@ -409,8 +409,8 @@ function myshop_cart_ensemble() {
 		if ( $title ) {
 			myshop_section_head(
 				array(
-					'title'  => $title,
-					'center' => true,
+					'eyebrow' => $title,
+					'center'  => true,
 				)
 			);
 		}

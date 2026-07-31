@@ -22,12 +22,14 @@ $cart_subtitle = function_exists( 'myshop_cart_subtitle' ) ? myshop_cart_subtitl
 
 	<?php if ( $cart_title || $cart_subtitle ) : ?>
 		<header class="myshop-cart__head">
-			<?php if ( $cart_title ) : ?>
-				<h1 class="myshop-cart__title"><?php echo esc_html( $cart_title ); ?></h1>
-			<?php endif; ?>
-			<?php if ( $cart_subtitle ) : ?>
-				<p class="myshop-cart__sub"><?php echo esc_html( $cart_subtitle ); ?></p>
-			<?php endif; ?>
+			<div class="sec-head__text">
+				<?php if ( $cart_title ) : ?>
+					<h1 class="sec-head__title"><?php echo esc_html( $cart_title ); ?></h1>
+				<?php endif; ?>
+				<?php if ( $cart_subtitle ) : ?>
+					<p class="sec-head__sub"><?php echo esc_html( $cart_subtitle ); ?></p>
+				<?php endif; ?>
+			</div>
 		</header>
 	<?php endif; ?>
 
