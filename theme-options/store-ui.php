@@ -276,6 +276,43 @@ add_action(
 
 		acf_add_local_field(
 			array(
+				'key'           => 'field_ms_cart_ensemble_card_bg_type',
+				'parent'        => $parent,
+				'name'          => 'cart_ensemble_card_bg_type',
+				'label'         => __( '"Complete the ensemble" — product box background type (empty = sitewide default)', 'base-theme' ),
+				'type'          => 'button_group',
+				'choices'       => array(
+					'color'    => __( 'Solid color', 'base-theme' ),
+					'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+				),
+			)
+		);
+
+		acf_add_local_field(
+			array(
+				'key'               => 'field_ms_cart_ensemble_card_bg_color',
+				'parent'            => $parent,
+				'name'              => 'cart_ensemble_card_bg_color',
+				'label'             => __( 'Color', 'base-theme' ),
+				'type'              => 'color_picker',
+				'conditional_logic' => array( array( array( 'field' => 'field_ms_cart_ensemble_card_bg_type', 'operator' => '==', 'value' => 'color' ) ) ),
+			)
+		);
+
+		acf_add_local_field(
+			array(
+				'key'               => 'field_ms_cart_ensemble_card_bg_css',
+				'parent'            => $parent,
+				'name'              => 'cart_ensemble_card_bg_css',
+				'label'             => __( 'Gradient / custom CSS', 'base-theme' ),
+				'type'              => 'text',
+				'placeholder'       => 'linear-gradient(150deg, #f4f2ed, #e7e3db)',
+				'conditional_logic' => array( array( array( 'field' => 'field_ms_cart_ensemble_card_bg_type', 'operator' => '==', 'value' => 'gradient' ) ) ),
+			)
+		);
+
+		acf_add_local_field(
+			array(
 				'key'           => 'field_ms_cart_auto_update',
 				'parent'        => $parent,
 				'name'          => 'cart_auto_update',

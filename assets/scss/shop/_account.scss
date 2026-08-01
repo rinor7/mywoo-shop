@@ -306,6 +306,13 @@ body.woocommerce-account {
         font-size: 13.5px;
         line-height: 1.65;
         color: inherit;
+
+        /* The security card interpolates the account's email address —
+           one unbroken string with no natural break point. On a narrow
+           mobile card that's long enough to force the card (and, since
+           nothing here clips it, the whole page) wider than the
+           viewport — same fix already used for order numbers/notices. */
+        word-break: break-word;
     }
 
     &__address {

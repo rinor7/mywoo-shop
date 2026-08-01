@@ -230,6 +230,17 @@
 .cat-slider {
     display: none;
 
+    /* Same breakout as .products__carousel (New arrivals, right above this
+       section): break out of .shop-container's gutter and re-add it as the
+       swiper's own padding, so a slide mid-peek or scrolled to the end is
+       clipped at a consistent gutter-width inset instead of cutting flush
+       against the container's edge. */
+    margin-inline: calc(-1 * var(--gutter));
+
+    .swiper {
+        padding-inline: var(--gutter);
+    }
+
     @include sm {
         display: block;
     }

@@ -405,6 +405,11 @@ function myshop_cart_ensemble() {
 	}
 
 	$title = function_exists( 'myshop_cart_ensemble_title' ) ? myshop_cart_ensemble_title() : '';
+
+	// Admin's color/gradient (Global Settings → Cart → "Complete the ensemble")
+	// overrides the sitewide product-box background just for these cards.
+	$card_bg_type = myshop_opt( 'cart_ensemble_card_bg_type', '' );
+	$card_bg      = 'color' === $card_bg_type ? myshop_opt( 'cart_ensemble_card_bg_color', '' ) : ( 'gradient' === $card_bg_type ? myshop_opt( 'cart_ensemble_card_bg_css', '' ) : '' );
 	?>
 	<section class="cart-ensemble">
 		<?php
@@ -418,7 +423,7 @@ function myshop_cart_ensemble() {
 		?>
 		<div class="product-grid">
 			<?php foreach ( $products as $i => $product ) : ?>
-				<?php myshop_product_card( $product, $i, 'minimal' ); ?>
+				<?php myshop_product_card( $product, $i, 'minimal', $card_bg ); ?>
 			<?php endforeach; ?>
 		</div>
 
@@ -432,7 +437,7 @@ function myshop_cart_ensemble() {
 				<div class="swiper-wrapper">
 					<?php foreach ( $products as $i => $product ) : ?>
 						<div class="swiper-slide">
-							<?php myshop_product_card( $product, $i, 'minimal' ); ?>
+							<?php myshop_product_card( $product, $i, 'minimal', $card_bg ); ?>
 						</div>
 					<?php endforeach; ?>
 				</div>

@@ -489,17 +489,15 @@
     border-radius: var(--r-pill);
     background: #fff;
 
-    /* Same breakout as .shop-pills, both sides here (that one only needed
-       the right edge) — @include md, not xs, to match .shop-pills' own
-       breakpoint instead of only kicking in on very small phones. width:
-       100% dropped in favor of the margin/padding pair: with it still set,
-       100% would resolve against the unshifted parent and the negative
-       margin would just slide the whole box left without extending it,
-       leaving the right edge short instead of flush. */
+    /* Unlike .shop-pills (individual pills with no shared background/border
+       of their own — breaking that row out to the true edge is invisible),
+       this bar IS its own bordered, backgrounded pill. Bleeding its box to
+       the screen edge — as a previous fix did, copying .shop-pills' trick —
+       strips the bar's own left/right inset, so it reads as "no padding"
+       against the heading above it. Just scroll its own overflow in place;
+       the bar stays inset like any other card. */
     @include md {
         overflow-x: auto;
-        margin-inline: calc(-1 * var(--gutter));
-        padding-inline: var(--gutter);
     }
 }
 
