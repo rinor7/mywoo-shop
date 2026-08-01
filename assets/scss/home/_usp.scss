@@ -6,6 +6,10 @@
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
 
+    .products__carousel {
+        display: none;
+    }
+
     &__list {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -16,6 +20,26 @@
 
         @include xxs {
             grid-template-columns: 1fr;
+        }
+    }
+
+    /* Declared after &__list on purpose — display:none here needs to beat
+       that unconditional display:grid at equal specificity, which only
+       works if this rule comes later in source order. */
+    @include sm {
+        padding-block: 22px;
+
+        &__list {
+            display: none;
+        }
+
+        .products__carousel {
+            display: block;
+        }
+
+        .usp__item {
+            padding: 0;
+            border: 0;
         }
     }
 

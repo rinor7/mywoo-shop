@@ -346,6 +346,20 @@ function myshop_register_frontpage_fields() {
 			'ui_off_text'   => __( 'Hidden', 'base-theme' ),
 		) + $third ),
 		myshop_f( 'look_btn_link', __( 'Button (empty = "Follow along" → the shop page)', 'base-theme' ), 'link', $third ),
+		myshop_f( 'look_card_bg_type', __( 'Product box background type (empty = sitewide default)', 'base-theme' ), 'button_group', array(
+			'choices' => array(
+				'color'    => __( 'Solid color', 'base-theme' ),
+				'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+			),
+			'instructions' => __( 'Tiles here are full-bleed lifestyle photos (cover-fit), not isolated product cutouts, so this has no visible effect yet — kept for consistency with New arrivals/Product tabs in case that changes.', 'base-theme' ),
+		) + $third ),
+		myshop_f( 'look_card_bg_color', __( 'Color', 'base-theme' ), 'color_picker', array(
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_look_card_bg_type', 'operator' => '==', 'value' => 'color' ) ) ),
+		) + $third ),
+		myshop_f( 'look_card_bg_css', __( 'Gradient / custom CSS', 'base-theme' ), 'text', array(
+			'placeholder'       => 'linear-gradient(150deg, #f4f2ed, #e7e3db)',
+			'conditional_logic' => array( array( array( 'field' => 'field_ms_look_card_bg_type', 'operator' => '==', 'value' => 'gradient' ) ) ),
+		) + $third ),
 		myshop_f( 'look_max_price', __( 'Only let the Product picker below show items under this price (optional)', 'base-theme' ), 'number', array(
 			'min'  => 0,
 			'step' => 0.01,

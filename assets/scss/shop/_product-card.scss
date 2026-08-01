@@ -383,21 +383,34 @@
     }
 }
 
-/* "Complete the look" (product page) and "Complete the ensemble" (cart) show
-   5 rather than the default 4 — full breakpoint set redeclared rather than
-   just overriding the base rule, since this selector's extra ancestor class
-   makes it more specific than .product-grid's own @include lg/md rules and
-   would otherwise win at every width, not just desktop. */
-.pdp-pairings .product-grid,
-.cart-ensemble .product-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-
-    @include lg {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+/* "Complete the look" (product page), "Complete the ensemble" (cart), and
+   "Curated for you" (account dashboard) show 5 in one row rather than the
+   default 4 — and rather than wrapping to a second row once 5 no longer
+   fit, they swap to the same slider + progress bar as New arrivals below
+   1200px (markup renders both; this just toggles which one is visible —
+   see .js-product-slider in main.js, already wired for that exact
+   class/structure). */
+.pdp-pairings,
+.cart-ensemble,
+.account-curated {
+    .product-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
-    @include md {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .products__carousel,
+    .products__progress {
+        display: none;
+    }
+
+    @include lg {
+        .product-grid {
+            display: none;
+        }
+
+        .products__carousel,
+        .products__progress {
+            display: block;
+        }
     }
 }
 
@@ -414,6 +427,26 @@
 /* ---------- Carousel ---------- */
 .products__carousel {
     position: relative;
+
+    /* Same trick as .shop-pills (_shop-archive.scss): break out of
+       .shop-container's own gutter, then re-add it as the swiper's own
+       padding instead of inheriting it from the ancestor. Swiper sizes its
+       slide viewport off its own box, so this keeps a slide that's mid-peek
+       or scrolled to the end clipped at a consistent gutter-width inset
+       instead of cropping flush against the true edge. */
+    margin-inline: calc(-1 * var(--gutter));
+
+    .swiper {
+        padding-inline: var(--gutter);
+    }
+}
+
+/* Account dashboard only, by request — the "Choose options" button collides
+   with the quick-view button on this slider's cards. Same reasoning as the
+   @include sm rule above: quick-view is a pointer nicety — the card link
+   covers it — so it's the one that goes. */
+.account-curated .pcard__quick {
+    display: none;
 }
 
 .products__progress {

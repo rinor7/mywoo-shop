@@ -206,14 +206,14 @@ if ( myshop_account_card_enabled( 'acct_curated_enabled' ) ) {
 		if ( $curated_product && 'publish' === $curated_product->get_status() ) {
 			$curated[] = myshop_normalize_product( $curated_product );
 		}
-		if ( count( $curated ) >= 4 ) {
+		if ( count( $curated ) >= 5 ) {
 			break;
 		}
 	}
 
 	// No picks (or none still published) — fall back to current bestsellers.
 	if ( ! $curated ) {
-		$curated = myshop_get_products( array( 'limit' => 4, 'type' => 'bestseller' ) );
+		$curated = myshop_get_products( array( 'limit' => 5, 'type' => 'bestseller' ) );
 	}
 }
 ?>
@@ -254,8 +254,28 @@ if ( myshop_account_card_enabled( 'acct_curated_enabled' ) ) {
 
 		<div class="product-grid">
 			<?php foreach ( $curated as $i => $curated_product ) : ?>
-				<?php myshop_product_card( $curated_product, $i ); ?>
+				<?php myshop_product_card( $curated_product, $i, 'minimal' ); ?>
 			<?php endforeach; ?>
+		</div>
+
+		<?php
+		// Same products again, in the New arrivals slider markup — CSS shows
+		// only one of the two depending on viewport width (see .account-curated
+		// in _product-card.scss).
+		?>
+		<div class="products__carousel">
+			<div class="swiper js-product-slider">
+				<div class="swiper-wrapper">
+					<?php foreach ( $curated as $i => $curated_product ) : ?>
+						<div class="swiper-slide">
+							<?php myshop_product_card( $curated_product, $i, 'minimal' ); ?>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</div>
+		<div class="products__progress">
+			<span class="products__progress-bar js-product-progress"></span>
 		</div>
 	</section>
 <?php endif; ?>

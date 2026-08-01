@@ -476,9 +476,9 @@
                 slidesPerView: 1.25,
                 spaceBetween: 14,
                 breakpoints: {
-                    480: { slidesPerView: 2, spaceBetween: 16 },
-                    768: { slidesPerView: 3, spaceBetween: 20 },
-                    1200: { slidesPerView: 4, spaceBetween: 24 }
+                    480: { slidesPerView: 1.6, spaceBetween: 16 },
+                    768: { slidesPerView: 2.6, spaceBetween: 20 },
+                    1200: { slidesPerView: 3.6, spaceBetween: 24 }
                 },
                 on: {
                     init: updateProgress,
@@ -531,6 +531,52 @@
                     init: updateCategoryProgress,
                     resize: updateCategoryProgress,
                     progress: updateCategoryProgress
+                }
+            }));
+        }
+
+        // Lookbook mobile carousel — uniform tile size (unlike the category
+        // slider above), so this mirrors the New arrivals slider's simpler
+        // fixed-slidesPerView setup instead of category's freeMode/auto.
+        if (qs('.js-lookbook-slider')) {
+            var lookbookProgressBar = qs('.js-lookbook-progress');
+
+            var updateLookbookProgress = function (sw) {
+                if (!lookbookProgressBar) { return; }
+
+                var perView = sw.params.slidesPerView;
+                var total = sw.slides.length;
+                var ratio = Math.min(1, perView / total);
+
+                lookbookProgressBar.style.width = (ratio * 100) + '%';
+                lookbookProgressBar.style.transform =
+                    'translateX(' + (((1 - ratio) / ratio) * 100 * sw.progress) + '%)';
+            };
+
+            swipers.push(new Swiper('.js-lookbook-slider', {
+                slidesPerView: 1.4,
+                spaceBetween: 12,
+                breakpoints: {
+                    480: { slidesPerView: 2.2, spaceBetween: 14 }
+                },
+                on: {
+                    init: updateLookbookProgress,
+                    resize: updateLookbookProgress,
+                    progress: updateLookbookProgress
+                }
+            }));
+        }
+
+        // Trust bar mobile carousel — same uniform-slide setup as Lookbook,
+        // swapped in below 768px (see .usp in _usp.scss) instead of the
+        // 4-across list stacking to a full-width column per item. No
+        // progress bar — just 4 short items, the peek is signal enough.
+        if (qs('.js-usp-slider')) {
+            swipers.push(new Swiper('.js-usp-slider', {
+                slidesPerView: 1.8,
+                spaceBetween: 20,
+                breakpoints: {
+                    480: { slidesPerView: 2.4, spaceBetween: 24 }
                 }
             }));
         }

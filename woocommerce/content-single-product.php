@@ -325,6 +325,26 @@ foreach ( array( 'ps_stat1_value', 'ps_stat1_label', 'ps_stat2_value', 'ps_stat2
 						<?php myshop_product_card( $pairing, $i, 'minimal' ); ?>
 					<?php endforeach; ?>
 				</div>
+
+				<?php
+				// Same products again, in the New arrivals slider markup — CSS
+				// shows only one of the two depending on viewport width (see
+				// .pdp-pairings in _product-card.scss).
+				?>
+				<div class="products__carousel">
+					<div class="swiper js-product-slider">
+						<div class="swiper-wrapper">
+							<?php foreach ( $pairings as $i => $pairing ) : ?>
+								<div class="swiper-slide">
+									<?php myshop_product_card( $pairing, $i, 'minimal' ); ?>
+								</div>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				</div>
+				<div class="products__progress">
+					<span class="products__progress-bar js-product-progress"></span>
+				</div>
 			</div>
 		</section>
 	<?php endif; ?>

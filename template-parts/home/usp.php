@@ -40,5 +40,28 @@ if ( ! $items ) {
 				</li>
 			<?php endforeach; ?>
 		</ul>
+
+		<!-- Mobile only: same items, laid out as slides instead of stacking —
+			 swipeable row like the other mobile carousels (.js-usp-slider), not
+			 an auto-scrolling marquee, so the trust copy stays readable. No
+			 progress bar here — only 4 short items, the peeking next item is
+			 signal enough that there's more to swipe to. -->
+		<div class="products__carousel">
+			<div class="swiper js-usp-slider">
+				<div class="swiper-wrapper">
+					<?php foreach ( $items as $i => $item ) : ?>
+						<div class="swiper-slide">
+							<span class="usp__item">
+								<span class="usp__icon"><i class="fa-solid <?php echo esc_attr( $item[0] ); ?>" aria-hidden="true"></i></span>
+								<span class="usp__body">
+									<strong class="usp__title"><?php echo esc_html( $item[1] ); ?></strong>
+									<span class="usp__text"><?php echo wp_kses_post( $item[2] ); ?></span>
+								</span>
+							</span>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</div>
 	</div>
 </section>

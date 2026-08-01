@@ -453,10 +453,13 @@
         color: rgba(255, 255, 255, .65);
     }
 
+    /* Wrap, not stack: forcing flex-direction:column dropped the trailing
+       link to its own row even when the eyebrow/title were short enough to
+       share one line with it (e.g. "@myshop" + "Follow us"). flex-wrap only
+       breaks the link onto a second line once the two actually collide. */
     @include sm {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 18px;
+        flex-wrap: wrap;
+        row-gap: 18px;
     }
 }
 
