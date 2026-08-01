@@ -29,8 +29,16 @@ body.woocommerce-account {
     align-items: start;
     gap: clamp(28px, 4vw, 64px);
 
+    /* minmax(0, 1fr), not a bare 1fr — a bare track's automatic minimum is
+       its content's auto/min-content size, not 0. With the account-curated
+       carousel now nested in here, that let the track's size and the
+       swiper's own width-measurement chase each other into Chromium's
+       circular-sizing edge case, which resolves by clamping the track to
+       its internal max layout size (~33,554,400px) — the page-wide
+       horizontal scroll on mobile. minmax(0, ...) is what every other grid
+       in this file already uses to rule this out. */
     @include md {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
@@ -210,7 +218,7 @@ body.woocommerce-account {
     gap: clamp(12px, 1.4vw, 20px);
 
     @include sm {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 

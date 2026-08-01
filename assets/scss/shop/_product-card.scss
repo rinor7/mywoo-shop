@@ -449,6 +449,24 @@
     display: none;
 }
 
+/* .products__carousel's edge-to-edge breakout (above) assumes its ancestor
+   chain has exactly one gutter-width inset to cancel out — true on the
+   homepage/cart/product page's .shop-container, but on the account
+   dashboard this same carousel also sits inside the .account sidebar+content
+   grid, which shifts the actual available width out from under that
+   assumption and let the carousel's box push past the true viewport edge
+   (the page-wide horizontal scroll on mobile). Neutralize the breakout here
+   specifically — the carousel stays fully contained, same as .product-grid
+   right above it, instead of trying to bleed to an edge this layout can't
+   safely give it. */
+.account-curated .products__carousel {
+    margin-inline: 0;
+
+    .swiper {
+        padding-inline: 0;
+    }
+}
+
 .products__progress {
     height: 2px;
     margin-top: 30px;
