@@ -218,6 +218,13 @@ if ( myshop_account_card_enabled( 'acct_curated_enabled' ) ) {
 }
 ?>
 <?php if ( $curated ) : ?>
+	<?php
+	// Admin's color/gradient (Global Settings → Account Dashboard → "Curated
+	// for you") overrides the sitewide product-box background just for
+	// these cards.
+	$curated_card_bg_type = myshop_opt( 'acct_curated_card_bg_type', '' );
+	$curated_card_bg      = 'color' === $curated_card_bg_type ? myshop_opt( 'acct_curated_card_bg_color', '' ) : ( 'gradient' === $curated_card_bg_type ? myshop_opt( 'acct_curated_card_bg_css', '' ) : '' );
+	?>
 	<section class="account-curated">
 		<div class="sec-head">
 			<div class="sec-head__text">
@@ -254,7 +261,7 @@ if ( myshop_account_card_enabled( 'acct_curated_enabled' ) ) {
 
 		<div class="product-grid">
 			<?php foreach ( $curated as $i => $curated_product ) : ?>
-				<?php myshop_product_card( $curated_product, $i, 'minimal' ); ?>
+				<?php myshop_product_card( $curated_product, $i, 'minimal', $curated_card_bg ); ?>
 			<?php endforeach; ?>
 		</div>
 
@@ -268,7 +275,7 @@ if ( myshop_account_card_enabled( 'acct_curated_enabled' ) ) {
 				<div class="swiper-wrapper">
 					<?php foreach ( $curated as $i => $curated_product ) : ?>
 						<div class="swiper-slide">
-							<?php myshop_product_card( $curated_product, $i, 'minimal' ); ?>
+							<?php myshop_product_card( $curated_product, $i, 'minimal', $curated_card_bg ); ?>
 						</div>
 					<?php endforeach; ?>
 				</div>

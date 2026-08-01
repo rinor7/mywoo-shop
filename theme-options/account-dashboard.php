@@ -273,6 +273,39 @@ add_action(
 				'conditional_logic' => array( array( array( 'field' => 'field_ms_acct_curated_enabled', 'operator' => '==', 'value' => '1' ) ) ),
 			) )
 		);
+
+		acf_add_local_field(
+			$field( 'acct_curated_card_bg_type', __( '"Curated for you" — product box background type (empty = sitewide default)', 'base-theme' ), 'button_group', array(
+				'choices'           => array(
+					'color'    => __( 'Solid color', 'base-theme' ),
+					'gradient' => __( 'Gradient / custom CSS', 'base-theme' ),
+				),
+				'conditional_logic' => array( array( array( 'field' => 'field_ms_acct_curated_enabled', 'operator' => '==', 'value' => '1' ) ) ),
+			) )
+		);
+
+		acf_add_local_field(
+			$field( 'acct_curated_card_bg_color', __( 'Color', 'base-theme' ), 'color_picker', array(
+				'conditional_logic' => array(
+					array(
+						array( 'field' => 'field_ms_acct_curated_enabled', 'operator' => '==', 'value' => '1' ),
+						array( 'field' => 'field_ms_acct_curated_card_bg_type', 'operator' => '==', 'value' => 'color' ),
+					),
+				),
+			) )
+		);
+
+		acf_add_local_field(
+			$field( 'acct_curated_card_bg_css', __( 'Gradient / custom CSS', 'base-theme' ), 'text', array(
+				'placeholder'       => 'linear-gradient(150deg, #f4f2ed, #e7e3db)',
+				'conditional_logic' => array(
+					array(
+						array( 'field' => 'field_ms_acct_curated_enabled', 'operator' => '==', 'value' => '1' ),
+						array( 'field' => 'field_ms_acct_curated_card_bg_type', 'operator' => '==', 'value' => 'gradient' ),
+					),
+				),
+			) )
+		);
 	}
 );
 
